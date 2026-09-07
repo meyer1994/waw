@@ -11,5 +11,5 @@ export type Orgao = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Orgao[] }> => {
-  return await camaraClient.get('orgaos', { ordem: 'desc', ordenarPor: 'id' })
+  return await camaraClient.get('orgaos', { query: { ordem: 'desc', ordenarPor: 'id' } })
 })

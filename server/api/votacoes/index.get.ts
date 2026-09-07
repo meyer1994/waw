@@ -13,9 +13,9 @@ export type Votacao = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Votacao[] }> => {
-  return await camaraClient.get<{ dados: Votacao[] }>('votacoes', {
+  return await camaraClient.get<{ dados: Votacao[] }>('votacoes', { query: {
     itens: 10,
     ordem: 'desc',
     ordenarPor: 'dataHoraRegistro'
-  })
+  } })
 })

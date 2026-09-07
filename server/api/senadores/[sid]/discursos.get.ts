@@ -24,9 +24,11 @@ export default defineEventHandler(async (event): Promise<{ dados: Pronunciamento
     `senador/${sid}/discursos`,
     ['DiscursosParlamentar', 'Parlamentar', 'Pronunciamentos', 'Pronunciamento'],
     {
-      casa: query.casa,
-      dataInicio: query.dataInicio?.replaceAll('-', ''),
-      dataFim: query.dataFim?.replaceAll('-', '')
+      query: {
+        casa: query.casa,
+        dataInicio: query.dataInicio?.replaceAll('-', ''),
+        dataFim: query.dataFim?.replaceAll('-', '')
+      }
     }
   )
 

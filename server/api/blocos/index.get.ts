@@ -7,5 +7,5 @@ export type Bloco = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Bloco[] }> => {
-  return await camaraClient.get<{ dados: Bloco[] }>('blocos', { ordem: 'desc', ordenarPor: 'id' })
+  return await camaraClient.get<{ dados: Bloco[] }>('blocos', { query: { ordem: 'desc', ordenarPor: 'id' } })
 })

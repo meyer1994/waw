@@ -15,7 +15,7 @@ export type Deputado = {
 export default defineEventHandler(async (event): Promise<{ dados: Deputado[] }> => {
   const query = await getValidatedQuery(event, data => deputadosSchema.parse(data))
 
-  const res = await camaraClient.get<{ dados: Deputado[] }>('deputados', query)
+  const res = await camaraClient.get<{ dados: Deputado[] }>('deputados', { query })
 
   return { dados: res.dados }
 })

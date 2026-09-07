@@ -1,10 +1,13 @@
-import { ApiClient } from './apiClient'
+type FetchInit = NonNullable<Parameters<typeof $fetch>[1]>
 
-export class SenadoClient extends ApiClient {
-  protected readonly base = 'https://legis.senado.leg.br/dadosabertos'
+const base = 'https://legis.senado.leg.br/dadosabertos'
 
-  protected buildUrl(path: string): string {
-    return `${this.base}/${path}.json`
+export class SenadoClient {
+  async get<T>(path: string, init?: FetchInit) {
+    return await $fetch<T>(`${base}/${path}.json`, {
+      ...init,
+      headers: { Accept: 'application/json', ...init?.headers }
+    })
   }
 
   // Senado XML->JSON responses return single records as plain objects, not arrays
@@ -15,8 +18,8 @@ export class SenadoClient extends ApiClient {
 
   // Digs a nested list out of a response envelope.
   // Example: list('senador/123/mandatos', ['MandatoParlamentar', 'Parlamentar', 'Mandatos', 'Mandato'])
-  async list<T>(path: string, keys: readonly string[], query?: Record<string, unknown>): Promise<T[]> {
-    let node: unknown = await this.get<unknown>(path, query)
+  async list<T>(path: string, keys: readonly string[], init?: FetchInit): Promise<T[]> {
+    let node: unknown = await this.get<unknown>(path, init)
 
     for (const key of keys) {
       if (node === undefined || node === null) break

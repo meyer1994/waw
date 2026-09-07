@@ -15,9 +15,9 @@ export type Evento = {
 export default defineEventHandler(async (event): Promise<{ dados: Evento[] }> => {
   const did = getRouterParam(event, 'did')
 
-  return await camaraClient.get<{ dados: Evento[] }>(`deputados/${did}/eventos`, {
+  return await camaraClient.get<{ dados: Evento[] }>(`deputados/${did}/eventos`, { query: {
     itens: 10,
     ordem: 'desc',
     ordenarPor: 'dataHoraInicio'
-  })
+  } })
 })

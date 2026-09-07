@@ -6,5 +6,5 @@ export type Partido = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Partido[] }> => {
-  return await camaraClient.get<{ dados: Partido[] }>('partidos', { ordem: 'desc', ordenarPor: 'id' })
+  return await camaraClient.get<{ dados: Partido[] }>('partidos', { query: { ordem: 'desc', ordenarPor: 'id' } })
 })

@@ -13,5 +13,5 @@ export type Grupo = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Grupo[] }> => {
-  return await camaraClient.get<{ dados: Grupo[] }>('grupos', { ordem: 'desc', ordenarPor: 'id' })
+  return await camaraClient.get<{ dados: Grupo[] }>('grupos', { query: { ordem: 'desc', ordenarPor: 'id' } })
 })

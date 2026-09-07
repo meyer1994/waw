@@ -1,10 +1,14 @@
-import { ApiClient } from './apiClient'
+type FetchInit = NonNullable<Parameters<typeof $fetch>[1]>
 
-export class CamaraClient extends ApiClient {
-  protected readonly base = 'https://dadosabertos.camara.leg.br/api/v2'
+const base = 'https://dadosabertos.camara.leg.br/api/v2'
 
-  protected buildUrl(path: string): string {
-    return `${this.base}/${path}`
+export class CamaraClient {
+  async get<T>(path: string, init?: FetchInit) {
+    // Nitro's typed internal $fetch conflicts with the generic T here
+    return await $fetch<T>(`${base}/${path}`, {
+      ...init,
+      headers: { Accept: 'application/json', ...init?.headers }
+    })
   }
 }
 

@@ -13,5 +13,5 @@ export type Evento = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Evento[] }> => {
-  return await camaraClient.get('eventos', { itens: 10, ordem: 'desc', ordenarPor: 'dataHoraInicio' })
+  return await camaraClient.get('eventos', { query: { itens: 10, ordem: 'desc', ordenarPor: 'dataHoraInicio' } })
 })

@@ -28,8 +28,10 @@ export default defineEventHandler(async (event): Promise<{ dados: Senador[] }> =
     : ['senador/lista/atual', ['ListaParlamentarEmExercicio', 'Parlamentares', 'Parlamentar']]
 
   const parlamentares = await senadoClient.list<RawParlamentar>(path, keys, {
-    uf: query.uf,
-    participacao: query.participacao
+    query: {
+      uf: query.uf,
+      participacao: query.participacao
+    }
   })
 
   return {

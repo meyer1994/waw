@@ -48,13 +48,13 @@ export default defineEventHandler(async (event): Promise<{
 
   const [deputadoRes, proposicoesRes] = await Promise.all([
     camaraClient.get<{ dados: DeputadoDetalhado }>(`deputados/${did}`),
-    camaraClient.get<{ dados: Proposicao[], links: Link[] }>('proposicoes', {
+    camaraClient.get<{ dados: Proposicao[], links: Link[] }>('proposicoes', { query: {
       idDeputadoAutor: did,
       dataApresentacaoInicio: '2023-01-01',
       itens: 10,
       ordem: 'desc',
       ordenarPor: 'id'
-    })
+    } })
   ])
 
   return {

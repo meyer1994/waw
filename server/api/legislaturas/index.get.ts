@@ -6,5 +6,5 @@ export type Legislatura = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Legislatura[] }> => {
-  return await camaraClient.get<{ dados: Legislatura[] }>('legislaturas', { ordem: 'desc', ordenarPor: 'id' })
+  return await camaraClient.get<{ dados: Legislatura[] }>('legislaturas', { query: { ordem: 'desc', ordenarPor: 'id' } })
 })

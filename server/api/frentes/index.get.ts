@@ -6,5 +6,5 @@ export type Frente = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Frente[] }> => {
-  return await camaraClient.get<{ dados: Frente[] }>('frentes', { ordem: 'desc', ordenarPor: 'id' })
+  return await camaraClient.get<{ dados: Frente[] }>('frentes', { query: { ordem: 'desc', ordenarPor: 'id' } })
 })
