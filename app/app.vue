@@ -3,7 +3,7 @@
     <UHeader>
       <template #left>
         <NuxtLink
-          to="/"
+          to="/deputados"
           class="focus-visible:outline-3 outline-primary/25 rounded-md p-1 -ms-1"
         >
           <span class="font-bold">Deputados</span>

@@ -1,6 +1,20 @@
-import type { Deputado } from '../deputados.get'
+import type { Deputado } from './index.get'
+import { proposicoesSchema } from '~~/shared/schemas'
 
-type DeputadoDetalhado = Omit<Deputado, 'nome' | 'siglaPartido' | 'siglaUf' | 'idLegislatura' | 'email' | 'uriPartido' | 'urlFoto'> & {
+export type Proposicao = {
+  id: number
+  uri: string
+  siglaTipo: string
+  codTipo: number
+  numero: number
+  ano: number
+  ementa: string
+  dataApresentacao: string | null
+}
+
+type Link = { href: string, rel: string, method?: string }
+
+export type DeputadoDetalhado = Omit<Deputado, 'nome' | 'siglaPartido' | 'siglaUf' | 'idLegislatura' | 'email' | 'uriPartido' | 'urlFoto'> & {
   cpf: string
   dataNascimento: string | null
   dataFalecimento: string | null
@@ -27,13 +41,39 @@ type DeputadoDetalhado = Omit<Deputado, 'nome' | 'siglaPartido' | 'siglaUf' | 'i
   }
 }
 
-export default defineEventHandler(async (event): Promise<DeputadoDetalhado> => {
+export default defineEventHandler(async (event): Promise<{
+  deputado: DeputadoDetalhado
+  proposicoes: { dados: Proposicao[], links: Link[] }
+}> => {
   const id = getRouterParam(event, 'id')
-
-  const response = await $fetch<{ dados: DeputadoDetalhado }>(
-    `https://dadosabertos.camara.leg.br/api/v2/deputados/${id}`,
-    { headers: { Accept: 'application/json' } }
+  const { pagina, itens, ordem, ordenarPor } = await getValidatedQuery(
+    event,
+    data => proposicoesSchema.pick({ pagina: true, itens: true, ordem: true, ordenarPor: true }).parse(data)
   )
 
-  return response.dados
+  const [deputadoRes, proposicoesRes] = await Promise.all([
+    $fetch<{ dados: DeputadoDetalhado }>(
+      `https://dadosabertos.camara.leg.br/api/v2/deputados/${id}`,
+      { headers: { Accept: 'application/json' } }
+    ),
+    $fetch<{ dados: Proposicao[], links: Link[] }>(
+      'https://dadosabertos.camara.leg.br/api/v2/proposicoes',
+      {
+        query: {
+          idDeputadoAutor: id,
+          dataApresentacaoInicio: '2023-01-01',
+          pagina,
+          itens,
+          ordem,
+          ordenarPor
+        },
+        headers: { Accept: 'application/json' }
+      }
+    )
+  ])
+
+  return {
+    deputado: deputadoRes.dados,
+    proposicoes: proposicoesRes
+  }
 })

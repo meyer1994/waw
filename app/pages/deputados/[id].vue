@@ -1,23 +1,20 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Proposicao } from '~~/server/api/proposicoes.get'
+import type { Proposicao } from '~~/server/api/deputados/[id].get'
 
 const route = useRoute()
 const id = route.params.id as string
-
-const { data: deputado, status: deputadoStatus } = await useFetch(`/api/deputados/${id}`)
 
 const state = reactive({
   pagina: 1,
   itens: 15,
   ordem: 'desc' as const,
-  ordenarPor: 'id' as const,
-  dataApresentacaoInicio: '2023-01-01'
+  ordenarPor: 'id' as const
 })
 
-const { data: proposicoes, status } = await useFetch('/api/proposicoes', {
-  query: { ...state, idDeputadoAutor: id }
-})
+const { data, status } = await useFetch(`/api/deputados/${id}`, { query: state })
+const deputado = computed(() => data.value?.deputado)
+const proposicoes = computed(() => data.value?.proposicoes)
 
 const hasNextPage = computed(() => proposicoes.value?.links.some(link => link.rel === 'next') ?? false)
 const hasPreviousPage = computed(() => proposicoes.value?.links.some(link => link.rel === 'previous') ?? false)
@@ -38,7 +35,7 @@ useHead(() => ({ title: deputado.value?.ultimoStatus.nome ?? 'Deputado' }))
 <template>
   <div>
     <div
-      v-if="deputadoStatus === 'pending'"
+      v-if="status === 'pending'"
       class="flex justify-center py-8"
     >
       <UIcon

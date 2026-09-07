@@ -2,7 +2,7 @@
 import type { TableColumn } from '@nuxt/ui'
 import type { z } from 'zod'
 import { deputadosSchema } from '~~/shared/schemas'
-import type { Deputado } from '~~/server/api/deputados.get'
+import type { Deputado } from '~~/server/api/deputados/index.get'
 
 const ufItems = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
 
@@ -57,7 +57,7 @@ const columns: TableColumn<Deputado>[] = [
       :loading="status === 'pending'"
     >
       <template #foto-cell="{ row }">
-        <NuxtLink :to="`/deputado/${row.original.id}`">
+        <NuxtLink :to="`/deputados/${row.original.id}`">
           <UAvatar
             :src="row.original.urlFoto"
             :alt="row.original.nome"
