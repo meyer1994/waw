@@ -20,6 +20,7 @@ export type Despesa = {
 
 export default defineEventHandler(async (event): Promise<{ dados: Despesa[] }> => {
   const did = getRouterParam(event, 'did')
+  if (!did) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   return await camaraClient.get<{ dados: Despesa[] }>(`deputados/${did}/despesas`, { query: {
     itens: 10,

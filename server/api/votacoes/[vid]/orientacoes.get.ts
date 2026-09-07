@@ -8,6 +8,7 @@ export type Orientacao = {
 
 export default defineEventHandler(async (event): Promise<{ dados: Orientacao[] }> => {
   const vid = getRouterParam(event, 'vid')
+  if (!vid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   return await camaraClient.get<{ dados: Orientacao[] }>(`votacoes/${vid}/orientacoes`)
 })

@@ -1,11 +1,16 @@
 import type { Evento } from '../index.get'
 
 export type EventoDetalhe = Evento & {
-  localCamara: { andar: string | null, nome: string | null, predio: string | null, sala: string | null } | null
+  uriConvidados: string | null
+  uriDeputados: string | null
+  urlDocumentoPauta: string | null
+  fases?: Record<string, unknown>[]
+  requerimentos?: Record<string, unknown>[]
 }
 
 export default defineEventHandler(async (event): Promise<EventoDetalhe> => {
   const eid = getRouterParam(event, 'eid')
+  if (!eid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   const response = await camaraClient.get<{ dados: EventoDetalhe }>(`eventos/${eid}`)
 

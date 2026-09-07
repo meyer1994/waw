@@ -27,6 +27,7 @@ export type DeputadoDetalhado = Omit<Deputado, 'nome' | 'siglaPartido' | 'siglaU
   ultimoStatus: {
     id: number
     nome: string
+    nomeEleitoral: string | null
     siglaPartido: string
     siglaUf: string
     idLegislatura: number
@@ -36,7 +37,16 @@ export type DeputadoDetalhado = Omit<Deputado, 'nome' | 'siglaPartido' | 'siglaU
     uriPartido: string | null
     situacao: string
     condicaoEleitoral: string
+    descricaoStatus: string | null
     data: string
+    gabinete: {
+      andar: string | null
+      email: string | null
+      nome: string | null
+      predio: string | null
+      sala: string | null
+      telefone: string | null
+    } | null
   }
 }
 
@@ -45,6 +55,7 @@ export default defineEventHandler(async (event): Promise<{
   proposicoes: { dados: Proposicao[], links: Link[] }
 }> => {
   const did = getRouterParam(event, 'did')
+  if (!did) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   const [deputadoRes, proposicoesRes] = await Promise.all([
     camaraClient.get<{ dados: DeputadoDetalhado }>(`deputados/${did}`),

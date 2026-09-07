@@ -5,10 +5,18 @@ const base = 'https://dadosabertos.camara.leg.br/api/v2'
 export class CamaraClient {
   async get<T>(path: string, init?: FetchInit) {
     // Nitro's typed internal $fetch conflicts with the generic T here
-    return await $fetch<T>(`${base}/${path}`, {
-      ...init,
-      headers: { Accept: 'application/json', ...init?.headers }
-    })
+    try {
+      return await $fetch<T>(`${base}/${path}`, {
+        ...init,
+        headers: { Accept: 'application/json', ...init?.headers }
+      })
+    } catch (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Failed to fetch data from Camara API',
+        cause: error
+      })
+    }
   }
 }
 

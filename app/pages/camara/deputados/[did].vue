@@ -2,9 +2,7 @@
 import type { TabsItem } from '@nuxt/ui'
 
 const route = useRoute()
-const did = route.params.did as string
-
-const { data } = await useFetch(`/api/deputados/${did}`)
+const { data } = await useFetch(`/api/deputados/${route.params.did}`)
 const deputado = computed(() => data.value?.deputado)
 </script>
 
@@ -44,7 +42,7 @@ const deputado = computed(() => data.value?.deputado)
         { label: 'Profissões', value: 'profissoes' },
         { label: 'Mandatos Externos', value: 'mandatosExternos' }
       ] satisfies TabsItem[])"
-      @update:model-value="async e => await navigateTo(`/camara/deputados/${did}/${e}`)"
+      @update:model-value="navigateTo(`/camara/deputados/${useRoute().params.did}/${$event}`, { replace: true })"
     >
       <template #content>
         <NuxtPage />

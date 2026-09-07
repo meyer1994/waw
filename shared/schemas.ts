@@ -30,3 +30,7 @@ export const pronunciamentosSchema = z.object({
   dataInicio: emptyToUndefined(z.iso.date()),
   dataFim: emptyToUndefined(z.iso.date())
 })
+
+export const frentesSchema = z.object({
+  idLegislatura: z.coerce.number().int().positive().optional()
+})

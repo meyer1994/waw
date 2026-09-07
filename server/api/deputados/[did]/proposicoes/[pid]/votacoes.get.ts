@@ -35,7 +35,9 @@ export default defineEventHandler(async (event): Promise<{
   links: Link[]
 }> => {
   const did = getRouterParam(event, 'did')
+  if (!did) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
   const pid = getRouterParam(event, 'pid')
+  if (!pid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   const [propRes, votRes] = await Promise.all([
     camaraClient.get<{ dados: ProposicaoDetalhe }>(`proposicoes/${pid}`),

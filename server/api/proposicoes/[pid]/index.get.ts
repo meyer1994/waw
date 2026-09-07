@@ -23,10 +23,17 @@ export type ProposicaoDetalhe = {
     descricaoSituacao: string | null
     ementaUrl: string | null
   } | null
+  uriAutores: string | null
+  uriOrgaoNumerador: string | null
+  uriPropAnterior: string | null
+  uriPropPosterior: string | null
+  uriPropPrincipal: string | null
+  urnFinal: string | null
 }
 
 export default defineEventHandler(async (event): Promise<ProposicaoDetalhe> => {
   const pid = getRouterParam(event, 'pid')
+  if (!pid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   const response = await camaraClient.get<{ dados: ProposicaoDetalhe }>(`proposicoes/${pid}`)
 

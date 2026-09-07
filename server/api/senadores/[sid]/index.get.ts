@@ -55,6 +55,7 @@ export type SenadorDetalhe = {
 
 export default defineEventHandler(async (event): Promise<{ senador: SenadorDetalhe, mandatos: Mandato[] }> => {
   const sid = getRouterParam(event, 'sid')
+  if (!sid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   const [detRes, mandatos] = await Promise.all([
     senadoClient.get<{ DetalheParlamentar: { Parlamentar: SenadorDetalhe } }>(`senador/${sid}`),

@@ -16,6 +16,7 @@ export type Lider = {
 
 export default defineEventHandler(async (event): Promise<{ dados: Lider[] }> => {
   const pid = getRouterParam(event, 'pid')
+  if (!pid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   return await camaraClient.get<{ dados: Lider[] }>(`partidos/${pid}/lideres`)
 })

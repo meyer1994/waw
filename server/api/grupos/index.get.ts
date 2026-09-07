@@ -1,14 +1,21 @@
 export type Grupo = {
   id: number
   nome: string
-  anoCriacao: number | null
+  anoCriacao: string | null
   ativo: string | null
   grupoMisto: string | null
   subvencionado: string | null
   observacoes: string | null
   resolucaoTitulo: string | null
   resolucaoUri: string | null
-  ultimoStatus: string | null
+  ultimoStatus: {
+    idLegislatura: number | null
+    dataStatus: string | null
+    presidenteNome: string | null
+    presidenteUri: string | null
+    oficioTitulo: string | null
+    oficioUri: string | null
+  } | null
   uri: string
 }
 

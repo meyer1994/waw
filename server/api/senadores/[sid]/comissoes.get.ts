@@ -18,6 +18,7 @@ type RawComissao = {
 
 export default defineEventHandler(async (event): Promise<{ dados: ComissaoMembro[] }> => {
   const sid = getRouterParam(event, 'sid')
+  if (!sid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   const comissoes = await senadoClient.list<RawComissao>(
     `senador/${sid}/comissoes`,

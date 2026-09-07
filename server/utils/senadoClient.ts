@@ -4,10 +4,18 @@ const base = 'https://legis.senado.leg.br/dadosabertos'
 
 export class SenadoClient {
   async get<T>(path: string, init?: FetchInit) {
-    return await $fetch<T>(`${base}/${path}.json`, {
-      ...init,
-      headers: { Accept: 'application/json', ...init?.headers }
-    })
+    try {
+      return await $fetch<T>(`${base}/${path}.json`, {
+        ...init,
+        headers: { Accept: 'application/json', ...init?.headers }
+      })
+    } catch (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Failed to fetch data from Senado API',
+        cause: error
+      })
+    }
   }
 
   // Senado XML->JSON responses return single records as plain objects, not arrays

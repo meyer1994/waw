@@ -13,12 +13,22 @@ export type PartidoDetalhe = {
     situacao: string | null
     totalMembros: number | null
     totalPosse: number | null
-    uri: string | null
+    uriMembros: string | null
+    lider: {
+      idLegislatura: number | null
+      nome: string
+      siglaPartido: string | null
+      uf: string | null
+      uri: string | null
+      uriPartido: string | null
+      urlFoto: string | null
+    } | null
   } | null
 }
 
 export default defineEventHandler(async (event): Promise<PartidoDetalhe> => {
   const pid = getRouterParam(event, 'pid')
+  if (!pid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   const response = await camaraClient.get<{ dados: PartidoDetalhe }>(`partidos/${pid}`)
 

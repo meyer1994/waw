@@ -14,6 +14,7 @@ export type Votacao = {
 
 export default defineEventHandler(async (event): Promise<{ dados: Votacao[] }> => {
   const pid = getRouterParam(event, 'pid')
+  if (!pid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   return await camaraClient.get<{ dados: Votacao[] }>(`proposicoes/${pid}/votacoes`)
 })

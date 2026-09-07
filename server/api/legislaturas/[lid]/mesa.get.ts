@@ -16,6 +16,7 @@ export type MembroMesa = {
 
 export default defineEventHandler(async (event): Promise<{ dados: MembroMesa[] }> => {
   const lid = getRouterParam(event, 'lid')
+  if (!lid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   return await camaraClient.get<{ dados: MembroMesa[] }>(`legislaturas/${lid}/mesa`)
 })

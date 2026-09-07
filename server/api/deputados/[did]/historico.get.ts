@@ -17,6 +17,7 @@ export type Historico = {
 
 export default defineEventHandler(async (event): Promise<{ dados: Historico[] }> => {
   const did = getRouterParam(event, 'did')
+  if (!did) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   return await camaraClient.get<{ dados: Historico[] }>(`deputados/${did}/historico`)
 })

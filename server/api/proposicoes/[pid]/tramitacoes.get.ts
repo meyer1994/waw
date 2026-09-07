@@ -17,6 +17,7 @@ export type Tramitacao = {
 
 export default defineEventHandler(async (event): Promise<{ dados: Tramitacao[] }> => {
   const pid = getRouterParam(event, 'pid')
+  if (!pid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   const response = await camaraClient.get<{ dados: Tramitacao[] }>(`proposicoes/${pid}/tramitacoes`)
 

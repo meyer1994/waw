@@ -13,6 +13,16 @@ export type Senador = {
   MembroMesa: string | null
   MembroLideranca: string | null
   DescricaoParticipacao: string | null
+  Bloco?: Bloco | null
+  CodigoPublicoNaLegAtual?: string | null
+  UrlPaginaParlamentar?: string | null
+  Telefones?: Record<string, unknown>
+}
+
+export type Bloco = {
+  CodigoBloco: string | null
+  NomeBloco: string | null
+  SiglaBloco: string | null
 }
 
 type RawParlamentar = {

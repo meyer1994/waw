@@ -11,6 +11,7 @@ export type ProposicaoRelacionada = {
 
 export default defineEventHandler(async (event): Promise<{ dados: ProposicaoRelacionada[] }> => {
   const pid = getRouterParam(event, 'pid')
+  if (!pid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   return await camaraClient.get<{ dados: ProposicaoRelacionada[] }>(`proposicoes/${pid}/relacionadas`)
 })

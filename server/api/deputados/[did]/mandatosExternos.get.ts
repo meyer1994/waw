@@ -10,6 +10,7 @@ export type MandatoExterno = {
 
 export default defineEventHandler(async (event): Promise<{ dados: MandatoExterno[] }> => {
   const did = getRouterParam(event, 'did')
+  if (!did) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
 
   return await camaraClient.get<{ dados: MandatoExterno[] }>(`deputados/${did}/mandatosExternos`)
 })
