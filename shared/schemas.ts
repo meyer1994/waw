@@ -17,3 +17,17 @@ export const deputadosSchema = z.object({
   ordem: z.enum(['asc', 'desc']).default('asc'),
   ordenarPor: z.enum(['id', 'idLegislatura', 'nome', 'siglaUF', 'siglaPartido']).default('nome')
 })
+
+export const proposicoesSchema = z.object({
+  id: z.coerce.number().int().positive().optional(),
+  idDeputadoAutor: z.coerce.number().int().positive().optional(),
+  siglaTipo: emptyToUndefined(z.string().trim().min(1).toUpperCase()),
+  numero: z.coerce.number().int().positive().optional(),
+  ano: z.coerce.number().int().min(1900).optional(),
+  dataApresentacaoInicio: z.iso.date().optional(),
+  dataApresentacaoFim: z.iso.date().optional(),
+  pagina: z.coerce.number().int().min(1).default(1),
+  itens: z.coerce.number().int().min(1).max(100).default(15),
+  ordem: z.enum(['asc', 'desc']).default('desc'),
+  ordenarPor: z.enum(['id', 'codTipo', 'siglaTipo', 'numero', 'ano']).default('id')
+})
