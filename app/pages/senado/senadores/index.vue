@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { PARTY_FLAGS, UF } from '~~/shared/constants'
 import { senadoresSchema } from '~~/shared/schemas'
 import type { Senador } from '~~/server/api/senadores/index.get'
 
-const ufItems = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
+const ufItems: string[] = Object.values(UF)
 
 const uf = ref('')
 const participacao = ref('todos')
@@ -46,7 +47,25 @@ useHead(() => ({ title: afastados.value ? 'Senadores Afastados' : 'Senadores' })
         v-model="uf"
         :items="ufItems.map(u => ({ label: u || 'Todos os estados', value: u }))"
         class="w-48"
-      />
+      >
+        <template #leading="{ modelValue }">
+          <NuxtImg
+            v-if="modelValue"
+            :src="`/flags/${String(modelValue).toLowerCase()}.svg`"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+        </template>
+
+        <template #item-leading="{ item }">
+          <NuxtImg
+            v-if="item.value"
+            :src="`/flags/${String(item.value).toLowerCase()}.svg`"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+        </template>
+      </USelect>
 
       <USelect
         v-model="participacao"
@@ -70,6 +89,28 @@ useHead(() => ({ title: afastados.value ? 'Senadores Afastados' : 'Senadores' })
       :columns="columns"
       :loading="status === 'pending'"
     >
+      <template #SiglaPartidoParlamentar-cell="{ row }">
+        <span class="flex items-center gap-1.5">
+          <NuxtImg
+            v-if="PARTY_FLAGS[row.original.SiglaPartidoParlamentar]"
+            :src="PARTY_FLAGS[row.original.SiglaPartidoParlamentar]"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+          {{ row.original.SiglaPartidoParlamentar }}
+        </span>
+      </template>
+
+      <template #UfParlamentar-cell="{ row }">
+        <span class="flex items-center gap-1.5">
+          <NuxtImg
+            :src="`/flags/${row.original.UfParlamentar.toLowerCase()}.svg`"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+          {{ row.original.UfParlamentar }}
+        </span>
+      </template>
       <template #foto-cell="{ row }">
         <NuxtLink :to="`/senado/senadores/${row.original.CodigoParlamentar}`">
           <UAvatar

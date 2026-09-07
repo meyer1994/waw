@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { PARTY_FLAGS } from '~~/shared/constants'
 import type { Orientacao } from '~~/server/api/votacoes/[vid]/orientacoes.get'
 
 const route = useRoute()
@@ -30,16 +31,24 @@ const votoColor = (voto: string | null) => {
       :loading="status === 'pending'"
     >
       <template #partido-cell="{ row }">
-        <NuxtLink
-          v-if="row.original.uriPartidoBloco?.includes('/camara/partidos/')"
-          :to="`/camara/partidos/${row.original.uriPartidoBloco.split('/').pop()}`"
-        >
-          <span class="text-primary hover:underline font-medium">{{ row.original.siglaPartidoBloco }}</span>
-        </NuxtLink>
-        <span
-          v-else
-          class="font-medium"
-        >{{ row.original.siglaPartidoBloco ?? '—' }}</span>
+        <span class="flex items-center gap-1.5">
+          <NuxtImg
+            v-if="row.original.siglaPartidoBloco && PARTY_FLAGS[row.original.siglaPartidoBloco]"
+            :src="PARTY_FLAGS[row.original.siglaPartidoBloco]"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+          <NuxtLink
+            v-if="row.original.uriPartidoBloco?.includes('/camara/partidos/')"
+            :to="`/camara/partidos/${row.original.uriPartidoBloco.split('/').pop()}`"
+          >
+            <span class="text-primary hover:underline font-medium">{{ row.original.siglaPartidoBloco }}</span>
+          </NuxtLink>
+          <span
+            v-else
+            class="font-medium"
+          >{{ row.original.siglaPartidoBloco ?? '—' }}</span>
+        </span>
       </template>
 
       <template #codTipoLideranca-cell="{ row }">

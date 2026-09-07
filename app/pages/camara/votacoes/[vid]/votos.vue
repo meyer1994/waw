@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { PARTY_FLAGS } from '~~/shared/constants'
 import type { Voto } from '~~/server/api/votacoes/[vid]/votos.get'
 
 const route = useRoute()
@@ -44,8 +45,21 @@ const votoColor = (voto: string | null) => {
       </template>
 
       <template #partido-cell="{ row }">
-        <span class="text-muted text-sm">
-          {{ row.original.deputado_.siglaPartido }}–{{ row.original.deputado_.siglaUf }}
+        <span class="text-muted text-sm flex items-center gap-1.5">
+          <NuxtImg
+            v-if="row.original.deputado_.siglaPartido && PARTY_FLAGS[row.original.deputado_.siglaPartido]"
+            :src="PARTY_FLAGS[row.original.deputado_.siglaPartido]"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+          {{ row.original.deputado_.siglaPartido }}
+          <NuxtImg
+            v-if="row.original.deputado_.siglaUf"
+            :src="`/flags/${row.original.deputado_.siglaUf.toLowerCase()}.svg`"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+          {{ row.original.deputado_.siglaUf }}
         </span>
       </template>
 

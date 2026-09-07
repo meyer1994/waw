@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="900"
+   height="600"
+   viewBox="0 0 30 20"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="tp flag.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <metadata
+     id="metadata21">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs19">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 300 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="900 : 300 : 1"
+       inkscape:persp3d-origin="450 : 200 : 1"
+       id="perspective23" />
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-height="963"
+     inkscape:window-width="1270"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="false"
+     inkscape:zoom="0.62111111"
+     inkscape:cx="378.29551"
+     inkscape:cy="300"
+     inkscape:window-x="5"
+     inkscape:window-y="-3"
+     inkscape:current-layer="svg2" />
+  <g
+     id="g2412">
+    <rect
+       height="20"
+       width="30"
+       id="red_background"
+       fill="red" />
+    <g
+       id="g2400">
+      <g
+         id="yellow_star"
+         transform="matrix(6,0,0,6,15,10.572949)"
+         style="fill:#ffff00">
+        <g
+           id="cone">
+          <polygon
+             id="triangle"
+             points="0,0 0,1 0.7,1 0,0 "
+             transform="matrix(0.8967361,0.4425657,-0.4425657,0.8967361,0,-1)" />
+          <use
+             xlink:href="#triangle"
+             transform="scale(-1,1)"
+             id="use8"
+             x="0"
+             y="0"
+             width="30"
+             height="20" />
+        </g>
+        <use
+           xlink:href="#cone"
+           transform="matrix(0.309017,0.9510565,-0.9510565,0.309017,0,0)"
+           id="use10"
+           x="0"
+           y="0"
+           width="30"
+           height="20" />
+        <use
+           xlink:href="#cone"
+           transform="matrix(0.309017,-0.9510565,0.9510565,0.309017,0,0)"
+           id="use12"
+           x="0"
+           y="0"
+           width="30"
+           height="20" />
+        <use
+           xlink:href="#cone"
+           transform="matrix(-0.809017,0.5877853,-0.5877853,-0.809017,0,0)"
+           id="use14"
+           x="0"
+           y="0"
+           width="30"
+           height="20" />
+        <use
+           xlink:href="#cone"
+           transform="matrix(-0.809017,-0.5877853,0.5877853,-0.809017,0,0)"
+           id="use16"
+           x="0"
+           y="0"
+           width="30"
+           height="20" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:4.92747068px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Ouhod;-inkscape-font-specification:Ouhod Bold"
+         x="14.181012"
+         y="11.419155"
+         id="text2396"
+         transform="scale(0.8694567,1.1501436)"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan2398"
+           x="14.181012"
+           y="11.419155">PT</tspan></text>
+    </g>
+  </g>
+</svg>

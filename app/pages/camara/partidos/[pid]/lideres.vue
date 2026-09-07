@@ -22,6 +22,23 @@ const columns: TableColumn<Lider>[] = [
       :columns="columns"
       :loading="status === 'pending'"
     >
+      <template #siglaUf-cell="{ row }">
+        <span
+          v-if="row.original.siglaUf"
+          class="flex items-center gap-1.5"
+        >
+          <NuxtImg
+            :src="`/flags/${row.original.siglaUf.toLowerCase()}.svg`"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+          {{ row.original.siglaUf }}
+        </span>
+        <span
+          v-else
+          class="text-muted text-sm"
+        >—</span>
+      </template>
       <template #nome-cell="{ row }">
         <NuxtLink
           :to="`/camara/deputados/${row.original.id}`"

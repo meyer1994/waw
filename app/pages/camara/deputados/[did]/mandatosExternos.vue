@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { PARTY_FLAGS } from '~~/shared/constants'
 import type { MandatoExterno } from '~~/server/api/deputados/[did]/mandatosExternos.get'
 
 const route = useRoute()
@@ -37,7 +38,15 @@ const columns: TableColumn<MandatoExterno>[] = [
       </template>
 
       <template #siglaPartidoEleicao-cell="{ row }">
-        <span class="text-sm">{{ row.original.siglaPartidoEleicao ?? '—' }}</span>
+        <span class="text-sm flex items-center gap-1.5">
+          <NuxtImg
+            v-if="row.original.siglaPartidoEleicao && PARTY_FLAGS[row.original.siglaPartidoEleicao]"
+            :src="PARTY_FLAGS[row.original.siglaPartidoEleicao]"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+          {{ row.original.siglaPartidoEleicao ?? '—' }}
+        </span>
       </template>
 
       <template #periodo-cell="{ row }">

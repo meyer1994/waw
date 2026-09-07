@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { PARTY_FLAGS } from '~~/shared/constants'
 import type { Mandato } from '~~/server/api/senadores/[sid]/index.get'
 
 const route = useRoute()
@@ -33,6 +34,16 @@ const columns: TableColumn<Mandato>[] = [
       :columns="columns"
       :loading="status === 'pending'"
     >
+      <template #UfParlamentar-cell="{ row }">
+        <span class="flex items-center gap-1.5">
+          <NuxtImg
+            :src="`/flags/${row.original.UfParlamentar.toLowerCase()}.svg`"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+          {{ row.original.UfParlamentar }}
+        </span>
+      </template>
       <template #legislaturas-cell="{ row }">
         <span class="text-muted text-sm">
           {{ row.original.PrimeiraLegislaturaDoMandato?.NumeroLegislatura }}
@@ -50,7 +61,14 @@ const columns: TableColumn<Mandato>[] = [
             v-for="partido in partidosDoMandato(row.original)"
             :key="partido.CodigoPartido"
             variant="subtle"
+            class="flex items-center gap-1"
           >
+            <NuxtImg
+              v-if="PARTY_FLAGS[partido.Sigla]"
+              :src="PARTY_FLAGS[partido.Sigla]"
+              alt=""
+              class="w-4 h-3 rounded-[1px] object-cover"
+            />
             {{ partido.Sigla }}
           </UBadge>
           <span

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { PARTY_FLAGS } from '~~/shared/constants'
 import type { Filiacao } from '~~/server/api/senadores/[sid]/filiacoes.get'
 
 const route = useRoute()
@@ -8,7 +9,7 @@ const sid = route.params.sid as string
 const { data, status } = await useFetch(`/api/senadores/${sid}/filiacoes`)
 
 const columns: TableColumn<Filiacao>[] = [
-  { accessorKey: 'Partido.SiglaPartido', header: 'Partido' },
+  { id: 'partido', accessorKey: 'Partido.SiglaPartido', header: 'Partido' },
   { accessorKey: 'Partido.NomePartido', header: 'Nome' },
   { accessorKey: 'DataFiliacao', header: 'Filiação' },
   { accessorKey: 'DataDesfiliacao', header: 'Desfiliação' }
@@ -26,6 +27,17 @@ const columns: TableColumn<Filiacao>[] = [
       :columns="columns"
       :loading="status === 'pending'"
     >
+      <template #partido-cell="{ row }">
+        <span class="flex items-center gap-1.5">
+          <NuxtImg
+            v-if="PARTY_FLAGS[row.original.Partido.SiglaPartido]"
+            :src="PARTY_FLAGS[row.original.Partido.SiglaPartido]"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+          {{ row.original.Partido.SiglaPartido }}
+        </span>
+      </template>
       <template #DataFiliacao-cell="{ row }">
         <NuxtTime
           v-if="row.original.DataFiliacao"
