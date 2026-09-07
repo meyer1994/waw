@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { TabsItem } from '@nuxt/ui'
-import type { DeputadoDetalhado } from '~~/server/api/deputados/[did]/index.get'
 
 const route = useRoute()
 const did = route.params.did as string
 
-const { data } = await useFetch<DeputadoDetalhado>(`/api/deputados/${did}`)
+const { data } = await useFetch(`/api/deputados/${did}`)
 const deputado = computed(() => data.value?.deputado)
 </script>
 

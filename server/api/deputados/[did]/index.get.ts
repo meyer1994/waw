@@ -1,4 +1,4 @@
-import type { Deputado } from './index.get'
+import type { Deputado } from '../index.get'
 
 export type Proposicao = {
   id: number

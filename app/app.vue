@@ -14,6 +14,30 @@
         >
           <span class="font-bold">Proposições</span>
         </NuxtLink>
+        <NuxtLink
+          to="/partidos"
+          class="focus-visible:outline-3 outline-primary/25 rounded-md p-1"
+        >
+          <span class="font-bold">Partidos</span>
+        </NuxtLink>
+        <NuxtLink
+          to="/votacoes"
+          class="focus-visible:outline-3 outline-primary/25 rounded-md p-1"
+        >
+          <span class="font-bold">Votações</span>
+        </NuxtLink>
+        <NuxtLink
+          to="/orgaos"
+          class="focus-visible:outline-3 outline-primary/25 rounded-md p-1"
+        >
+          <span class="font-bold">Órgãos</span>
+        </NuxtLink>
+        <NuxtLink
+          to="/eventos"
+          class="focus-visible:outline-3 outline-primary/25 rounded-md p-1"
+        >
+          <span class="font-bold">Eventos</span>
+        </NuxtLink>
       </template>
 
       <template #right>

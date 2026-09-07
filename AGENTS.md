@@ -5,6 +5,12 @@
 
 ---
 
+## Commands
+
+- **Prefer jq** over inline python/node scripts for parsing json
+
+---
+
 ## Coding Guidelines
 
 - **Prefer early returns.** Exit functions as soon as pre-conditions fail; avoid

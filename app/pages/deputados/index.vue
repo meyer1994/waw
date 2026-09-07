@@ -11,9 +11,6 @@ const siglaUf = ref('')
 const debName = debouncedRef(name, 500)
 const { data, status } = await useFetch('/api/deputados', { query: { nome: debName, siglaUf } })
 
-const hasNextPage = computed(() => data.value?.links.some(link => link.rel === 'next') ?? false)
-const hasPreviousPage = computed(() => data.value?.links.some(link => link.rel === 'previous') ?? false)
-
 const columns: TableColumn<Deputado>[] = [
   { id: 'foto', header: '', meta: { class: { th: 'w-16' } } },
   { accessorKey: 'nome', header: 'Nome' },
@@ -81,26 +78,5 @@ const columns: TableColumn<Deputado>[] = [
         >—</span>
       </template>
     </UTable>
-
-    <div class="flex justify-end gap-3 mt-4">
-      <UButton
-        icon="i-lucide-chevron-left"
-        color="neutral"
-        variant="outline"
-        :disabled="!hasPreviousPage"
-        @click="() => state.pagina = (state.pagina ?? 1) - 1"
-      >
-        Anterior
-      </UButton>
-      <UButton
-        trailing-icon="i-lucide-chevron-right"
-        color="neutral"
-        variant="outline"
-        :disabled="!hasNextPage"
-        @click="() => state.pagina = (state.pagina ?? 1) + 1"
-      >
-        Próxima
-      </UButton>
-    </div>
   </div>
 </template>
