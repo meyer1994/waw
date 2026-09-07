@@ -8,6 +8,11 @@
 ## Commands
 
 - **Prefer jq** over inline python/node scripts for parsing json
+- Use `find` and `grep` for searching files:
+  - `find . -name '*.ts'` — list all TypeScript files
+  - `find . -type f -iname '*.vue' | xargs grep 'useFetch'` — search for 'useFetch' in all Vue files
+  - `grep -rn 'useToast' ./app/components` — recursively search for 'useToast' in components directory with line numbers
+  - `grep -ri 'error' .` — case-insensitive search for 'error' in all files
 
 ---
 
