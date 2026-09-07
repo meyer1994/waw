@@ -4,25 +4,30 @@ const props = defineProps<{ did: string }>()
 const route = useRoute()
 
 const sections = computed(() => [
-  { label: 'Proposições', to: `/deputados/${props.did}` },
-  { label: 'Despesas', to: `/deputados/${props.did}/despesas` },
-  { label: 'Eventos', to: `/deputados/${props.did}/eventos` },
-  { label: 'Discursos', to: `/deputados/${props.did}/discursos` }
+  { label: 'Proposições', value: 'proposicoes' },
+  { label: 'Despesas', value: 'despesas' },
+  { label: 'Eventos', value: 'eventos' },
+  { label: 'Discursos', value: 'discursos' }
 ])
 
-const isActive = (to: string) => route.path === to
+const active = computed(() => {
+  const section = route.path.split('/')[3]
+  return sections.value.find(s => s.value === section)?.value ?? 'proposicoes'
+})
+
+const onChange = (value: string | number) => {
+  if (value === 'proposicoes')
+    return navigateTo(`/deputados/${props.did}`)
+  return navigateTo(`/deputados/${props.did}/${value}`)
+}
 </script>
 
 <template>
-  <nav class="flex gap-2 mb-6">
-    <UButton
-      v-for="section in sections"
-      :key="section.to"
-      :to="section.to"
-      :label="section.label"
-      :variant="isActive(section.to) ? 'soft' : 'ghost'"
-      color="neutral"
-      size="sm"
-    />
-  </nav>
+  <UTabs
+    :items="sections"
+    :model-value="active"
+    :content="false"
+    class="mb-6"
+    @update:model-value="onChange"
+  />
 </template>

@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { z } from 'zod'
 import { deputadosSchema } from '~~/shared/schemas'
 import type { Deputado } from '~~/server/api/deputados/index.get'
 
 const ufItems = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
 
-type State = z.output<typeof deputadosSchema>
-const state = reactive<Partial<State>>({ pagina: 1, itens: 15 })
+const name = ref('')
+const siglaUf = ref('')
 
-const { data, status } = await useFetch('/api/deputados', { query: state })
+const debName = debouncedRef(name, 500)
+const { data, status } = await useFetch('/api/deputados', { query: { nome: debName, siglaUf } })
+
 const hasNextPage = computed(() => data.value?.links.some(link => link.rel === 'next') ?? false)
 const hasPreviousPage = computed(() => data.value?.links.some(link => link.rel === 'previous') ?? false)
 
@@ -31,20 +32,19 @@ const columns: TableColumn<Deputado>[] = [
 
     <!-- search form -->
     <UForm
-      :state="state"
       :schema="deputadosSchema"
       :disabled="status === 'pending'"
       class="flex gap-3 mb-4"
     >
       <UInput
-        v-model="state.nome"
+        v-model="name"
         icon="i-lucide-search"
         placeholder="Buscar por nome..."
         class="w-64"
       />
 
       <USelect
-        v-model="state.siglaUf"
+        v-model="siglaUf"
         :items="ufItems.map(uf => ({ label: uf || 'Todos os estados', value: uf }))"
         class="w-48"
       />

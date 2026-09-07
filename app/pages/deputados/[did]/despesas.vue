@@ -5,17 +5,7 @@ import type { Despesa } from '~~/server/api/deputados/[did]/despesas.get'
 const route = useRoute()
 const did = route.params.did as string
 
-const state = reactive({
-  pagina: 1,
-  itens: 15,
-  ordem: 'desc' as const,
-  ordenarPor: 'ano' as const
-})
-
-const { data, status } = await useFetch(`/api/deputados/${did}/despesas`, { query: state })
-
-const hasNextPage = computed(() => data.value?.links.some(link => link.rel === 'next') ?? false)
-const hasPreviousPage = computed(() => data.value?.links.some(link => link.rel === 'previous') ?? false)
+const { data, status } = await useFetch(`/api/deputados/${did}/despesas`)
 
 const columns: TableColumn<Despesa>[] = [
   { id: 'data', header: 'Data' },
@@ -33,11 +23,9 @@ useHead(() => ({ title: 'Despesas' }))
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold mb-4">
+    <h2 class="text-xl font-semibold mb-4">
       Despesas
-    </h1>
-
-    <DeputadoNav :did="did" />
+    </h2>
 
     <UTable
       :data="data?.dados ?? []"
@@ -89,26 +77,5 @@ useHead(() => ({ title: 'Despesas' }))
         />
       </template>
     </UTable>
-
-    <div class="flex justify-end gap-3 mt-4">
-      <UButton
-        icon="i-lucide-chevron-left"
-        color="neutral"
-        variant="outline"
-        :disabled="!hasPreviousPage"
-        @click="state.pagina--"
-      >
-        Anterior
-      </UButton>
-      <UButton
-        trailing-icon="i-lucide-chevron-right"
-        color="neutral"
-        variant="outline"
-        :disabled="!hasNextPage"
-        @click="state.pagina++"
-      >
-        Próxima
-      </UButton>
-    </div>
   </div>
 </template>

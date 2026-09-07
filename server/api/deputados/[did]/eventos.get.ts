@@ -1,5 +1,3 @@
-import { eventosSchema } from '~~/shared/schemas'
-
 export type Evento = {
   id: number
   dataHoraInicio: string | null
@@ -14,21 +12,11 @@ export type Evento = {
   orgaos: { id: number, nome: string, sigla: string | null, uri: string | null }[]
 }
 
-export default defineEventHandler(async (event): Promise<{
-  dados: Evento[]
-  links: { href: string, rel: string, method?: string }[]
-}> => {
+export default defineEventHandler(async (event): Promise<{ dados: Evento[] }> => {
   const did = getRouterParam(event, 'did')
-  const query = await getValidatedQuery(event, data => eventosSchema.parse(data))
-
-  const params = new URLSearchParams()
-  for (const [key, value] of Object.entries(query)) {
-    if (value !== undefined)
-      params.set(key, String(value))
-  }
 
   return await $fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${did}/eventos`, {
-    query: params,
+    query: { itens: 10, ordem: 'desc', ordenarPor: 'dataHoraInicio' },
     headers: { Accept: 'application/json' }
   })
 })

@@ -1,5 +1,3 @@
-import { discursosSchema } from '~~/shared/schemas'
-
 export type Discurso = {
   dataHoraInicio: string | null
   dataHoraFim: string | null
@@ -14,21 +12,11 @@ export type Discurso = {
   urlVideo: string | null
 }
 
-export default defineEventHandler(async (event): Promise<{
-  dados: Discurso[]
-  links: { href: string, rel: string, method?: string }[]
-}> => {
+export default defineEventHandler(async (event): Promise<{ dados: Discurso[] }> => {
   const did = getRouterParam(event, 'did')
-  const query = await getValidatedQuery(event, data => discursosSchema.parse(data))
-
-  const params = new URLSearchParams()
-  for (const [key, value] of Object.entries(query)) {
-    if (value !== undefined)
-      params.set(key, String(value))
-  }
 
   return await $fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${did}/discursos`, {
-    query: params,
+    query: { itens: 10, ordem: 'desc', ordenarPor: 'dataHoraInicio' },
     headers: { Accept: 'application/json' }
   })
 })

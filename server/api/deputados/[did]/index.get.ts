@@ -1,5 +1,4 @@
 import type { Deputado } from './index.get'
-import { proposicoesSchema } from '~~/shared/schemas'
 
 export type Proposicao = {
   id: number
@@ -46,10 +45,6 @@ export default defineEventHandler(async (event): Promise<{
   proposicoes: { dados: Proposicao[], links: Link[] }
 }> => {
   const did = getRouterParam(event, 'did')
-  const { pagina, itens, ordem, ordenarPor } = await getValidatedQuery(
-    event,
-    data => proposicoesSchema.pick({ pagina: true, itens: true, ordem: true, ordenarPor: true }).parse(data)
-  )
 
   const [deputadoRes, proposicoesRes] = await Promise.all([
     $fetch<{ dados: DeputadoDetalhado }>(
@@ -62,10 +57,9 @@ export default defineEventHandler(async (event): Promise<{
         query: {
           idDeputadoAutor: did,
           dataApresentacaoInicio: '2023-01-01',
-          pagina,
-          itens,
-          ordem,
-          ordenarPor
+          itens: 10,
+          ordem: 'desc',
+          ordenarPor: 'id'
         },
         headers: { Accept: 'application/json' }
       }
