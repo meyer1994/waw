@@ -12,6 +12,7 @@ const deputado = computed(() => data.value?.deputado)
   <div>
     <div class="flex items-center gap-4 mb-8">
       <UAvatar
+        as="NuxtImg"
         :src="deputado?.ultimoStatus?.urlFoto"
         :alt="deputado?.ultimoStatus?.nome"
         size="3xl"

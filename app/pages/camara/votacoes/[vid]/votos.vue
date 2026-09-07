@@ -36,6 +36,7 @@ const votoColor = (voto: string | null) => {
           class="flex items-center gap-2"
         >
           <UAvatar
+            as="NuxtImg"
             :src="row.original.deputado_.urlFoto ?? undefined"
             :alt="row.original.deputado_.nome"
             size="2xs"

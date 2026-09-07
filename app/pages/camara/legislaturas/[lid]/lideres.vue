@@ -28,6 +28,7 @@ const columns: TableColumn<LiderLegislatura>[] = [
           class="flex items-center gap-2"
         >
           <UAvatar
+            as="NuxtImg"
             :src="row.original.parlamentar.urlFoto ?? undefined"
             :alt="row.original.parlamentar.nome"
             size="2xs"

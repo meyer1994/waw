@@ -13,6 +13,7 @@ useHead(() => ({ title: partido.value?.sigla ?? 'Partido' }))
   <div>
     <div class="flex items-center gap-4 mb-8">
       <UAvatar
+        as="NuxtImg"
         :src="partido?.urlLogo ?? undefined"
         :alt="partido?.sigla"
         :text="partido?.sigla"

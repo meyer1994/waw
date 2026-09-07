@@ -103,6 +103,7 @@ const columns: TableColumn<Deputado>[] = [
       <template #foto-cell="{ row }">
         <NuxtLink :to="`/camara/deputados/${row.original.id}`">
           <UAvatar
+            as="NuxtImg"
             :src="row.original.urlFoto"
             :alt="row.original.nome"
             size="sm"

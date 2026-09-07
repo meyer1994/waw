@@ -56,6 +56,7 @@ const columns: TableColumn<Deputado>[] = [
           class="flex items-center gap-2"
         >
           <UAvatar
+            as="NuxtImg"
             :src="row.original.urlFoto"
             :alt="row.original.nome"
             size="2xs"

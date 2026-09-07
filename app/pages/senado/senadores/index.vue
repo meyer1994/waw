@@ -114,6 +114,7 @@ useHead(() => ({ title: afastados.value ? 'Senadores Afastados' : 'Senadores' })
       <template #foto-cell="{ row }">
         <NuxtLink :to="`/senado/senadores/${row.original.CodigoParlamentar}`">
           <UAvatar
+            as="NuxtImg"
             :src="row.original.UrlFotoParlamentar ?? undefined"
             :alt="row.original.NomeParlamentar"
             :text="row.original.NomeParlamentar?.slice(0, 1)"

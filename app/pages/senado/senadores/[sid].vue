@@ -16,6 +16,7 @@ useHead(() => ({ title: senador.value?.NomeParlamentar ?? 'Senador' }))
   <div>
     <div class="flex items-center gap-4 mb-8">
       <UAvatar
+        as="NuxtImg"
         :src="senador?.UrlFotoParlamentar ?? undefined"
         :alt="senador?.NomeParlamentar"
         :text="senador?.NomeParlamentar?.slice(0, 1)"
