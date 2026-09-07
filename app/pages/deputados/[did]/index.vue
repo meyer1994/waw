@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Proposicao } from '~~/server/api/deputados/[id].get'
+import type { Proposicao } from '~~/server/api/deputados/[did]/index.get'
 
 const route = useRoute()
-const id = route.params.id as string
+const did = route.params.did as string
 
 const state = reactive({
   pagina: 1,
@@ -12,7 +12,7 @@ const state = reactive({
   ordenarPor: 'id' as const
 })
 
-const { data, status } = await useFetch(`/api/deputados/${id}`, { query: state })
+const { data, status } = await useFetch(`/api/deputados/${did}`, { query: state })
 const deputado = computed(() => data.value?.deputado)
 const proposicoes = computed(() => data.value?.proposicoes)
 
@@ -20,11 +20,7 @@ const hasNextPage = computed(() => proposicoes.value?.links.some(link => link.re
 const hasPreviousPage = computed(() => proposicoes.value?.links.some(link => link.rel === 'previous') ?? false)
 
 const columns: TableColumn<Proposicao>[] = [
-  {
-    id: 'proposicao',
-    header: 'Proposição',
-    cell: ({ row }) => `${row.original.siglaTipo} ${row.original.numero}/${row.original.ano}`
-  },
+  { id: 'proposicao', header: 'Proposição' },
   { accessorKey: 'dataApresentacao', header: 'Apresentação' },
   { id: 'ementa', header: 'Ementa' }
 ]
@@ -74,8 +70,27 @@ useHead(() => ({ title: deputado.value?.ultimoStatus.nome ?? 'Deputado' }))
         :columns="columns"
         :loading="status === 'pending'"
       >
+        <template #proposicao-cell="{ row }">
+          <NuxtLink :to="`/deputados/${did}/proposicoes/${row.original.id}/votacoes`">
+            <span class="text-primary hover:underline">
+              {{ row.original.siglaTipo }} {{ row.original.numero }}/{{ row.original.ano }}
+            </span>
+          </NuxtLink>
+        </template>
+
         <template #dataApresentacao-cell="{ row }">
-          {{ row.original.dataApresentacao ? new Date(`${row.original.dataApresentacao.slice(0, 10)}T00:00:00`).toLocaleDateString('pt-BR') : '—' }}
+          <NuxtTime
+            v-if="row.original.dataApresentacao"
+            :datetime="row.original.dataApresentacao.slice(0, 10)"
+            locale="pt-BR"
+            year="numeric"
+            month="2-digit"
+            day="2-digit"
+          />
+          <span
+            v-else
+            class="text-muted"
+          >—</span>
         </template>
 
         <template #ementa-cell="{ row }">

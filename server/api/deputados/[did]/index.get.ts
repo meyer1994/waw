@@ -45,7 +45,7 @@ export default defineEventHandler(async (event): Promise<{
   deputado: DeputadoDetalhado
   proposicoes: { dados: Proposicao[], links: Link[] }
 }> => {
-  const id = getRouterParam(event, 'id')
+  const did = getRouterParam(event, 'did')
   const { pagina, itens, ordem, ordenarPor } = await getValidatedQuery(
     event,
     data => proposicoesSchema.pick({ pagina: true, itens: true, ordem: true, ordenarPor: true }).parse(data)
@@ -53,14 +53,14 @@ export default defineEventHandler(async (event): Promise<{
 
   const [deputadoRes, proposicoesRes] = await Promise.all([
     $fetch<{ dados: DeputadoDetalhado }>(
-      `https://dadosabertos.camara.leg.br/api/v2/deputados/${id}`,
+      `https://dadosabertos.camara.leg.br/api/v2/deputados/${did}`,
       { headers: { Accept: 'application/json' } }
     ),
     $fetch<{ dados: Proposicao[], links: Link[] }>(
       'https://dadosabertos.camara.leg.br/api/v2/proposicoes',
       {
         query: {
-          idDeputadoAutor: id,
+          idDeputadoAutor: did,
           dataApresentacaoInicio: '2023-01-01',
           pagina,
           itens,
