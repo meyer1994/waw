@@ -17,3 +17,16 @@ export const deputadosSchema = z.object({
   ordem: z.enum(['asc', 'desc']).default('asc'),
   ordenarPor: z.enum(['id', 'idLegislatura', 'nome', 'siglaUF', 'siglaPartido']).default('nome')
 })
+
+// Senado — https://legis.senado.leg.br/dadosabertos
+export const senadoresSchema = z.object({
+  uf: emptyToUndefined(z.string().trim().length(2).toUpperCase()),
+  participacao: z.enum(['T', 'S']).optional(),
+  afastados: z.coerce.boolean().optional()
+})
+
+export const pronunciamentosSchema = z.object({
+  casa: emptyToUndefined(z.string().trim().length(2).toUpperCase()),
+  dataInicio: emptyToUndefined(z.iso.date()),
+  dataFim: emptyToUndefined(z.iso.date())
+})

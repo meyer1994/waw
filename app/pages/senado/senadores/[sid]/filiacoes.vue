@@ -1,0 +1,64 @@
+<script setup lang="ts">
+import type { TableColumn } from '@nuxt/ui'
+import type { Filiacao } from '~~/server/api/senadores/[sid]/filiacoes.get'
+
+const route = useRoute()
+const sid = route.params.sid as string
+
+const { data, status } = await useFetch(`/api/senadores/${sid}/filiacoes`)
+
+const columns: TableColumn<Filiacao>[] = [
+  { accessorKey: 'Partido.SiglaPartido', header: 'Partido' },
+  { accessorKey: 'Partido.NomePartido', header: 'Nome' },
+  { accessorKey: 'DataFiliacao', header: 'Filiação' },
+  { accessorKey: 'DataDesfiliacao', header: 'Desfiliação' }
+]
+</script>
+
+<template>
+  <div>
+    <h2 class="text-xl font-semibold mb-4">
+      Filiações Partidárias
+    </h2>
+
+    <UTable
+      :data="data?.dados ?? []"
+      :columns="columns"
+      :loading="status === 'pending'"
+    >
+      <template #DataFiliacao-cell="{ row }">
+        <NuxtTime
+          v-if="row.original.DataFiliacao"
+          :datetime="row.original.DataFiliacao"
+          locale="pt-BR"
+          year="numeric"
+          month="2-digit"
+          day="2-digit"
+        />
+        <span
+          v-else
+          class="text-muted"
+        >—</span>
+      </template>
+
+      <template #DataDesfiliacao-cell="{ row }">
+        <template v-if="row.original.DataDesfiliacao">
+          <NuxtTime
+            :datetime="row.original.DataDesfiliacao"
+            locale="pt-BR"
+            year="numeric"
+            month="2-digit"
+            day="2-digit"
+          />
+        </template>
+        <UBadge
+          v-else
+          color="success"
+          variant="subtle"
+        >
+          Atual
+        </UBadge>
+      </template>
+    </UTable>
+  </div>
+</template>

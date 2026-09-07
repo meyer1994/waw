@@ -10,6 +10,29 @@ Pattern for each resource:
 
 All items DONE — nothing pending. Kept for reference.
 
+## Senadores (Senado — base: https://legis.senado.leg.br/dadosabertos)
+
+Pages under `/senado/senadores` (not `/senado/senador`); API routes under `/api/senadores` (mirroring the no-prefix `server/api/deputados` pattern). Route param: `sid` (código parlamentar).
+
+- [x] `server/api/senadores/index.get.ts` — GET /senador/lista/atual (uf, participacao)
+- [x] `/senado/senadores` list page (filter: UF, participação; toggle afastados via `?afastados=true` on same endpoint)
+- [x] `server/api/senadores/[sid]/index.get.ts` — GET /senador/{codigo} (aggregate detail + mandatos)
+- [x] `/senado/senadores/[sid].vue` detail layout (UTabs + NuxtPage)
+- [x] `/senado/senadores/[sid]/index.vue` detail tab (header: foto, nome, partido–UF, situação)
+- [x] `server/api/senadores/[sid]/filiacoes.get.ts` + `/filiacoes.vue` — Filiações partidárias
+- [x] `server/api/senadores/[sid]/mandatos.get.ts` + `/mandatos.vue` — Mandatos parlamentares
+- [x] `server/api/senadores/[sid]/comissoes.get.ts` + `/comissoes.vue` — Comissões (membro)
+- [x] `server/api/senadores/[sid]/cargos.get.ts` + `/cargos.vue` — Cargos
+- [x] `server/api/senadores/[sid]/licencas.get.ts` + `/licencas.vue` — Licenças (filtros dataInicio/dataFim)
+- [x] `server/api/senadores/[sid]/discursos.get.ts` + `/discursos.vue` — Discursos (filtros casa/datas)
+- [x] `server/api/senadores/[sid]/apartes.get.ts` + `/apartes.vue` — Apartes
+- [x] `server/api/senadores/[sid]/profissao.get.ts` + `/profissao.vue` — Profissões
+- [x] `server/api/senadores/[sid]/historicoAcademico.get.ts` + `/historicoAcademico.vue` — Histórico acadêmico
+- [x] afastados: GET /senador/afastados (toggle on list page)
+- [x] Wrap-up: nav link (Câmara/Senado groups), lint clean, routes verified
+
+Note: deprecated upstream endpoints skipped — `/senador/{codigo}/votacoes`, `/relatorias`, `/liderancas`, `/autorias` (replacements live in `votacao/`, `processo/`, `composicao/`, to be built later).
+
 ## Partidos
 - [x] GET /api/partidos (list)
 - [x] /partidos list page

@@ -3,12 +3,25 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 
 const navItems: NavigationMenuItem[][] = [
   [
-    { label: 'Deputados', icon: 'i-lucide-users', to: '/camara/deputados' },
-    { label: 'Proposições', icon: 'i-lucide-file-text', to: '/camara/proposicoes' },
-    { label: 'Partidos', icon: 'i-lucide-flag', to: '/camara/partidos' },
-    { label: 'Votações', icon: 'i-lucide-vote', to: '/camara/votacoes' },
-    { label: 'Órgãos', icon: 'i-lucide-landmark', to: '/camara/orgaos' },
-    { label: 'Eventos', icon: 'i-lucide-calendar', to: '/camara/eventos' }
+    {
+      label: 'Câmara',
+      icon: 'i-lucide-landmark',
+      children: [
+        { label: 'Deputados', to: '/camara/deputados' },
+        { label: 'Proposições', to: '/camara/proposicoes' },
+        { label: 'Partidos', to: '/camara/partidos' },
+        { label: 'Votações', to: '/camara/votacoes' },
+        { label: 'Órgãos', to: '/camara/orgaos' },
+        { label: 'Eventos', to: '/camara/eventos' }
+      ]
+    },
+    {
+      label: 'Senado',
+      icon: 'i-lucide-scale',
+      children: [
+        { label: 'Senadores', to: '/senado/senadores' }
+      ]
+    }
   ]
 ]
 </script>
