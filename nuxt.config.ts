@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/ui', '@vueuse/nuxt'],
+  modules: ['@nuxt/eslint', '@nuxt/ui', '@vueuse/nuxt', 'nitro-cloudflare-dev'],
 
   devtools: {
     enabled: true
@@ -13,6 +13,15 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2026-06-30',
+
+  nitro: {
+    preset: 'cloudflare_module',
+
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true
+    }
+  },
 
   eslint: {
     config: {

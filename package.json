@@ -7,6 +7,9 @@
     "dev": "nuxt dev",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "clean": "rm -rf .output .wrangler .nuxt node_modules",
+    "cf:deploy": "wrangler --cwd .output deploy",
+    "cf:types": "wrangler types shared/wrangler.d.ts && eslint --fix shared/wrangler.d.ts",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck"
   },
@@ -25,8 +28,10 @@
   "devDependencies": {
     "@nuxt/eslint": "^1.17.0",
     "eslint": "^10.10.0",
+    "nitro-cloudflare-dev": "^0.2.2",
     "typescript": "^6.0.3",
-    "vue-tsc": "^3.3.11"
+    "vue-tsc": "^3.3.11",
+    "wrangler": "^4.129.0"
   },
   "packageManager": "pnpm@11.25.0"
 }
