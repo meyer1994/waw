@@ -36,7 +36,12 @@ const deputado = computed(() => data.value?.deputado)
         { label: 'Proposições', value: 'proposicoes' },
         { label: 'Discursos', value: 'discursos' },
         { label: 'Despesas', value: 'despesas' },
-        { label: 'Eventos', value: 'eventos' }
+        { label: 'Eventos', value: 'eventos' },
+        { label: 'Órgãos', value: 'orgaos' },
+        { label: 'Frentes', value: 'frentes' },
+        { label: 'Histórico', value: 'historico' },
+        { label: 'Ocupações', value: 'ocupacoes' },
+        { label: 'Profissões', value: 'profissoes' }
       ] satisfies TabsItem[])"
       @update:model-value="async e => await navigateTo(`/deputados/${did}/${e}`)"
     >

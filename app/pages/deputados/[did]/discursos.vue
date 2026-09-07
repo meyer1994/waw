@@ -1,10 +1,19 @@
 <script setup lang="ts">
+import type { TableColumn } from '@nuxt/ui'
+import type { Discurso } from '~~/server/api/deputados/[did]/discursos.get'
+
 const route = useRoute()
 const did = route.params.did as string
 
-const { data } = await useFetch(`/api/deputados/${did}/discursos`)
+const { data, status } = await useFetch(`/api/deputados/${did}/discursos`)
 
-useHead(() => ({ title: 'Discursos' }))
+const columns: TableColumn<Discurso>[] = [
+  { id: 'data', header: 'Data' },
+  { accessorKey: 'tipoDiscurso', header: 'Tipo' },
+  { id: 'fase', header: 'Fase' },
+  { id: 'sumario', header: 'Sumário' },
+  { id: 'midia', header: '' }
+]
 </script>
 
 <template>
@@ -13,83 +22,74 @@ useHead(() => ({ title: 'Discursos' }))
       Discursos
     </h2>
 
-    <p
-      v-if="data?.dados.length === 0"
-      class="text-muted"
+    <UTable
+      :data="data?.dados ?? []"
+      :columns="columns"
+      :loading="status === 'pending'"
     >
-      Nenhum discurso registrado.
-    </p>
+      <template #data-cell="{ row }">
+        <NuxtTime
+          v-if="row.original.dataHoraInicio"
+          :datetime="row.original.dataHoraInicio"
+          locale="pt-BR"
+          year="numeric"
+          month="2-digit"
+          day="2-digit"
+          hour="2-digit"
+          minute="2-digit"
+        />
+        <span
+          v-else
+          class="text-muted"
+        >—</span>
+      </template>
 
-    <ul
-      v-else
-      class="space-y-4"
-    >
-      <li
-        v-for="discurso in data?.dados ?? []"
-        :key="discurso.dataHoraInicio"
-        class="border rounded-lg p-4"
-      >
-        <div class="flex items-start justify-between gap-4">
-          <div>
-            <p class="font-medium">
-              <NuxtTime
-                v-if="discurso.dataHoraInicio"
-                :datetime="discurso.dataHoraInicio"
-                locale="pt-BR"
-                year="numeric"
-                month="2-digit"
-                day="2-digit"
-                hour="2-digit"
-                minute="2-digit"
-              />
-              <span v-else>—</span>
-              • {{ discurso.tipoDiscurso ?? 'Discurso' }}
-            </p>
-            <p
-              v-if="discurso.faseEvento?.titulo"
-              class="text-muted text-sm mt-1"
-            >
-              {{ discurso.faseEvento.titulo }}
-            </p>
-            <p class="text-sm mt-2 line-clamp-2">
-              {{ discurso.sumario ?? discurso.keywords }}
-            </p>
-          </div>
+      <template #tipoDiscurso-cell="{ row }">
+        <span class="text-sm">{{ row.original.tipoDiscurso ?? 'Discurso' }}</span>
+      </template>
 
-          <div class="flex gap-2 shrink-0">
-            <UButton
-              v-if="discurso.urlVideo"
-              :to="discurso.urlVideo"
-              target="_blank"
-              icon="i-lucide-video"
-              color="neutral"
-              variant="ghost"
-              size="xs"
-              aria-label="Ver vídeo"
-            />
-            <UButton
-              v-if="discurso.urlAudio"
-              :to="discurso.urlAudio"
-              target="_blank"
-              icon="i-lucide-audio-lines"
-              color="neutral"
-              variant="ghost"
-              size="xs"
-              aria-label="Ouvir áudio"
-            />
-            <UButton
-              v-if="discurso.urlTexto"
-              :to="discurso.urlTexto"
-              target="_blank"
-              icon="i-lucide-file-text"
-              color="neutral"
-              variant="ghost"
-              size="xs"
-              aria-label="Ler texto"
-            />
-          </div>
+      <template #fase-cell="{ row }">
+        <span class="text-muted text-sm">{{ row.original.faseEvento?.titulo ?? '—' }}</span>
+      </template>
+
+      <template #sumario-cell="{ row }">
+        <span class="text-sm line-clamp-2">{{ row.original.sumario ?? row.original.keywords }}</span>
+      </template>
+
+      <template #midia-cell="{ row }">
+        <div class="flex gap-1">
+          <UButton
+            v-if="row.original.urlVideo"
+            :to="row.original.urlVideo"
+            target="_blank"
+            icon="i-lucide-video"
+            color="neutral"
+            variant="ghost"
+            size="xs"
+            aria-label="Ver vídeo"
+          />
+          <UButton
+            v-if="row.original.urlAudio"
+            :to="row.original.urlAudio"
+            target="_blank"
+            icon="i-lucide-audio-lines"
+            color="neutral"
+            variant="ghost"
+            size="xs"
+            aria-label="Ouvir áudio"
+          />
+          <UButton
+            v-if="row.original.urlTexto"
+            :to="row.original.urlTexto"
+            target="_blank"
+            icon="i-lucide-file-text"
+            color="neutral"
+            variant="ghost"
+            size="xs"
+            aria-label="Ler texto"
+          />
         </div>
-      </li>
-    </ul>
+      </template>
+    </UTable>
   </div>
 </template>
