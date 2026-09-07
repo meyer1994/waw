@@ -17,8 +17,8 @@ const active = computed(() => {
 
 const onChange = (value: string | number) => {
   if (value === 'proposicoes')
-    return navigateTo(`/deputados/${props.did}`)
-  return navigateTo(`/deputados/${props.did}/${value}`)
+    return navigateTo(`/camara/deputados/${props.did}`)
+  return navigateTo(`/camara/deputados/${props.did}/${value}`)
 }
 </script>
 
