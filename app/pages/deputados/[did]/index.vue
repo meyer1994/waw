@@ -61,6 +61,8 @@ useHead(() => ({ title: deputado.value?.ultimoStatus.nome ?? 'Deputado' }))
         </div>
       </div>
 
+      <DeputadoNav :did="did" />
+
       <h2 class="text-xl font-semibold mb-4">
         Proposições
       </h2>

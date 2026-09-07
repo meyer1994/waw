@@ -31,3 +31,31 @@ export const proposicoesSchema = z.object({
   ordem: z.enum(['asc', 'desc']).default('desc'),
   ordenarPor: z.enum(['id', 'codTipo', 'siglaTipo', 'numero', 'ano']).default('id')
 })
+
+export const despesasSchema = z.object({
+  ano: z.coerce.number().int().min(1990).optional(),
+  mes: z.coerce.number().int().min(1).max(12).optional(),
+  cnpjCpfFornecedor: emptyToUndefined(z.string().trim().min(1)),
+  pagina: z.coerce.number().int().min(1).default(1),
+  itens: z.coerce.number().int().min(1).max(100).default(15),
+  ordem: z.enum(['asc', 'desc']).default('desc'),
+  ordenarPor: z.string().trim().min(1).default('ano')
+})
+
+export const eventosSchema = z.object({
+  dataInicio: z.iso.date().optional(),
+  dataFim: z.iso.date().optional(),
+  pagina: z.coerce.number().int().min(1).default(1),
+  itens: z.coerce.number().int().min(1).max(100).default(15),
+  ordem: z.enum(['asc', 'desc']).default('desc'),
+  ordenarPor: z.string().trim().min(1).default('dataHoraInicio')
+})
+
+export const discursosSchema = z.object({
+  dataInicio: z.iso.date().optional(),
+  dataFim: z.iso.date().optional(),
+  pagina: z.coerce.number().int().min(1).default(1),
+  itens: z.coerce.number().int().min(1).max(100).default(15),
+  ordem: z.enum(['asc', 'desc']).default('desc'),
+  ordenarPor: z.string().trim().min(1).default('dataHoraInicio')
+})
