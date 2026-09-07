@@ -1,40 +1,38 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Proposicao } from '~~/server/api/deputados/[did]/index.get'
+import type { Proposicao } from '~~/server/api/proposicoes/index.get'
 
-const route = useRoute()
-const did = route.params.did as string
-
-const { data, status } = await useFetch(`/api/deputados/${did}`)
-const proposicoes = computed(() => data.value?.proposicoes)
+const { data, status } = await useFetch('/api/proposicoes')
 
 const columns: TableColumn<Proposicao>[] = [
   { id: 'proposicao', header: 'Proposição' },
-  { accessorKey: 'dataApresentacao', header: 'Apresentação' },
+  { id: 'data', header: 'Apresentação' },
   { id: 'ementa', header: 'Ementa' }
 ]
+
+useHead(() => ({ title: 'Proposições' }))
 </script>
 
 <template>
   <div>
-    <h2 class="text-xl font-semibold mb-4">
+    <h1 class="text-2xl font-bold mb-4">
       Proposições
-    </h2>
+    </h1>
 
     <UTable
-      :data="proposicoes?.dados ?? []"
+      :data="data?.dados ?? []"
       :columns="columns"
       :loading="status === 'pending'"
     >
       <template #proposicao-cell="{ row }">
         <NuxtLink :to="`/proposicoes/${row.original.id}`">
-          <span class="text-primary hover:underline">
+          <span class="text-primary hover:underline font-medium">
             {{ row.original.siglaTipo }} {{ row.original.numero }}/{{ row.original.ano }}
           </span>
         </NuxtLink>
       </template>
 
-      <template #dataApresentacao-cell="{ row }">
+      <template #data-cell="{ row }">
         <NuxtTime
           v-if="row.original.dataApresentacao"
           :datetime="row.original.dataApresentacao.slice(0, 10)"
@@ -50,9 +48,7 @@ const columns: TableColumn<Proposicao>[] = [
       </template>
 
       <template #ementa-cell="{ row }">
-        <span class="text-muted text-sm line-clamp-2">
-          {{ row.original.ementa }}
-        </span>
+        <span class="text-muted text-sm line-clamp-2">{{ row.original.ementa }}</span>
       </template>
     </UTable>
   </div>

@@ -41,7 +41,8 @@ const deputado = computed(() => data.value?.deputado)
         { label: 'Frentes', value: 'frentes' },
         { label: 'Histórico', value: 'historico' },
         { label: 'Ocupações', value: 'ocupacoes' },
-        { label: 'Profissões', value: 'profissoes' }
+        { label: 'Profissões', value: 'profissoes' },
+        { label: 'Mandatos Externos', value: 'mandatosExternos' }
       ] satisfies TabsItem[])"
       @update:model-value="async e => await navigateTo(`/deputados/${did}/${e}`)"
     >
