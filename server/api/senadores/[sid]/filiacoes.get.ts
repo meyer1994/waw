@@ -11,10 +11,10 @@ export type Filiacao = {
 export default defineEventHandler(async (event): Promise<{ dados: Filiacao[] }> => {
   const sid = getRouterParam(event, 'sid')
 
-  const res = await $fetch<{ FiliacaoParlamentar: { Parlamentar: { Filiacoes?: { Filiacao?: Filiacao | Filiacao[] } } } }>(
-    `https://legis.senado.leg.br/dadosabertos/senador/${sid}/filiacoes.json`,
-    { headers: { Accept: 'application/json' } }
+  const dados = await senadoClient.list<Filiacao>(
+    `senador/${sid}/filiacoes`,
+    ['FiliacaoParlamentar', 'Parlamentar', 'Filiacoes', 'Filiacao']
   )
 
-  return { dados: toArray(res.FiliacaoParlamentar?.Parlamentar?.Filiacoes?.Filiacao) }
+  return { dados }
 })

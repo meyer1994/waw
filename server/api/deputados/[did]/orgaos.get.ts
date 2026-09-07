@@ -13,7 +13,5 @@ export type Orgao = {
 export default defineEventHandler(async (event): Promise<{ dados: Orgao[] }> => {
   const did = getRouterParam(event, 'did')
 
-  return await $fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${did}/orgaos`, {
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get<{ dados: Orgao[] }>(`deputados/${did}/orgaos`)
 })

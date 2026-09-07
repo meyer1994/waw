@@ -12,8 +12,9 @@ export type Proposicao = {
 type Link = { href: string, rel: string, method?: string }
 
 export default defineEventHandler(async (): Promise<{ dados: Proposicao[], links: Link[] }> => {
-  return await $fetch('https://dadosabertos.camara.leg.br/api/v2/proposicoes', {
-    query: { itens: 10, ordem: 'desc', ordenarPor: 'id' },
-    headers: { Accept: 'application/json' }
+  return await camaraClient.get<{ dados: Proposicao[], links: Link[] }>('proposicoes', {
+    itens: 10,
+    ordem: 'desc',
+    ordenarPor: 'id'
   })
 })

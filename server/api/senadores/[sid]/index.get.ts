@@ -55,16 +55,14 @@ export type SenadorDetalhe = {
 
 export default defineEventHandler(async (event): Promise<{ senador: SenadorDetalhe, mandatos: Mandato[] }> => {
   const sid = getRouterParam(event, 'sid')
-  const headers = { Accept: 'application/json' }
-  const base = 'https://legis.senado.leg.br/dadosabertos'
 
-  const [detRes, manRes] = await Promise.all([
-    $fetch<{ DetalheParlamentar: { Parlamentar: SenadorDetalhe } }>(`${base}/senador/${sid}.json`, { headers }),
-    $fetch<{ MandatoParlamentar: { Parlamentar: { Mandatos?: { Mandato?: Mandato | Mandato[] } } } }>(`${base}/senador/${sid}/mandatos.json`, { headers })
+  const [detRes, mandatos] = await Promise.all([
+    senadoClient.get<{ DetalheParlamentar: { Parlamentar: SenadorDetalhe } }>(`senador/${sid}`),
+    senadoClient.list<Mandato>(`senador/${sid}/mandatos`, ['MandatoParlamentar', 'Parlamentar', 'Mandatos', 'Mandato'])
   ])
 
   return {
     senador: detRes.DetalheParlamentar.Parlamentar,
-    mandatos: toArray(manRes.MandatoParlamentar?.Parlamentar?.Mandatos?.Mandato)
+    mandatos
   }
 })

@@ -6,8 +6,5 @@ export type Legislatura = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Legislatura[] }> => {
-  return await $fetch('https://dadosabertos.camara.leg.br/api/v2/legislaturas', {
-    query: { ordem: 'desc', ordenarPor: 'id' },
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get<{ dados: Legislatura[] }>('legislaturas', { ordem: 'desc', ordenarPor: 'id' })
 })

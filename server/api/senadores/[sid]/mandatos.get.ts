@@ -3,10 +3,10 @@ import type { Mandato } from './index.get'
 export default defineEventHandler(async (event): Promise<{ dados: Mandato[] }> => {
   const sid = getRouterParam(event, 'sid')
 
-  const res = await $fetch<{ MandatoParlamentar: { Parlamentar: { Mandatos?: { Mandato?: Mandato | Mandato[] } } } }>(
-    `https://legis.senado.leg.br/dadosabertos/senador/${sid}/mandatos.json`,
-    { headers: { Accept: 'application/json' } }
+  const dados = await senadoClient.list<Mandato>(
+    `senador/${sid}/mandatos`,
+    ['MandatoParlamentar', 'Parlamentar', 'Mandatos', 'Mandato']
   )
 
-  return { dados: toArray(res.MandatoParlamentar?.Parlamentar?.Mandatos?.Mandato) }
+  return { dados }
 })

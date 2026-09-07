@@ -21,13 +21,13 @@ type RawCargo = {
 export default defineEventHandler(async (event): Promise<{ dados: Cargo[] }> => {
   const sid = getRouterParam(event, 'sid')
 
-  const res = await $fetch<{ CargoParlamentar: { Parlamentar: { Cargos?: { Cargo?: RawCargo | RawCargo[] } } } }>(
-    `https://legis.senado.leg.br/dadosabertos/senador/${sid}/cargos.json`,
-    { headers: { Accept: 'application/json' } }
+  const cargos = await senadoClient.list<RawCargo>(
+    `senador/${sid}/cargos`,
+    ['CargoParlamentar', 'Parlamentar', 'Cargos', 'Cargo']
   )
 
   return {
-    dados: toArray(res.CargoParlamentar?.Parlamentar?.Cargos?.Cargo).map((c): Cargo => ({
+    dados: cargos.map((c): Cargo => ({
       CodigoComissao: c.IdentificacaoComissao?.CodigoComissao ?? '',
       SiglaComissao: c.IdentificacaoComissao?.SiglaComissao ?? '',
       NomeComissao: c.IdentificacaoComissao?.NomeComissao ?? '',

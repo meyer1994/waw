@@ -7,8 +7,5 @@ export type Bloco = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Bloco[] }> => {
-  return await $fetch('https://dadosabertos.camara.leg.br/api/v2/blocos', {
-    query: { ordem: 'desc', ordenarPor: 'id' },
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get<{ dados: Bloco[] }>('blocos', { ordem: 'desc', ordenarPor: 'id' })
 })

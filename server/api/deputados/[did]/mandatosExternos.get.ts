@@ -11,7 +11,5 @@ export type MandatoExterno = {
 export default defineEventHandler(async (event): Promise<{ dados: MandatoExterno[] }> => {
   const did = getRouterParam(event, 'did')
 
-  return await $fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${did}/mandatosExternos`, {
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get<{ dados: MandatoExterno[] }>(`deputados/${did}/mandatosExternos`)
 })

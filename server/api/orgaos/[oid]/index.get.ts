@@ -13,10 +13,7 @@ export type OrgaoDetalhe = Orgao & {
 export default defineEventHandler(async (event): Promise<OrgaoDetalhe> => {
   const oid = getRouterParam(event, 'oid')
 
-  const response = await $fetch<{ dados: OrgaoDetalhe }>(
-    `https://dadosabertos.camara.leg.br/api/v2/orgaos/${oid}`,
-    { headers: { Accept: 'application/json' } }
-  )
+  const response = await camaraClient.get<{ dados: OrgaoDetalhe }>(`orgaos/${oid}`)
 
   return response.dados
 })

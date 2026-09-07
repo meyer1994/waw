@@ -15,8 +15,9 @@ export type Discurso = {
 export default defineEventHandler(async (event): Promise<{ dados: Discurso[] }> => {
   const did = getRouterParam(event, 'did')
 
-  return await $fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${did}/discursos`, {
-    query: { itens: 10, ordem: 'desc', ordenarPor: 'dataHoraInicio' },
-    headers: { Accept: 'application/json' }
+  return await camaraClient.get<{ dados: Discurso[] }>(`deputados/${did}/discursos`, {
+    itens: 10,
+    ordem: 'desc',
+    ordenarPor: 'dataHoraInicio'
   })
 })

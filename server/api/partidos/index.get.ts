@@ -6,8 +6,5 @@ export type Partido = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Partido[] }> => {
-  return await $fetch('https://dadosabertos.camara.leg.br/api/v2/partidos', {
-    query: { ordem: 'desc', ordenarPor: 'id' },
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get<{ dados: Partido[] }>('partidos', { ordem: 'desc', ordenarPor: 'id' })
 })

@@ -37,16 +37,13 @@ export default defineEventHandler(async (event): Promise<{
   const did = getRouterParam(event, 'did')
   const pid = getRouterParam(event, 'pid')
 
-  const base = 'https://dadosabertos.camara.leg.br/api/v2'
-  const headers = { Accept: 'application/json' }
-
   const [propRes, votRes] = await Promise.all([
-    $fetch<{ dados: ProposicaoDetalhe }>(`${base}/proposicoes/${pid}`, { headers }),
-    $fetch<{ dados: Votacao[], links: Link[] }>(`${base}/proposicoes/${pid}/votacoes`, { headers })
+    camaraClient.get<{ dados: ProposicaoDetalhe }>(`proposicoes/${pid}`),
+    camaraClient.get<{ dados: Votacao[], links: Link[] }>(`proposicoes/${pid}/votacoes`)
   ])
 
   const votacoes = await Promise.all(votRes.dados.map(async (votacao) => {
-    const votos = await $fetch<{ dados: Voto[] }>(`${base}/votacoes/${votacao.id}/votos`, { headers })
+    const votos = await camaraClient.get<{ dados: Voto[] }>(`votacoes/${votacao.id}/votos`)
     const voto = votos.dados.find(v => v.deputado_.id === Number(did))
 
     return { ...votacao, voto: voto?.tipoVoto ?? null }

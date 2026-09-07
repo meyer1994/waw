@@ -13,8 +13,5 @@ export type Grupo = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Grupo[] }> => {
-  return await $fetch('https://dadosabertos.camara.leg.br/api/v2/grupos', {
-    query: { ordem: 'desc', ordenarPor: 'id' },
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get<{ dados: Grupo[] }>('grupos', { ordem: 'desc', ordenarPor: 'id' })
 })

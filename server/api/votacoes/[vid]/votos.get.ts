@@ -14,7 +14,5 @@ export type Voto = {
 export default defineEventHandler(async (event): Promise<{ dados: Voto[] }> => {
   const vid = getRouterParam(event, 'vid')
 
-  return await $fetch(`https://dadosabertos.camara.leg.br/api/v2/votacoes/${vid}/votos`, {
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get<{ dados: Voto[] }>(`votacoes/${vid}/votos`)
 })

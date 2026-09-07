@@ -3,10 +3,10 @@ import type { Pronunciamento } from './discursos.get'
 export default defineEventHandler(async (event): Promise<{ dados: Pronunciamento[] }> => {
   const sid = getRouterParam(event, 'sid')
 
-  const res = await $fetch<{ ApartesParlamentar: { Parlamentar: { Apartes?: { Aparte?: Pronunciamento | Pronunciamento[] } } } }>(
-    `https://legis.senado.leg.br/dadosabertos/senador/${sid}/apartes.json`,
-    { headers: { Accept: 'application/json' } }
+  const dados = await senadoClient.list<Pronunciamento>(
+    `senador/${sid}/apartes`,
+    ['ApartesParlamentar', 'Parlamentar', 'Apartes', 'Aparte']
   )
 
-  return { dados: toArray(res.ApartesParlamentar?.Parlamentar?.Apartes?.Aparte) }
+  return { dados }
 })

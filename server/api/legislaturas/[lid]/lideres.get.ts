@@ -17,7 +17,5 @@ export type LiderLegislatura = {
 export default defineEventHandler(async (event): Promise<{ dados: LiderLegislatura[] }> => {
   const lid = getRouterParam(event, 'lid')
 
-  return await $fetch(`https://dadosabertos.camara.leg.br/api/v2/legislaturas/${lid}/lideres`, {
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get<{ dados: LiderLegislatura[] }>(`legislaturas/${lid}/lideres`)
 })

@@ -14,7 +14,5 @@ export type Pauta = {
 export default defineEventHandler(async (event): Promise<{ dados: Pauta[] }> => {
   const eid = getRouterParam(event, 'eid')
 
-  return await $fetch(`https://dadosabertos.camara.leg.br/api/v2/eventos/${eid}/pauta`, {
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get<{ dados: Pauta[] }>(`eventos/${eid}/pauta`)
 })

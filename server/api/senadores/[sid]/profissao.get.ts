@@ -3,14 +3,14 @@ export type Profissao = {
   IndicadorAtividadePrincipal: string | null
 }
 
-// Note: upstream returns the HistoricoAcademico envelope for this service (quirk of the API)
 export default defineEventHandler(async (event): Promise<{ dados: Profissao[] }> => {
   const sid = getRouterParam(event, 'sid')
 
-  const res = await $fetch<{ HistoricoAcademicoParlamentar: { Parlamentar: { Profissoes?: { Profissao?: Profissao | Profissao[] } } } }>(
-    `https://legis.senado.leg.br/dadosabertos/senador/${sid}/profissao.json`,
-    { headers: { Accept: 'application/json' } }
+  // Note: upstream returns the HistoricoAcademico envelope for this service (quirk of the API)
+  const dados = await senadoClient.list<Profissao>(
+    `senador/${sid}/profissao`,
+    ['HistoricoAcademicoParlamentar', 'Parlamentar', 'Profissoes', 'Profissao']
   )
 
-  return { dados: toArray(res.HistoricoAcademicoParlamentar?.Parlamentar?.Profissoes?.Profissao) }
+  return { dados }
 })

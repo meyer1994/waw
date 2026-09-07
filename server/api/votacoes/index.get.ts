@@ -13,8 +13,9 @@ export type Votacao = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Votacao[] }> => {
-  return await $fetch('https://dadosabertos.camara.leg.br/api/v2/votacoes', {
-    query: { itens: 10, ordem: 'desc', ordenarPor: 'dataHoraRegistro' },
-    headers: { Accept: 'application/json' }
+  return await camaraClient.get<{ dados: Votacao[] }>('votacoes', {
+    itens: 10,
+    ordem: 'desc',
+    ordenarPor: 'dataHoraRegistro'
   })
 })

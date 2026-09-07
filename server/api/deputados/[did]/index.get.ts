@@ -47,23 +47,14 @@ export default defineEventHandler(async (event): Promise<{
   const did = getRouterParam(event, 'did')
 
   const [deputadoRes, proposicoesRes] = await Promise.all([
-    $fetch<{ dados: DeputadoDetalhado }>(
-      `https://dadosabertos.camara.leg.br/api/v2/deputados/${did}`,
-      { headers: { Accept: 'application/json' } }
-    ),
-    $fetch<{ dados: Proposicao[], links: Link[] }>(
-      'https://dadosabertos.camara.leg.br/api/v2/proposicoes',
-      {
-        query: {
-          idDeputadoAutor: did,
-          dataApresentacaoInicio: '2023-01-01',
-          itens: 10,
-          ordem: 'desc',
-          ordenarPor: 'id'
-        },
-        headers: { Accept: 'application/json' }
-      }
-    )
+    camaraClient.get<{ dados: DeputadoDetalhado }>(`deputados/${did}`),
+    camaraClient.get<{ dados: Proposicao[], links: Link[] }>('proposicoes', {
+      idDeputadoAutor: did,
+      dataApresentacaoInicio: '2023-01-01',
+      itens: 10,
+      ordem: 'desc',
+      ordenarPor: 'id'
+    })
   ])
 
   return {

@@ -7,10 +7,10 @@ export type Curso = {
 export default defineEventHandler(async (event): Promise<{ dados: Curso[] }> => {
   const sid = getRouterParam(event, 'sid')
 
-  const res = await $fetch<{ HistoricoAcademicoParlamentar: { Parlamentar: { HistoricoAcademico?: { Curso?: Curso | Curso[] } } } }>(
-    `https://legis.senado.leg.br/dadosabertos/senador/${sid}/historicoAcademico.json`,
-    { headers: { Accept: 'application/json' } }
+  const dados = await senadoClient.list<Curso>(
+    `senador/${sid}/historicoAcademico`,
+    ['HistoricoAcademicoParlamentar', 'Parlamentar', 'HistoricoAcademico', 'Curso']
   )
 
-  return { dados: toArray(res.HistoricoAcademicoParlamentar?.Parlamentar?.HistoricoAcademico?.Curso) }
+  return { dados }
 })

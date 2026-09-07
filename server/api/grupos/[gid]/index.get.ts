@@ -8,10 +8,7 @@ export type GrupoDetalhe = Grupo & {
 export default defineEventHandler(async (event): Promise<GrupoDetalhe> => {
   const gid = getRouterParam(event, 'gid')
 
-  const response = await $fetch<{ dados: GrupoDetalhe }>(
-    `https://dadosabertos.camara.leg.br/api/v2/grupos/${gid}`,
-    { headers: { Accept: 'application/json' } }
-  )
+  const response = await camaraClient.get<{ dados: GrupoDetalhe }>(`grupos/${gid}`)
 
   return response.dados
 })

@@ -8,7 +8,5 @@ export type Frente = {
 export default defineEventHandler(async (event): Promise<{ dados: Frente[] }> => {
   const did = getRouterParam(event, 'did')
 
-  return await $fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${did}/frentes`, {
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get<{ dados: Frente[] }>(`deputados/${did}/frentes`)
 })

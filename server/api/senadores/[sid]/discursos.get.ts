@@ -20,15 +20,15 @@ export default defineEventHandler(async (event): Promise<{ dados: Pronunciamento
   const query = await getValidatedQuery(event, data => pronunciamentosSchema.parse(data))
 
   // Senado expects AAAAMMDD, transform YYYY-MM-DD
-  const params: Record<string, string> = {}
-  if (query.casa) params.casa = query.casa
-  if (query.dataInicio) params.dataInicio = query.dataInicio.replaceAll('-', '')
-  if (query.dataFim) params.dataFim = query.dataFim.replaceAll('-', '')
-
-  const res = await $fetch<{ DiscursosParlamentar: { Parlamentar: { Pronunciamentos?: { Pronunciamento?: Pronunciamento | Pronunciamento[] } } } }>(
-    `https://legis.senado.leg.br/dadosabertos/senador/${sid}/discursos.json`,
-    { query: params, headers: { Accept: 'application/json' } }
+  const dados = await senadoClient.list<Pronunciamento>(
+    `senador/${sid}/discursos`,
+    ['DiscursosParlamentar', 'Parlamentar', 'Pronunciamentos', 'Pronunciamento'],
+    {
+      casa: query.casa,
+      dataInicio: query.dataInicio?.replaceAll('-', ''),
+      dataFim: query.dataFim?.replaceAll('-', '')
+    }
   )
 
-  return { dados: toArray(res.DiscursosParlamentar?.Parlamentar?.Pronunciamentos?.Pronunciamento) }
+  return { dados }
 })

@@ -7,10 +7,7 @@ export type EventoDetalhe = Evento & {
 export default defineEventHandler(async (event): Promise<EventoDetalhe> => {
   const eid = getRouterParam(event, 'eid')
 
-  const response = await $fetch<{ dados: EventoDetalhe }>(
-    `https://dadosabertos.camara.leg.br/api/v2/eventos/${eid}`,
-    { headers: { Accept: 'application/json' } }
-  )
+  const response = await camaraClient.get<{ dados: EventoDetalhe }>(`eventos/${eid}`)
 
   return response.dados
 })

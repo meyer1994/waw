@@ -9,7 +9,5 @@ export type Orientacao = {
 export default defineEventHandler(async (event): Promise<{ dados: Orientacao[] }> => {
   const vid = getRouterParam(event, 'vid')
 
-  return await $fetch(`https://dadosabertos.camara.leg.br/api/v2/votacoes/${vid}/orientacoes`, {
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get<{ dados: Orientacao[] }>(`votacoes/${vid}/orientacoes`)
 })

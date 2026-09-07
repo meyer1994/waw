@@ -11,10 +11,10 @@ export type Licenca = {
 export default defineEventHandler(async (event): Promise<{ dados: Licenca[] }> => {
   const sid = getRouterParam(event, 'sid')
 
-  const res = await $fetch<{ LicencaParlamentar: { Parlamentar: { Licencas?: { Licenca?: Licenca | Licenca[] } } } }>(
-    `https://legis.senado.leg.br/dadosabertos/senador/${sid}/licencas.json`,
-    { headers: { Accept: 'application/json' } }
+  const dados = await senadoClient.list<Licenca>(
+    `senador/${sid}/licencas`,
+    ['LicencaParlamentar', 'Parlamentar', 'Licencas', 'Licenca']
   )
 
-  return { dados: toArray(res.LicencaParlamentar?.Parlamentar?.Licencas?.Licenca) }
+  return { dados }
 })

@@ -14,7 +14,5 @@ export type HistoricoGrupo = {
 export default defineEventHandler(async (event): Promise<{ dados: HistoricoGrupo[] }> => {
   const gid = getRouterParam(event, 'gid')
 
-  return await $fetch(`https://dadosabertos.camara.leg.br/api/v2/grupos/${gid}/historico`, {
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get<{ dados: HistoricoGrupo[] }>(`grupos/${gid}/historico`)
 })

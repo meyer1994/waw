@@ -28,10 +28,7 @@ export type ProposicaoDetalhe = {
 export default defineEventHandler(async (event): Promise<ProposicaoDetalhe> => {
   const pid = getRouterParam(event, 'pid')
 
-  const response = await $fetch<{ dados: ProposicaoDetalhe }>(
-    `https://dadosabertos.camara.leg.br/api/v2/proposicoes/${pid}`,
-    { headers: { Accept: 'application/json' } }
-  )
+  const response = await camaraClient.get<{ dados: ProposicaoDetalhe }>(`proposicoes/${pid}`)
 
   return response.dados
 })

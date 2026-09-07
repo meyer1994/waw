@@ -20,28 +20,20 @@ type RawParlamentar = {
   Mandato: { DescricaoParticipacao: string | null }
 }
 
-type Envelope = {
-  ListaParlamentarEmExercicio?: { Parlamentares?: { Parlamentar?: RawParlamentar | RawParlamentar[] } }
-  AfastamentoAtual?: { Parlamentares?: { Parlamentar?: RawParlamentar | RawParlamentar[] } }
-}
-
 export default defineEventHandler(async (event): Promise<{ dados: Senador[] }> => {
   const query = await getValidatedQuery(event, data => senadoresSchema.parse(data))
 
-  const path = query.afastados ? 'afastados' : 'lista/atual'
-  const url = new URL(`https://legis.senado.leg.br/dadosabertos/senador/${path}.json`)
-  for (const [key, value] of Object.entries(query))
-    if (value !== undefined && key !== 'afastados') url.searchParams.set(key, String(value))
+  const [path, keys]: [string, string[]] = query.afastados
+    ? ['senador/afastados', ['AfastamentoAtual', 'Parlamentares', 'Parlamentar']]
+    : ['senador/lista/atual', ['ListaParlamentarEmExercicio', 'Parlamentares', 'Parlamentar']]
 
-  const res = await $fetch<Envelope>(url.toString(), {
-    headers: { Accept: 'application/json' }
+  const parlamentares = await senadoClient.list<RawParlamentar>(path, keys, {
+    uf: query.uf,
+    participacao: query.participacao
   })
 
-  const raw = res.ListaParlamentarEmExercicio?.Parlamentares?.Parlamentar
-    ?? res.AfastamentoAtual?.Parlamentares?.Parlamentar
-
   return {
-    dados: toArray(raw).map(({ IdentificacaoParlamentar, Mandato }) => ({
+    dados: parlamentares.map(({ IdentificacaoParlamentar, Mandato }) => ({
       ...IdentificacaoParlamentar,
       DescricaoParticipacao: Mandato?.DescricaoParticipacao ?? null
     }))

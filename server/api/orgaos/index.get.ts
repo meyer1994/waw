@@ -11,8 +11,5 @@ export type Orgao = {
 }
 
 export default defineEventHandler(async (): Promise<{ dados: Orgao[] }> => {
-  return await $fetch('https://dadosabertos.camara.leg.br/api/v2/orgaos', {
-    query: { ordem: 'desc', ordenarPor: 'id' },
-    headers: { Accept: 'application/json' }
-  })
+  return await camaraClient.get('orgaos', { ordem: 'desc', ordenarPor: 'id' })
 })
