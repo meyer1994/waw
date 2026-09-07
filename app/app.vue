@@ -1,27 +1,26 @@
-<script setup>
-useHead({
-  meta: [
-    { name: 'viewport', content: 'width=device-width, initial-scale=1' }
-  ],
-  link: [
-    { rel: 'icon', href: '/favicon.ico' }
-  ],
-  htmlAttrs: {
-    lang: 'en'
-  }
-})
+<script setup lang="ts">
+import type { TableColumn } from '@nuxt/ui'
+import type { z } from 'zod'
+import { deputadosSchema } from '~~/shared/schemas'
+import type { Deputado } from '~~/server/api/deputados.get'
 
-const title = 'Nuxt Starter Template'
-const description = 'A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours.'
+const ufItems = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
 
-useSeoMeta({
-  title,
-  description,
-  ogTitle: title,
-  ogDescription: description,
-  ogImage: 'https://ui.nuxt.com/assets/templates/nuxt/starter-light.png',
-  twitterCard: 'summary_large_image'
-})
+type State = z.output<typeof deputadosSchema>
+const state = reactive<Partial<State>>({ pagina: 1, itens: 15 })
+
+const { data, status } = await useFetch('/api/deputados', { query: state })
+const hasNextPage = computed(() => data.value?.links.some(link => link.rel === 'next') ?? false)
+const hasPreviousPage = computed(() => data.value?.links.some(link => link.rel === 'previous') ?? false)
+
+const columns: TableColumn<Deputado>[] = [
+  { id: 'foto', header: '', meta: { class: { th: 'w-16' } } },
+  { accessorKey: 'nome', header: 'Nome' },
+  { accessorKey: 'siglaPartido', header: 'Partido' },
+  { accessorKey: 'siglaUf', header: 'UF' },
+  { accessorKey: 'idLegislatura', header: 'Legislatura' },
+  { accessorKey: 'email', header: 'Email' }
+]
 </script>
 
 <template>
@@ -32,10 +31,8 @@ useSeoMeta({
           to="/"
           class="focus-visible:outline-3 outline-primary/25 rounded-md p-1 -ms-1"
         >
-          <AppLogo class="w-auto h-6 shrink-0" />
+          <span class="font-bold">Deputados</span>
         </NuxtLink>
-
-        <TemplateMenu />
       </template>
 
       <template #right>
@@ -53,7 +50,82 @@ useSeoMeta({
     </UHeader>
 
     <UMain>
-      <NuxtPage />
+      <UContainer class="py-8">
+        <h1 class="text-2xl font-bold mb-4">
+          Deputados
+        </h1>
+
+        <!-- search form -->
+        <UForm
+          :state="state"
+          :schema="deputadosSchema"
+          :disabled="status === 'pending'"
+          class="flex gap-3 mb-4"
+        >
+          <UInput
+            v-model="state.nome"
+            icon="i-lucide-search"
+            placeholder="Buscar por nome..."
+            class="w-64"
+          />
+
+          <USelect
+            v-model="state.siglaUf"
+            :items="ufItems.map(uf => ({ label: uf || 'Todos os estados', value: uf }))"
+            class="w-48"
+          />
+        </UForm>
+
+        <!-- table -->
+        <UTable
+          :data="data?.dados ?? []"
+          :columns="columns"
+          :loading="status === 'pending'"
+        >
+          <template #foto-cell="{ row }">
+            <UAvatar
+              :src="row.original.urlFoto"
+              :alt="row.original.nome"
+              size="sm"
+            />
+          </template>
+
+          <template #email-cell="{ row }">
+            <ULink
+              v-if="row.original.email"
+              :to="`mailto:${row.original.email}`"
+              class="text-primary hover:underline"
+            >
+              {{ row.original.email }}
+            </ULink>
+            <span
+              v-else
+              class="text-muted"
+            >—</span>
+          </template>
+        </UTable>
+
+        <div class="flex justify-end gap-3 mt-4">
+          <UButton
+            icon="i-lucide-chevron-left"
+            color="neutral"
+            variant="outline"
+            :disabled="!hasPreviousPage"
+            @click="() => state.pagina = (state.pagina ?? 1) - 1"
+          >
+            Anterior
+          </UButton>
+          <UButton
+            trailing-icon="i-lucide-chevron-right"
+            color="neutral"
+            variant="outline"
+            :disabled="!hasNextPage"
+            @click="() => state.pagina = (state.pagina ?? 1) + 1"
+          >
+            Próxima
+          </UButton>
+        </div>
+      </UContainer>
     </UMain>
 
     <USeparator icon="i-simple-icons-nuxtdotjs" />

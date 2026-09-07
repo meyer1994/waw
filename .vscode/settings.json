@@ -1,0 +1,48 @@
+{
+  // Enable ESLint as the default formatter for vue, js/ts and json files
+  "[vue]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": true
+  },
+  // Let ESLint fix organize-imports (via eslint-plugin-import / perfectionist rules)
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "never"
+  },
+  // Run ESLint on the whole project (flat config support)
+  "eslint.useFlatConfig": true,
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "vue",
+    "json",
+    "jsonc"
+  ],
+  // Silence the built-in TS formatter to avoid conflicts
+  "typescript.format.enable": false,
+  "javascript.format.enable": false,
+  "json.format.enable": false
+}
