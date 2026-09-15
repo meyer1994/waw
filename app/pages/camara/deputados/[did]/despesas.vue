@@ -1,11 +1,21 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import type { Despesa } from '~~/server/api/deputados/[did]/despesas.get'
+import { MESES } from '~~/shared/constants'
 
 const route = useRoute()
 const did = route.params.did as string
 
-const { data, status } = await useFetch(`/api/deputados/${did}/despesas`)
+const ano = ref<string>()
+const mes = ref<string>()
+
+const { data, status } = await useFetch(`/api/deputados/${did}/despesas`, {
+  query: computed(() => ({ ano: ano.value, mes: mes.value }))
+})
+
+const anoItems = Array.from({ length: 10 }, (_, i) => ({ label: String(new Date().getFullYear() - i), value: String(new Date().getFullYear() - i) }))
+
+const mesItems = MESES.map((nome, i) => ({ label: nome, value: String(i + 1) }))
 
 const columns: TableColumn<Despesa>[] = [
   { id: 'data', header: 'Data' },
@@ -26,6 +36,28 @@ useHead(() => ({ title: 'Despesas' }))
     <h2 class="text-xl font-semibold mb-4">
       Despesas
     </h2>
+
+    <UForm
+      :disabled="status === 'pending'"
+      class="flex gap-3 mb-4"
+    >
+      <USelectMenu
+        v-model="ano"
+        value-key="value"
+        :items="anoItems"
+        clear
+        placeholder="Todos os anos"
+      />
+
+      <USelectMenu
+        v-model="mes"
+        value-key="value"
+        :items="mesItems"
+        clear
+        searchable
+        placeholder="Todos os meses"
+      />
+    </UForm>
 
     <UTable
       :data="data?.dados ?? []"

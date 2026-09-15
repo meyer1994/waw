@@ -2,7 +2,12 @@
 import type { TableColumn } from '@nuxt/ui'
 import type { Votacao } from '~~/server/api/votacoes/index.get'
 
-const { data, status } = await useFetch('/api/votacoes')
+const dataInicio = ref('')
+const dataFim = ref('')
+
+const { data, status } = await useFetch('/api/votacoes', {
+  query: computed(() => ({ dataInicio: dataInicio.value || undefined, dataFim: dataFim.value || undefined }))
+})
 
 const columns: TableColumn<Votacao>[] = [
   { id: 'data', header: 'Data' },
@@ -19,6 +24,21 @@ useHead(() => ({ title: 'Votações' }))
     <h1 class="text-2xl font-bold mb-4">
       Votações
     </h1>
+
+    <UForm
+      :disabled="status === 'pending'"
+      class="flex gap-3 mb-4"
+    >
+      <UInput
+        v-model="dataInicio"
+        type="date"
+      />
+
+      <UInput
+        v-model="dataFim"
+        type="date"
+      />
+    </UForm>
 
     <UTable
       :data="data?.dados ?? []"

@@ -6,13 +6,13 @@ import type { Pronunciamento } from '~~/server/api/senadores/[sid]/discursos.get
 const route = useRoute()
 const sid = route.params.sid as string
 
-const casa = ref('todas')
+const casa = ref<string>()
 const dataInicio = ref('')
 const dataFim = ref('')
 
 const { data, status } = await useFetch(`/api/senadores/${sid}/discursos`, {
   query: computed(() => ({
-    casa: casa.value === 'todas' ? undefined : casa.value,
+    casa: casa.value,
     dataInicio: dataInicio.value || undefined,
     dataFim: dataFim.value || undefined
   }))
@@ -37,28 +37,27 @@ const columns: TableColumn<Pronunciamento>[] = [
       :disabled="status === 'pending'"
       class="flex gap-3 mb-4"
     >
-      <USelect
+      <USelectMenu
         v-model="casa"
+        value-key="value"
         :items="[
-          { label: 'Todas as casas', value: 'todas' },
           { label: 'Senado', value: 'SF' },
           { label: 'Câmara', value: 'CD' },
           { label: 'Congresso', value: 'CN' },
           { label: 'Presidência', value: 'PR' }
         ]"
-        class="w-48"
+        clear
+        placeholder="Todas as casas"
       />
 
       <UInput
         v-model="dataInicio"
         type="date"
-        class="w-44"
       />
 
       <UInput
         v-model="dataFim"
         type="date"
-        class="w-44"
       />
     </UForm>
 

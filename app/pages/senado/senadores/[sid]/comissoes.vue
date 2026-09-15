@@ -5,7 +5,11 @@ import type { ComissaoMembro } from '~~/server/api/senadores/[sid]/comissoes.get
 const route = useRoute()
 const sid = route.params.sid as string
 
-const { data, status } = await useFetch(`/api/senadores/${sid}/comissoes`)
+const somenteAtivos = ref(false)
+
+const { data, status } = await useFetch(`/api/senadores/${sid}/comissoes`, {
+  query: computed(() => ({ ativo: somenteAtivos.value || undefined }))
+})
 
 const columns: TableColumn<ComissaoMembro>[] = [
   { accessorKey: 'SiglaComissao', header: 'Sigla' },
@@ -21,6 +25,11 @@ const columns: TableColumn<ComissaoMembro>[] = [
     <h2 class="text-xl font-semibold mb-4">
       Comissões
     </h2>
+
+    <div class="flex items-center gap-2 mb-4">
+      <USwitch v-model="somenteAtivos" />
+      <span class="text-sm text-muted">Somente em exercício</span>
+    </div>
 
     <UTable
       :data="data?.dados ?? []"

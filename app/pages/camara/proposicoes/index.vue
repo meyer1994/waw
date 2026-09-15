@@ -1,8 +1,43 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import type { Proposicao } from '~~/server/api/proposicoes/index.get'
+import { COD_TEMA, SIGLA_TIPO } from '~~/shared/constants'
 
-const { data, status } = await useFetch('/api/proposicoes')
+const siglaTipo = ref('all')
+const numero = ref('')
+const ano = ref('all')
+const keywords = ref('')
+const codTema = ref('all')
+const dataApresentacaoInicio = ref('')
+const dataApresentacaoFim = ref('')
+
+const debKeywords = debouncedRef(keywords, 500)
+const { data, status } = await useFetch('/api/proposicoes', {
+  query: computed(() => ({
+    siglaTipo: siglaTipo.value === 'all' ? undefined : siglaTipo.value,
+    numero: numero.value || undefined,
+    ano: ano.value === 'all' ? undefined : ano.value,
+    keywords: debKeywords.value || undefined,
+    codTema: codTema.value === 'all' ? undefined : codTema.value,
+    dataApresentacaoInicio: dataApresentacaoInicio.value || undefined,
+    dataApresentacaoFim: dataApresentacaoFim.value || undefined
+  }))
+})
+
+const tipoItems = [
+  { label: 'Todos os tipos', value: 'all' },
+  ...SIGLA_TIPO.map(tipo => ({ label: tipo, value: tipo }))
+]
+
+const temaItems = [
+  { label: 'Todos os temas', value: 'all' },
+  ...Object.entries(COD_TEMA).map(([cod, tema]) => ({ label: tema, value: cod }))
+]
+
+const anoItems = [
+  { label: 'Ano', value: 'all' },
+  ...Array.from({ length: new Date().getFullYear() - 1987 }, (_, i) => ({ label: String(new Date().getFullYear() - i), value: String(new Date().getFullYear() - i) }))
+]
 
 const columns: TableColumn<Proposicao>[] = [
   { id: 'proposicao', header: 'Proposição' },
@@ -18,6 +53,60 @@ useHead(() => ({ title: 'Proposições' }))
     <h1 class="text-2xl font-bold mb-4">
       Proposições
     </h1>
+
+    <UForm
+      :disabled="status === 'pending'"
+      class="flex flex-wrap gap-3 mb-4"
+    >
+      <USelectMenu
+        v-model="siglaTipo"
+        value-key="value"
+        :items="tipoItems"
+        clear
+        searchable
+        placeholder="Tipo"
+      />
+
+      <UInput
+        v-model="numero"
+        type="number"
+        placeholder="Número"
+      />
+
+      <USelectMenu
+        v-model="ano"
+        value-key="value"
+        :items="anoItems"
+        clear
+        searchable
+        placeholder="Ano"
+      />
+
+      <UInput
+        v-model="keywords"
+        icon="i-lucide-search"
+        placeholder="Buscar na ementa..."
+      />
+
+      <USelectMenu
+        v-model="codTema"
+        value-key="value"
+        :items="temaItems"
+        searchable
+        clear
+        placeholder="Tema"
+      />
+
+      <UInput
+        v-model="dataApresentacaoInicio"
+        type="date"
+      />
+
+      <UInput
+        v-model="dataApresentacaoFim"
+        type="date"
+      />
+    </UForm>
 
     <UTable
       :data="data?.dados ?? []"

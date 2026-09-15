@@ -34,3 +34,49 @@ export const pronunciamentosSchema = z.object({
 export const frentesSchema = z.object({
   idLegislatura: z.coerce.number().int().positive().optional()
 })
+
+export const despesasSchema = z.object({
+  ano: z.coerce.number().int().min(1989).max(2100).optional(),
+  mes: z.coerce.number().int().min(1).max(12).optional(),
+  itens: z.coerce.number().int().min(1).max(100).default(10)
+})
+
+export const votacoesSchema = z.object({
+  idProposicao: z.coerce.number().int().positive().optional(),
+  idEvento: z.coerce.number().int().positive().optional(),
+  idOrgao: z.coerce.number().int().positive().optional(),
+  dataInicio: emptyToUndefined(z.iso.date()),
+  dataFim: emptyToUndefined(z.iso.date()),
+  itens: z.coerce.number().int().min(1).max(100).default(10)
+})
+
+export const eventosSchema = z.object({
+  codTipoEvento: z.coerce.number().int().positive().optional(),
+  idOrgao: z.coerce.number().int().positive().optional(),
+  dataInicio: emptyToUndefined(z.iso.date()),
+  dataFim: emptyToUndefined(z.iso.date()),
+  itens: z.coerce.number().int().min(1).max(100).default(10)
+})
+
+export const orgaosSchema = z.object({
+  sigla: emptyToUndefined(z.string().trim().min(1).toUpperCase()),
+  codTipoOrgao: z.coerce.number().int().positive().optional(),
+  itens: z.coerce.number().int().min(1).max(100).default(15)
+})
+
+export const proposicoesSchema = z.object({
+  siglaTipo: emptyToUndefined(z.string().trim().min(1).toUpperCase()),
+  numero: z.coerce.number().int().positive().optional(),
+  ano: z.coerce.number().int().min(1987).max(2100).optional(),
+  keywords: emptyToUndefined(z.string().trim().min(1)),
+  codTema: z.coerce.number().int().positive().optional(),
+  autor: emptyToUndefined(z.string().trim().min(1)),
+  dataApresentacaoInicio: emptyToUndefined(z.iso.date()),
+  dataApresentacaoFim: emptyToUndefined(z.iso.date()),
+  itens: z.coerce.number().int().min(1).max(100).default(10)
+})
+
+// Senado cargos/comissoes upstream expects 'S'/'N'
+export const ativoSchema = z.object({
+  ativo: z.coerce.boolean().optional()
+})

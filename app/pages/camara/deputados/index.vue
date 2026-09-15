@@ -7,10 +7,30 @@ import type { Deputado } from '~~/server/api/deputados/index.get'
 const ufItems: string[] = Object.values(UF)
 
 const name = ref('')
-const siglaUf = ref('')
+const siglaUf = ref<string>()
+const siglaPartido = ref<string>()
+const siglaSexo = ref<string>()
+const idLegislatura = ref<string>()
 
 const debName = debouncedRef(name, 500)
-const { data, status } = await useFetch('/api/deputados', { query: { nome: debName, siglaUf } })
+const { data, status } = await useFetch('/api/deputados', {
+  query: computed(() => ({
+    nome: debName.value || undefined,
+    siglaUf: siglaUf.value,
+    siglaPartido: siglaPartido.value,
+    siglaSexo: siglaSexo.value,
+    idLegislatura: idLegislatura.value
+  }))
+})
+
+const { data: partidos } = await useFetch('/api/partidos')
+
+const sexoItems = [
+  { label: 'Masculino', value: 'M' },
+  { label: 'Feminino', value: 'F' }
+]
+
+const legislaturaItems = Array.from({ length: 6 }, (_, i) => ({ label: String(57 - i), value: String(57 - i) }))
 
 const columns: TableColumn<Deputado>[] = [
   { id: 'foto', header: '', meta: { class: { th: 'w-16' } } },
@@ -38,13 +58,15 @@ const columns: TableColumn<Deputado>[] = [
         v-model="name"
         icon="i-lucide-search"
         placeholder="Buscar por nome..."
-        class="w-64"
       />
 
-      <USelect
+      <USelectMenu
         v-model="siglaUf"
-        :items="ufItems.map(uf => ({ label: uf || 'Todos os estados', value: uf }))"
-        class="w-48"
+        value-key="value"
+        :items="ufItems.map(uf => ({ label: uf, value: uf }))"
+        searchable
+        clear
+        placeholder="Todos os estados"
       >
         <template #leading="{ modelValue }">
           <NuxtImg
@@ -63,7 +85,32 @@ const columns: TableColumn<Deputado>[] = [
             class="w-5 h-3.5 rounded-[2px] object-cover"
           />
         </template>
-      </USelect>
+      </USelectMenu>
+
+      <USelectMenu
+        v-model="siglaPartido"
+        value-key="value"
+        :items="partidos?.dados.map(p => ({ label: `${p.sigla} — ${p.nome}`, value: p.sigla })) ?? []"
+        searchable
+        clear
+        placeholder="Partido"
+      />
+
+      <USelectMenu
+        v-model="siglaSexo"
+        value-key="value"
+        :items="sexoItems"
+        clear
+        placeholder="Sexo"
+      />
+
+      <USelectMenu
+        v-model="idLegislatura"
+        value-key="value"
+        :items="legislaturaItems"
+        clear
+        placeholder="Legislatura"
+      />
     </UForm>
 
     <!-- table -->
@@ -83,6 +130,7 @@ const columns: TableColumn<Deputado>[] = [
           {{ row.original.siglaPartido ?? '—' }}
         </span>
       </template>
+
       <template #siglaUf-cell="{ row }">
         <span
           v-if="row.original.siglaUf"
@@ -100,6 +148,7 @@ const columns: TableColumn<Deputado>[] = [
           class="text-muted text-sm"
         >—</span>
       </template>
+
       <template #foto-cell="{ row }">
         <NuxtLink :to="`/camara/deputados/${row.original.id}`">
           <UAvatar

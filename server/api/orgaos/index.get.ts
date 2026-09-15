@@ -1,3 +1,5 @@
+import { orgaosSchema } from '~~/shared/schemas'
+
 export type Orgao = {
   id: number
   uri: string
@@ -10,6 +12,14 @@ export type Orgao = {
   nomeResumido: string | null
 }
 
-export default defineEventHandler(async (): Promise<{ dados: Orgao[] }> => {
-  return await camaraClient.get('orgaos', { query: { ordem: 'desc', ordenarPor: 'id' } })
+export default defineEventHandler(async (event): Promise<{ dados: Orgao[] }> => {
+  const { sigla, codTipoOrgao, itens } = await getValidatedQuery(event, data => orgaosSchema.parse(data))
+
+  return await camaraClient.get('orgaos', { query: {
+    sigla,
+    codTipoOrgao,
+    itens,
+    ordem: 'desc',
+    ordenarPor: 'id'
+  } })
 })

@@ -6,16 +6,16 @@ import type { Senador } from '~~/server/api/senadores/index.get'
 
 const ufItems: string[] = Object.values(UF)
 
-const uf = ref('')
-const participacao = ref('todos')
+const uf = ref<string>()
+const participacao = ref<string>()
 const afastados = ref(false)
 
 const debUf = debouncedRef(uf, 500)
 const { data, status } = await useFetch('/api/senadores', {
   query: computed(() => ({
     afastados: afastados.value || undefined,
-    uf: debUf.value || undefined,
-    participacao: participacao.value === 'todos' ? undefined : participacao.value
+    uf: debUf.value,
+    participacao: participacao.value
   }))
 })
 
@@ -43,10 +43,13 @@ useHead(() => ({ title: afastados.value ? 'Senadores Afastados' : 'Senadores' })
       :disabled="status === 'pending'"
       class="flex gap-3 mb-4"
     >
-      <USelect
+      <USelectMenu
         v-model="uf"
-        :items="ufItems.map(u => ({ label: u || 'Todos os estados', value: u }))"
-        class="w-48"
+        value-key="value"
+        :items="ufItems.map(u => ({ label: u, value: u }))"
+        searchable
+        clear
+        placeholder="Todos os estados"
       >
         <template #leading="{ modelValue }">
           <NuxtImg
@@ -65,16 +68,17 @@ useHead(() => ({ title: afastados.value ? 'Senadores Afastados' : 'Senadores' })
             class="w-5 h-3.5 rounded-[2px] object-cover"
           />
         </template>
-      </USelect>
+      </USelectMenu>
 
-      <USelect
+      <USelectMenu
         v-model="participacao"
+        value-key="value"
         :items="[
-          { label: 'Todos', value: 'todos' },
           { label: 'Titulares', value: 'T' },
           { label: 'Suplentes', value: 'S' }
         ]"
-        class="w-48"
+        clear
+        placeholder="Participação"
       />
 
       <USwitch

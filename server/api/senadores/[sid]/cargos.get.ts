@@ -1,3 +1,5 @@
+import { ativoSchema } from '~~/shared/schemas'
+
 export type Cargo = {
   CodigoComissao: string
   SiglaComissao: string
@@ -21,10 +23,12 @@ type RawCargo = {
 export default defineEventHandler(async (event): Promise<{ dados: Cargo[] }> => {
   const sid = getRouterParam(event, 'sid')
   if (!sid) throw createError({ statusCode: 400, statusMessage: 'Parâmetro de rota obrigatório' })
+  const { ativo } = await getValidatedQuery(event, data => ativoSchema.parse(data))
 
   const cargos = await senadoClient.list<RawCargo>(
     `senador/${sid}/cargos`,
-    ['CargoParlamentar', 'Parlamentar', 'Cargos', 'Cargo']
+    ['CargoParlamentar', 'Parlamentar', 'Cargos', 'Cargo'],
+    { query: { ativo: ativo ? 'S' : undefined } }
   )
 
   return {

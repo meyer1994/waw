@@ -1,3 +1,5 @@
+import { votacoesSchema } from '~~/shared/schemas'
+
 export type Votacao = {
   aprovacao: number | null
   data: string | null
@@ -12,9 +14,16 @@ export type Votacao = {
   uriProposicaoObjeto: string | null
 }
 
-export default defineEventHandler(async (): Promise<{ dados: Votacao[] }> => {
+export default defineEventHandler(async (event): Promise<{ dados: Votacao[] }> => {
+  const { idProposicao, idEvento, idOrgao, dataInicio, dataFim, itens } = await getValidatedQuery(event, data => votacoesSchema.parse(data))
+
   return await camaraClient.get<{ dados: Votacao[] }>('votacoes', { query: {
-    itens: 10,
+    idProposicao,
+    idEvento,
+    idOrgao,
+    dataInicio,
+    dataFim,
+    itens,
     ordem: 'desc',
     ordenarPor: 'dataHoraRegistro'
   } })
