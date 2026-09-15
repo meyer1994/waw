@@ -41,14 +41,12 @@ const navItems: NavigationMenuItem[][] = [
       <UNavigationMenu
         :items="navItems"
         highlight
-        class="data-[orientation=horizontal]:border-b border-default data-[orientation=horizontal]:w-full"
       />
 
       <template #right>
         <UColorModeButton />
 
         <UButton
-
           to="https://github.com/nuxt-ui-templates/starter"
           target="_blank"
           icon="i-simple-icons-github"
