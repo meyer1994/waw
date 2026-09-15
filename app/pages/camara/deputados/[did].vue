@@ -42,7 +42,7 @@ const deputado = computed(() => data.value?.deputado)
         { label: 'Profissões', value: 'profissoes' },
         { label: 'Mandatos Externos', value: 'mandatosExternos' }
       ] satisfies TabsItem[])"
-      @update:model-value="navigateTo(`/camara/deputados/${useRoute().params.did}/${$event}`, { replace: true })"
+      @update:model-value="navigateTo(`/camara/deputados/${$route.params.did}/${$event}`, { replace: true })"
     >
       <template #content>
         <NuxtPage />
