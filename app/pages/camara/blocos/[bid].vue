@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import type { TabsItem } from '@nuxt/ui'
+import type { NavigationMenuItem } from '@nuxt/ui'
 
 const route = useRoute()
 const bid = route.params.bid as string
+const parent = `/camara/blocos/${bid}`
+const detalhesVisivel = computed(() => route.path === parent)
+
+const items: NavigationMenuItem[] = [
+  { label: 'Partidos', icon: 'i-lucide-flag', to: `${parent}/partidos` }
+]
 
 const { data: bloco } = await useFetch(`/api/blocos/${bid}`)
 
@@ -18,17 +24,39 @@ useHead(() => ({ title: bloco.value?.nome ?? 'Bloco' }))
       Legislatura {{ bloco?.idLegislatura ?? '—' }}
     </p>
 
-    <UTabs
-      default-value="detalhes"
-      :items="([
-        { label: 'Detalhes', value: 'detalhes' },
-        { label: 'Partidos', value: 'partidos' }
-      ] satisfies TabsItem[])"
-      @update:model-value="async e => await navigateTo(e === 'detalhes' ? `/camara/blocos/${bid}` : `/camara/blocos/${bid}/${e}`)"
+    <div
+      v-if="detalhesVisivel && bloco"
+      class="mb-6"
     >
-      <template #content>
-        <NuxtPage />
-      </template>
-    </UTabs>
+      <UCard>
+        <dl class="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <dt class="text-muted">
+              Nome
+            </dt>
+            <dd>{{ bloco.nome }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Legislatura
+            </dt>
+            <dd>{{ bloco.idLegislatura ?? '—' }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Federação
+            </dt>
+            <dd>{{ bloco.federacao === 'S' ? 'Sim' : bloco.federacao === 'N' ? 'Não' : '—' }}</dd>
+          </div>
+        </dl>
+      </UCard>
+    </div>
+
+    <UNavigationMenu
+      :items="items"
+      class="mb-6"
+    />
+
+    <NuxtPage />
   </div>
 </template>

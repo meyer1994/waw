@@ -1,9 +1,26 @@
 <script setup lang="ts">
-import type { TabsItem } from '@nuxt/ui'
+import type { NavigationMenuItem } from '@nuxt/ui'
 
-const route = useRoute()
-const { data } = await useFetch(`/api/deputados/${route.params.did}`)
+const did = useRoute().params.did as string
+const parent = `/camara/deputados/${did}`
+
+const items: NavigationMenuItem[] = [
+  { label: 'Proposições', icon: 'i-lucide-file-text', to: `${parent}/proposicoes` },
+  { label: 'Discursos', icon: 'i-lucide-mic', to: `${parent}/discursos` },
+  { label: 'Despesas', icon: 'i-lucide-receipt', to: `${parent}/despesas` },
+  { label: 'Eventos', icon: 'i-lucide-calendar-days', to: `${parent}/eventos` },
+  { label: 'Órgãos', icon: 'i-lucide-building-2', to: `${parent}/orgaos` },
+  { label: 'Frentes', icon: 'i-lucide-users', to: `${parent}/frentes` },
+  { label: 'Histórico', icon: 'i-lucide-history', to: `${parent}/historico` },
+  { label: 'Ocupações', icon: 'i-lucide-briefcase', to: `${parent}/ocupacoes` },
+  { label: 'Profissões', icon: 'i-lucide-hammer', to: `${parent}/profissoes` },
+  { label: 'Mandatos Externos', icon: 'i-lucide-globe', to: `${parent}/mandatosExternos` }
+]
+
+const { data } = await useFetch(`/api/deputados/${did}`)
 const deputado = computed(() => data.value?.deputado)
+
+useHead(() => ({ title: deputado.value?.ultimoStatus?.nome ?? 'Deputado' }))
 </script>
 
 <template>
@@ -29,24 +46,11 @@ const deputado = computed(() => data.value?.deputado)
       </div>
     </div>
 
-    <UTabs
-      :items="([
-        { label: 'Proposições', value: 'proposicoes' },
-        { label: 'Discursos', value: 'discursos' },
-        { label: 'Despesas', value: 'despesas' },
-        { label: 'Eventos', value: 'eventos' },
-        { label: 'Órgãos', value: 'orgaos' },
-        { label: 'Frentes', value: 'frentes' },
-        { label: 'Histórico', value: 'historico' },
-        { label: 'Ocupações', value: 'ocupacoes' },
-        { label: 'Profissões', value: 'profissoes' },
-        { label: 'Mandatos Externos', value: 'mandatosExternos' }
-      ] satisfies TabsItem[])"
-      @update:model-value="navigateTo(`/camara/deputados/${$route.params.did}/${$event}`, { replace: true })"
-    >
-      <template #content>
-        <NuxtPage />
-      </template>
-    </UTabs>
+    <UNavigationMenu
+      :items="items"
+      class="mb-6"
+    />
+
+    <NuxtPage />
   </div>
 </template>

@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import type { TabsItem } from '@nuxt/ui'
+import type { NavigationMenuItem } from '@nuxt/ui'
 
 const route = useRoute()
 const pid = route.params.pid as string
+const parent = `/camara/partidos/${pid}`
+const detalhesVisivel = computed(() => route.path === parent)
+
+const items: NavigationMenuItem[] = [
+  { label: 'Membros', icon: 'i-lucide-users', to: `${parent}/membros` },
+  { label: 'Líderes', icon: 'i-lucide-crown', to: `${parent}/lideres` }
+]
 
 const { data: partido } = await useFetch(`/api/partidos/${pid}`)
 
@@ -33,18 +40,75 @@ useHead(() => ({ title: partido.value?.sigla ?? 'Partido' }))
       </div>
     </div>
 
-    <UTabs
-      default-value="detalhes"
-      :items="([
-        { label: 'Detalhes', value: 'detalhes' },
-        { label: 'Membros', value: 'membros' },
-        { label: 'Líderes', value: 'lideres' }
-      ] satisfies TabsItem[])"
-      @update:model-value="async e => await navigateTo(e === 'detalhes' ? `/camara/partidos/${pid}` : `/camara/partidos/${pid}/${e}`)"
+    <div
+      v-if="detalhesVisivel && partido"
+      class="mb-6"
     >
-      <template #content>
-        <NuxtPage />
-      </template>
-    </UTabs>
+      <UCard>
+        <dl class="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <dt class="text-muted">
+              Nome
+            </dt>
+            <dd>{{ partido.nome }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Número eleitoral
+            </dt>
+            <dd>{{ partido.numeroEleitoral ?? '—' }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Situação
+            </dt>
+            <dd>{{ partido.status?.situacao ?? '—' }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Total de membros
+            </dt>
+            <dd>{{ partido.status?.totalMembros ?? '—' }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Website
+            </dt>
+            <dd>
+              <ULink
+                v-if="partido.urlWebSite"
+                :to="partido.urlWebSite"
+                target="_blank"
+              >
+                {{ partido.urlWebSite }}
+              </ULink>
+              <span v-else>—</span>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Facebook
+            </dt>
+            <dd>
+              <ULink
+                v-if="partido.urlFacebook"
+                :to="partido.urlFacebook"
+                target="_blank"
+              >
+                {{ partido.urlFacebook }}
+              </ULink>
+              <span v-else>—</span>
+            </dd>
+          </div>
+        </dl>
+      </UCard>
+    </div>
+
+    <UNavigationMenu
+      :items="items"
+      class="mb-6"
+    />
+
+    <NuxtPage />
   </div>
 </template>

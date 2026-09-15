@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import type { TabsItem } from '@nuxt/ui'
+import type { NavigationMenuItem } from '@nuxt/ui'
 
 const route = useRoute()
 const eid = route.params.eid as string
+const parent = `/camara/eventos/${eid}`
+const detalhesVisivel = computed(() => route.path === parent)
+
+const items: NavigationMenuItem[] = [
+  { label: 'Pauta', icon: 'i-lucide-list-ordered', to: `${parent}/pauta` },
+  { label: 'Deputados', icon: 'i-lucide-users', to: `${parent}/deputados` },
+  { label: 'Órgãos', icon: 'i-lucide-building-2', to: `${parent}/orgaos` },
+  { label: 'Votações', icon: 'i-lucide-check-check', to: `${parent}/votacoes` }
+]
 
 const { data: evento } = await useFetch(`/api/eventos/${eid}`)
 
@@ -28,20 +37,90 @@ useHead(() => ({ title: evento.value?.descricaoTipo ?? 'Evento' }))
       • {{ evento?.situacao ?? '—' }}
     </p>
 
-    <UTabs
-      default-value="detalhes"
-      :items="([
-        { label: 'Detalhes', value: 'detalhes' },
-        { label: 'Pauta', value: 'pauta' },
-        { label: 'Deputados', value: 'deputados' },
-        { label: 'Órgãos', value: 'orgaos' },
-        { label: 'Votações', value: 'votacoes' }
-      ] satisfies TabsItem[])"
-      @update:model-value="async e => await navigateTo(e === 'detalhes' ? `/camara/eventos/${eid}` : `/camara/eventos/${eid}/${e}`)"
+    <div
+      v-if="detalhesVisivel && evento"
+      class="mb-6"
     >
-      <template #content>
-        <NuxtPage />
-      </template>
-    </UTabs>
+      <UCard>
+        <dl class="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <dt class="text-muted">
+              Descrição
+            </dt>
+            <dd>{{ evento.descricao }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Situação
+            </dt>
+            <dd>{{ evento.situacao ?? '—' }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Início
+            </dt>
+            <dd>
+              <NuxtTime
+                v-if="evento.dataHoraInicio"
+                :datetime="evento.dataHoraInicio"
+                locale="pt-BR"
+                year="numeric"
+                month="2-digit"
+                day="2-digit"
+                hour="2-digit"
+                minute="2-digit"
+              />
+              <span v-else>—</span>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Fim
+            </dt>
+            <dd>
+              <NuxtTime
+                v-if="evento.dataHoraFim"
+                :datetime="evento.dataHoraFim"
+                locale="pt-BR"
+                year="numeric"
+                month="2-digit"
+                day="2-digit"
+                hour="2-digit"
+                minute="2-digit"
+              />
+              <span v-else>—</span>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Local
+            </dt>
+            <dd>{{ evento.localCamara?.nome ?? evento.localExterno ?? '—' }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Registro
+            </dt>
+            <dd>
+              <ULink
+                v-if="evento.urlRegistro"
+                :to="evento.urlRegistro"
+                target="_blank"
+              >
+                Ver registro
+              </ULink>
+              <span v-else>—</span>
+            </dd>
+          </div>
+        </dl>
+      </UCard>
+    </div>
+
+    <UNavigationMenu
+      :items="items"
+      class="mb-6"
+    />
+
+    <NuxtPage />
   </div>
 </template>

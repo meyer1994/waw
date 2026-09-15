@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import type { TabsItem } from '@nuxt/ui'
+import type { NavigationMenuItem } from '@nuxt/ui'
 
 const route = useRoute()
 const gid = route.params.gid as string
+const parent = `/camara/grupos/${gid}`
+const detalhesVisivel = computed(() => route.path === parent)
+
+const items: NavigationMenuItem[] = [
+  { label: 'Membros', icon: 'i-lucide-users', to: `${parent}/membros` },
+  { label: 'Histórico', icon: 'i-lucide-history', to: `${parent}/historico` }
+]
 
 const { data: grupo } = await useFetch(`/api/grupos/${gid}`)
 
@@ -18,18 +25,66 @@ useHead(() => ({ title: grupo.value?.nome ?? 'Grupo' }))
       {{ grupo?.anoCriacao ?? '—' }} • {{ grupo?.ativo === 'S' ? 'Ativo' : 'Inativo' }}
     </p>
 
-    <UTabs
-      default-value="detalhes"
-      :items="([
-        { label: 'Detalhes', value: 'detalhes' },
-        { label: 'Membros', value: 'membros' },
-        { label: 'Histórico', value: 'historico' }
-      ] satisfies TabsItem[])"
-      @update:model-value="async e => await navigateTo(e === 'detalhes' ? `/camara/grupos/${gid}` : `/camara/grupos/${gid}/${e}`)"
+    <div
+      v-if="detalhesVisivel && grupo"
+      class="mb-6"
     >
-      <template #content>
-        <NuxtPage />
-      </template>
-    </UTabs>
+      <UCard>
+        <dl class="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <dt class="text-muted">
+              Nome
+            </dt>
+            <dd>{{ grupo.nome }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Ano de criação
+            </dt>
+            <dd>{{ grupo.anoCriacao ?? '—' }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Grupo misto
+            </dt>
+            <dd>{{ grupo.grupoMisto === 'S' ? 'Sim' : 'Não' }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Subvencionado
+            </dt>
+            <dd>{{ grupo.subvencionado === 'S' ? 'Sim' : 'Não' }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Resolução
+            </dt>
+            <dd>
+              <ULink
+                v-if="grupo.resolucaoUri"
+                :to="grupo.resolucaoUri"
+                target="_blank"
+              >
+                {{ grupo.resolucaoTitulo ?? 'Ver resolução' }}
+              </ULink>
+              <span v-else>—</span>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Último status
+            </dt>
+            <dd>{{ grupo.ultimoStatus?.presidenteNome ?? '—' }}</dd>
+          </div>
+        </dl>
+      </UCard>
+    </div>
+
+    <UNavigationMenu
+      :items="items"
+      class="mb-6"
+    />
+
+    <NuxtPage />
   </div>
 </template>

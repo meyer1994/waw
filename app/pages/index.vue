@@ -80,7 +80,7 @@ const sections: PageCardProps[] = [
       <UPageGrid>
         <UPageCard
           v-for="section in sections"
-          :key="section.to"
+          :key="section.title"
           v-bind="section"
         />
       </UPageGrid>

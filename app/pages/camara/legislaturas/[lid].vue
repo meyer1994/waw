@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import type { TabsItem } from '@nuxt/ui'
+import type { NavigationMenuItem } from '@nuxt/ui'
 
 const route = useRoute()
 const lid = route.params.lid as string
+const parent = `/camara/legislaturas/${lid}`
+const detalhesVisivel = computed(() => route.path === parent)
+
+const items: NavigationMenuItem[] = [
+  { label: 'Mesa', icon: 'i-lucide-armchair', to: `${parent}/mesa` },
+  { label: 'Líderes', icon: 'i-lucide-crown', to: `${parent}/lideres` }
+]
 
 const { data: legislatura } = await useFetch(`/api/legislaturas/${lid}`)
 
@@ -35,18 +42,65 @@ useHead(() => ({ title: `${legislatura.value?.id ?? ''}ª Legislatura` }))
       <span v-else>atual</span>
     </p>
 
-    <UTabs
-      default-value="detalhes"
-      :items="([
-        { label: 'Detalhes', value: 'detalhes' },
-        { label: 'Mesa', value: 'mesa' },
-        { label: 'Líderes', value: 'lideres' }
-      ] satisfies TabsItem[])"
-      @update:model-value="async e => await navigateTo(e === 'detalhes' ? `/camara/legislaturas/${lid}` : `/camara/legislaturas/${lid}/${e}`)"
+    <div
+      v-if="detalhesVisivel && legislatura"
+      class="mb-6"
     >
-      <template #content>
-        <NuxtPage />
-      </template>
-    </UTabs>
+      <UCard>
+        <dl class="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <dt class="text-muted">
+              Número
+            </dt>
+            <dd>{{ legislatura.id }}ª</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Em exercício
+            </dt>
+            <dd>{{ legislatura.dataFim ? 'Encerrada' : 'Em curso' }}</dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Início
+            </dt>
+            <dd>
+              <NuxtTime
+                v-if="legislatura.dataInicio"
+                :datetime="legislatura.dataInicio"
+                locale="pt-BR"
+                year="numeric"
+                month="long"
+                day="numeric"
+              />
+              <span v-else>—</span>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-muted">
+              Fim
+            </dt>
+            <dd>
+              <NuxtTime
+                v-if="legislatura.dataFim"
+                :datetime="legislatura.dataFim"
+                locale="pt-BR"
+                year="numeric"
+                month="long"
+                day="numeric"
+              />
+              <span v-else>—</span>
+            </dd>
+          </div>
+        </dl>
+      </UCard>
+    </div>
+
+    <UNavigationMenu
+      :items="items"
+      class="mb-6"
+    />
+
+    <NuxtPage />
   </div>
 </template>
