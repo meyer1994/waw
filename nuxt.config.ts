@@ -9,7 +9,17 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   routeRules: {
-    '/': { prerender: true }
+    '/': { prerender: true },
+
+    // Cache all API proxies (Camara/Senado upstreams). SWR: serve instantly
+    '/api/**': {
+      cache: {
+        // @ts-expect-error - allowQuery is valid, but not typed
+        allowQuery: true,
+        maxAge: 60 * 5, // 5 minutes
+        swr: true
+      }
+    }
   },
 
   compatibilityDate: '2026-06-30',
@@ -20,6 +30,15 @@ export default defineNuxtConfig({
     cloudflare: {
       deployConfig: true,
       nodeCompat: true
+    },
+
+    // Persist the cache in the CACHE KV binding (wrangler.jsonc),
+    // so entries survive restarts and are shared across workers
+    storage: {
+      cache: {
+        driver: 'cloudflare-kv-binding',
+        binding: 'CACHE'
+      }
     }
   },
 

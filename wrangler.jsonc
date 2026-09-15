@@ -11,6 +11,15 @@
 		"enabled": true
 	},
 	/**
+	 * KV namespace used as the Nitro cache storage mount point
+	 */
+	"kv_namespaces": [
+		{
+			"binding": "CACHE",
+			"id": "1747ee8dffed402b83063860279c1dc5"
+		}
+	],
+	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
 	 */
