@@ -94,7 +94,25 @@ const columns: TableColumn<Deputado>[] = [
         searchable
         clear
         placeholder="Partido"
-      />
+      >
+        <template #leading="{ modelValue }">
+          <NuxtImg
+            v-if="modelValue && PARTY_FLAGS[String(modelValue)]"
+            :src="PARTY_FLAGS[String(modelValue)]"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+        </template>
+
+        <template #item-leading="{ item }">
+          <NuxtImg
+            v-if="item.value && PARTY_FLAGS[String(item.value)]"
+            :src="PARTY_FLAGS[String(item.value)]"
+            alt=""
+            class="w-5 h-3.5 rounded-[2px] object-cover"
+          />
+        </template>
+      </USelectMenu>
 
       <USelectMenu
         v-model="siglaSexo"

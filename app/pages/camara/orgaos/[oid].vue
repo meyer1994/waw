@@ -4,7 +4,6 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const route = useRoute()
 const oid = route.params.oid as string
 const parent = `/camara/orgaos/${oid}`
-const detalhesVisivel = computed(() => route.path === parent)
 
 const items: NavigationMenuItem[] = [
   { label: 'Membros', icon: 'i-lucide-users', to: `${parent}/membros` },
@@ -27,7 +26,7 @@ useHead(() => ({ title: orgao.value?.sigla ?? 'Órgão' }))
     </p>
 
     <div
-      v-if="detalhesVisivel && orgao"
+      v-if="orgao"
       class="mb-6"
     >
       <UCard>

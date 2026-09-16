@@ -4,7 +4,6 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const route = useRoute()
 const bid = route.params.bid as string
 const parent = `/camara/blocos/${bid}`
-const detalhesVisivel = computed(() => route.path === parent)
 
 const items: NavigationMenuItem[] = [
   { label: 'Partidos', icon: 'i-lucide-flag', to: `${parent}/partidos` }
@@ -25,7 +24,7 @@ useHead(() => ({ title: bloco.value?.nome ?? 'Bloco' }))
     </p>
 
     <div
-      v-if="detalhesVisivel && bloco"
+      v-if="bloco"
       class="mb-6"
     >
       <UCard>

@@ -4,7 +4,6 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const route = useRoute()
 const gid = route.params.gid as string
 const parent = `/camara/grupos/${gid}`
-const detalhesVisivel = computed(() => route.path === parent)
 
 const items: NavigationMenuItem[] = [
   { label: 'Membros', icon: 'i-lucide-users', to: `${parent}/membros` },
@@ -26,7 +25,7 @@ useHead(() => ({ title: grupo.value?.nome ?? 'Grupo' }))
     </p>
 
     <div
-      v-if="detalhesVisivel && grupo"
+      v-if="grupo"
       class="mb-6"
     >
       <UCard>

@@ -3,15 +3,13 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 
 const route = useRoute()
 const pid = route.params.pid as string
-const parent = `/camara/proposicoes/${pid}`
-const detalhesVisivel = computed(() => route.path === parent)
 
 const items: NavigationMenuItem[] = [
-  { label: 'Tramitações', icon: 'i-lucide-git-branch', to: `${parent}/tramitacoes` },
-  { label: 'Autores', icon: 'i-lucide-pen-line', to: `${parent}/autores` },
-  { label: 'Temas', icon: 'i-lucide-tags', to: `${parent}/temas` },
-  { label: 'Relacionadas', icon: 'i-lucide-link', to: `${parent}/relacionadas` },
-  { label: 'Votações', icon: 'i-lucide-check-check', to: `${parent}/votacoes` }
+  { label: 'Tramitações', icon: 'i-lucide-git-branch', to: `/camara/proposicoes/${pid}/tramitacoes` },
+  { label: 'Autores', icon: 'i-lucide-pen-line', to: `/camara/proposicoes/${pid}/autores` },
+  { label: 'Temas', icon: 'i-lucide-tags', to: `/camara/proposicoes/${pid}/temas` },
+  { label: 'Relacionadas', icon: 'i-lucide-link', to: `/camara/proposicoes/${pid}/relacionadas` },
+  { label: 'Votações', icon: 'i-lucide-check-check', to: `/camara/proposicoes/${pid}/votacoes` }
 ]
 
 const { data: proposicao } = await useFetch(`/api/proposicoes/${pid}`)
@@ -46,7 +44,7 @@ useHead(() => ({ title: titulo.value }))
       />
     </p>
 
-    <div v-if="detalhesVisivel">
+    <div>
       <UCard
         v-if="proposicao"
         class="mb-6"

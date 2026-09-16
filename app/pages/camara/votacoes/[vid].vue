@@ -4,7 +4,6 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const route = useRoute()
 const vid = route.params.vid as string
 const parent = `/camara/votacoes/${vid}`
-const detalhesVisivel = computed(() => route.path === parent)
 
 const items: NavigationMenuItem[] = [
   { label: 'Votos', icon: 'i-lucide-check', to: `${parent}/votos` },
@@ -42,7 +41,7 @@ useHead(() => ({ title: votacao.value ? `Votação ${votacao.value.id}` : 'Vota�
     </p>
 
     <div
-      v-if="detalhesVisivel && votacao"
+      v-if="votacao"
       class="mb-6"
     >
       <UCard>

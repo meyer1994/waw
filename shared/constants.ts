@@ -31,16 +31,33 @@ export enum UF {
 // Party sigla -> flag in /public/partidos
 // Only parties present in Category:SVG flags of political parties in Brazil are mapped
 export const PARTY_FLAGS: Record<string, string> = {
+  Agir: '/partidos/agir.png',
+  Avante: '/partidos/avante.png',
+  Cidadania: '/partidos/cidadania.png',
   // TODO: DC flag is the PSDC-era one (renamed in 2017)
-  DC: '/partidos/Bandeira PSDC.svg',
-  MISSÃO: '/partidos/Bandeira do Partido Missão.svg',
-  NOVO: '/partidos/Partido Novo flag (2023).svg',
-  PCdoB: '/partidos/PCdoB flag.svg',
-  PL: '/partidos/Bandeira do Partido Liberal (Brasil).svg',
-  // TODO: PP flag is the 1993 one, the current-era version is not on Commons
-  PP: '/partidos/Bandeira do Partido Progressista (Brasil) (1993).svg',
-  PT: '/partidos/Bandeira do Partido dos Trabalhadores (2022).svg',
-  PV: '/partidos/Bandeira Partido Verde Brasil.svg'
+  DC: '/partidos/dc.svg',
+  MISSÃO: '/partidos/missao.svg',
+  MOBILIZA: '/partidos/mobiliza.png',
+  NOVO: '/partidos/novo.svg',
+  PCdoB: '/partidos/pcdob.svg',
+  PL: '/partidos/pl.svg',
+  PMB: '/partidos/pmb.png',
+  PMN: '/partidos/pmn.png',
+  PP: '/partidos/pp.png',
+  Podemos: '/partidos/podemos.png',
+  PSB: '/partidos/psb.png',
+  PSD: '/partidos/psd.png',
+  PSDB: '/partidos/psdb.png',
+  PSC: '/partidos/psc.png',
+  PSOL: '/partidos/psol.png',
+  PT: '/partidos/pt.svg',
+  PTB: '/partidos/ptb.png',
+  PV: '/partidos/pv.svg',
+  REDE: '/partidos/rede.png',
+  PRTB: '/partidos/prtb.png',
+  Republicanos: '/partidos/republicanos.png',
+  Solidariedade: '/partidos/solidariedade.png',
+  UNIÃO: '/partidos/uniao.png'
 }
 
 // https://dadosabertos.camara.leg.br/api/v2/referencias/eventos (curated common types)
