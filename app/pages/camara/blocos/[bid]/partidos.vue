@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Partido } from '~~/server/api/partidos/index.get'
+import type { CamaraLista, Partido } from '#shared/api'
 
 const route = useRoute()
 const bid = route.params.bid as string
 
-const { data, status } = await useFetch(`/api/blocos/${bid}/partidos`)
+const { data, status } = await useFetch<CamaraLista<Partido>>(`/api/camara/blocos/${bid}/partidos`)
 
 const columns: TableColumn<Partido>[] = [
   { accessorKey: 'sigla', header: 'Sigla' },

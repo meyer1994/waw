@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Proposicao } from '~~/server/api/proposicoes/index.get'
+import type { CamaraLista, Proposicao } from '#shared/api'
 import { COD_TEMA, SIGLA_TIPO } from '~~/shared/constants'
 
 const siglaTipo = ref('all')
@@ -12,7 +12,7 @@ const dataApresentacaoInicio = ref('')
 const dataApresentacaoFim = ref('')
 
 const debKeywords = debouncedRef(keywords, 500)
-const { data, status } = await useFetch('/api/proposicoes', {
+const { data, status } = await useFetch<CamaraLista<Proposicao>>('/api/camara/proposicoes', {
   query: computed(() => ({
     siglaTipo: siglaTipo.value === 'all' ? undefined : siglaTipo.value,
     numero: numero.value || undefined,

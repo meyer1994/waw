@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Pauta } from '~~/server/api/eventos/[eid]/pauta.get'
+import type { CamaraLista, Pauta } from '#shared/api'
 
 const route = useRoute()
 const eid = route.params.eid as string
 
-const { data, status } = await useFetch(`/api/eventos/${eid}/pauta`)
+const { data, status } = await useFetch<CamaraLista<Pauta>>(`/api/camara/eventos/${eid}/pauta`)
 
 const columns: TableColumn<Pauta>[] = [
   { accessorKey: 'ordem', header: '#' },

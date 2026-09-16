@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { HistoricoGrupo } from '~~/server/api/grupos/[gid]/historico.get'
+import type { HistoricoGrupo, CamaraLista } from '#shared/api'
 
 const route = useRoute()
 const gid = route.params.gid as string
 
-const { data, status } = await useFetch(`/api/grupos/${gid}/historico`)
+const { data, status } = await useFetch<CamaraLista<HistoricoGrupo>>(`/api/camara/grupos/${gid}/historico`)
 
 const columns: TableColumn<HistoricoGrupo>[] = [
   { id: 'data', header: 'Data' },

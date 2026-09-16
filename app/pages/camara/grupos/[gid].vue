@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import type { CamaraItem, Grupo } from '#shared/api'
 
 const route = useRoute()
 const gid = route.params.gid as string
@@ -10,7 +11,8 @@ const items: NavigationMenuItem[] = [
   { label: 'Histórico', icon: 'i-lucide-history', to: `${parent}/historico` }
 ]
 
-const { data: grupo } = await useFetch(`/api/grupos/${gid}`)
+const { data } = await useFetch<CamaraItem<Grupo>>(`/api/camara/grupos/${gid}`)
+const grupo = computed(() => data.value?.dados)
 
 useHead(() => ({ title: grupo.value?.nome ?? 'Grupo' }))
 </script>

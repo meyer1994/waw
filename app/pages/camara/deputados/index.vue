@@ -2,7 +2,7 @@
 import type { TableColumn } from '@nuxt/ui'
 import { PARTY_FLAGS, UF } from '~~/shared/constants'
 import { deputadosSchema } from '~~/shared/schemas'
-import type { Deputado } from '~~/server/api/deputados/index.get'
+import type { Deputado, CamaraLista, Partido } from '#shared/api'
 
 const ufItems: string[] = Object.values(UF)
 
@@ -13,7 +13,7 @@ const siglaSexo = ref<string>()
 const idLegislatura = ref<string>()
 
 const debName = debouncedRef(name, 500)
-const { data, status } = await useFetch('/api/deputados', {
+const { data, status } = await useFetch<CamaraLista<Deputado>>('/api/camara/deputados', {
   query: computed(() => ({
     nome: debName.value || undefined,
     siglaUf: siglaUf.value,
@@ -23,7 +23,7 @@ const { data, status } = await useFetch('/api/deputados', {
   }))
 })
 
-const { data: partidos } = await useFetch('/api/partidos')
+const { data: partidos } = await useFetch<CamaraLista<Partido>>('/api/camara/partidos')
 
 const sexoItems = [
   { label: 'Masculino', value: 'M' },

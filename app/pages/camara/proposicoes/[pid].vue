@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import type { CamaraItem, ProposicaoDetalhe } from '#shared/api'
 
 const route = useRoute()
 const pid = route.params.pid as string
@@ -12,7 +13,8 @@ const items: NavigationMenuItem[] = [
   { label: 'Votações', icon: 'i-lucide-check-check', to: `/camara/proposicoes/${pid}/votacoes` }
 ]
 
-const { data: proposicao } = await useFetch(`/api/proposicoes/${pid}`)
+const { data } = await useFetch<CamaraItem<ProposicaoDetalhe>>(`/api/camara/proposicoes/${pid}`)
+const proposicao = computed(() => data.value?.dados)
 
 const titulo = computed(() => proposicao.value
   ? `${proposicao.value.siglaTipo} ${proposicao.value.numero}/${proposicao.value.ano}`

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import type { CamaraDeputadoDetalhe, CamaraItem } from '#shared/api'
 
 const did = useRoute().params.did as string
 const parent = `/camara/deputados/${did}`
@@ -17,8 +18,8 @@ const items: NavigationMenuItem[] = [
   { label: 'Mandatos Externos', icon: 'i-lucide-globe', to: `${parent}/mandatosExternos` }
 ]
 
-const { data } = await useFetch(`/api/deputados/${did}`)
-const deputado = computed(() => data.value?.deputado)
+const { data } = await useFetch<CamaraItem<CamaraDeputadoDetalhe>>(`/api/camara/deputados/${did}`)
+const deputado = computed(() => data.value?.dados)
 
 useHead(() => ({ title: deputado.value?.ultimoStatus?.nome ?? 'Deputado' }))
 </script>

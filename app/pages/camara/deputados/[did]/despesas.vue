@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Despesa } from '~~/server/api/deputados/[did]/despesas.get'
+import type { CamaraLista, Despesa } from '#shared/api'
 import { MESES } from '~~/shared/constants'
 
 const route = useRoute()
@@ -9,7 +9,7 @@ const did = route.params.did as string
 const ano = ref<string>()
 const mes = ref<string>()
 
-const { data, status } = await useFetch(`/api/deputados/${did}/despesas`, {
+const { data, status } = await useFetch<CamaraLista<Despesa>>(`/api/camara/deputados/${did}/despesas`, {
   query: computed(() => ({ ano: ano.value, mes: mes.value }))
 })
 
@@ -93,7 +93,7 @@ useHead(() => ({ title: 'Despesas' }))
       </template>
 
       <template #valorLiquido-cell="{ row }">
-        <span class="font-medium tabular-nums">{{ formatValor(row.original.valorLiquido) }}</span>
+        <span class="font-medium tabular-nums">{{ formatValor(row.original.valorLiquido ?? null) }}</span>
       </template>
 
       <template #documento-cell="{ row }">

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import type { CamaraItem, FrenteDetalhe } from '#shared/api'
 
 const route = useRoute()
 const fid = route.params.fid as string
@@ -9,7 +10,8 @@ const items: NavigationMenuItem[] = [
   { label: 'Membros', icon: 'i-lucide-users', to: `${parent}/membros` }
 ]
 
-const { data: frente } = await useFetch(`/api/frentes/${fid}`)
+const { data } = await useFetch<CamaraItem<FrenteDetalhe>>(`/api/camara/frentes/${fid}`)
+const frente = computed(() => data.value?.dados)
 
 useHead(() => ({ title: frente.value?.titulo ?? 'Frente' }))
 </script>

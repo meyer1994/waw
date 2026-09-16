@@ -2,7 +2,6 @@
 import type { TableColumn } from '@nuxt/ui'
 import { PARTY_FLAGS, UF } from '~~/shared/constants'
 import { senadoresSchema } from '~~/shared/schemas'
-import type { Senador } from '~~/server/api/senadores/index.get'
 
 const ufItems: string[] = Object.values(UF)
 

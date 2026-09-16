@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Deputado } from '~~/server/api/deputados/index.get'
+import type { CamaraLista, Deputado } from '#shared/api'
 
 const route = useRoute()
 const pid = route.params.pid as string
 
-const { data, status } = await useFetch(`/api/partidos/${pid}/membros`)
+const { data, status } = await useFetch<CamaraLista<Deputado>>(`/api/camara/partidos/${pid}/membros`)
 
 const columns: TableColumn<Deputado>[] = [
   { id: 'deputado', header: 'Deputado' },

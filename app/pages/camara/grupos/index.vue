@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Grupo } from '~~/server/api/grupos/index.get'
+import type { CamaraLista, Grupo } from '#shared/api'
 
-const { data, status } = await useFetch('/api/grupos')
+const { data, status } = await useFetch<CamaraLista<Grupo>>('/api/camara/grupos')
 
 const columns: TableColumn<Grupo>[] = [
   { accessorKey: 'nome', header: 'Grupo' },

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { MembroGrupo } from '~~/server/api/grupos/[gid]/membros.get'
+import type { CamaraLista, GrupoMembros, MembroGrupo } from '#shared/api'
 
 const route = useRoute()
 const gid = route.params.gid as string
 
-const { data, status } = await useFetch(`/api/grupos/${gid}/membros`)
+const { data, status } = await useFetch<CamaraLista<GrupoMembros>>(`/api/camara/grupos/${gid}/membros`)
 
 const membros = computed(() => data.value?.dados.flatMap(grupo => grupo.membros) ?? [])
 

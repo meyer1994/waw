@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import type { CamaraItem, PartidoDetalhe } from '#shared/api'
 
 const route = useRoute()
 const pid = route.params.pid as string
@@ -10,7 +11,8 @@ const items: NavigationMenuItem[] = [
   { label: 'Líderes', icon: 'i-lucide-crown', to: `${parent}/lideres` }
 ]
 
-const { data: partido } = await useFetch(`/api/partidos/${pid}`)
+const { data } = await useFetch<CamaraItem<PartidoDetalhe>>(`/api/camara/partidos/${pid}`)
+const partido = computed(() => data.value?.dados)
 
 useHead(() => ({ title: partido.value?.sigla ?? 'Partido' }))
 </script>

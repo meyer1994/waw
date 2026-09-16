@@ -4,11 +4,10 @@ import * as vNG from "v-network-graph"
 import { ForceLayout, ForceNodeDatum, ForceEdgeDatum } from "v-network-graph/lib/force-layout"
 import { VNetworkGraph } from "v-network-graph"
 import "v-network-graph/lib/style.css"
+import type { CamaraLista, CamaraProposicaoItem } from "#shared/api"
+import type { GraphNode } from "~/composables/useCoautoriaNetwork"
 
-// Deputado padrão: Adriana Ventura (NOVO/SP)
-const DEFAULT_DEPUTADO = 204528
-
-const { nodes, edges, fetchDeputadoProposicoes } = useCoautoriaNetwork()
+const { nodes, edges, limitReached, fetchProposicaoAutores, fetchDeputadoProposicoes } = useCoautoriaNetwork()
 
 const expanded = new Set<string>()
 const hoveredNode = ref<string | null>(null)
@@ -31,23 +30,57 @@ function onEdgeOut() {
   hoveredEdge.value = null
 }
 
-// dblclick: expande o nó (fetch coautores)
+// dblclick: proposições buscam os autores, deputados buscam suas proposições
 async function onNodeDblClick(id: string) {
   if (expanded.has(id)) return
+  const node = nodes.value[id]
+  if (!node) return
   expanded.add(id)
-  await fetchDeputadoProposicoes(id.replace("dep-", ""))
+
+  if (node.type === "proposicao") {
+    const { id, siglaTipo, numero, ano, ementa } = node
+    await fetchProposicaoAutores({ id, siglaTipo, numero, ano, ementa })
+  }
+  else {
+    await fetchDeputadoProposicoes(id)
+  }
 }
 
-function seed(did: number) {
+// seed: proposição aleatória da API. PECs quase sempre têm coautores,
+// então sorteamos entre elas; caímos para o pool geral se necessário
+async function seed() {
   nodes.value = {}
   edges.value = {}
   expanded.clear()
   hoveredNode.value = null
   hoveredEdge.value = null
-  onNodeDblClick(`dep-${did}`)
+  limitReached.value = false
+
+  const res = await $fetch<CamaraLista<CamaraProposicaoItem>>("/api/camara/proposicoes", { query: { siglaTipo: "PEC", itens: 50 } })
+  const pool = [...res.dados.filter(p => p.ementa)].sort(() => Math.random() - 0.5)
+  for (const p of pool.slice(0, 3)) {
+    const linked = await fetchProposicaoAutores(p)
+    if (linked >= 2) break
+  }
 }
 
-onMounted(() => seed(DEFAULT_DEPUTADO))
+onMounted(() => seed())
+
+// ------------------------------------------------------------------
+// Per-node colors: deputados by partido, proposições by ano
+// ------------------------------------------------------------------
+const PARTY_COLORS = ["#0ea5e9", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#14b8a6", "#f97316", "#84cc16", "#6366f1"]
+
+function colorFromString(value: string): string {
+  let hash = 0
+  for (let i = 0; i < value.length; i++) hash = (hash * 31 + value.charCodeAt(i)) >>> 0
+  return PARTY_COLORS[hash % PARTY_COLORS.length]
+}
+
+function nodeColor(node: GraphNode): string {
+  if (node.type === "deputado") return colorFromString((node.siglaPartido as string) ?? "?")
+  return colorFromString(`ano-${node.ano}`)
+}
 
 // ------------------------------------------------------------------
 // Configs
@@ -72,11 +105,27 @@ const configs = computed(() => ({
     }),
   },
   node: {
+    // per-node styling: functions go on each field (official EachObject example)
     normal: {
-      type: "circle", radius: 20, color: "#1e3a5f",
-      label: { fontSize: 10, color: "#1f2937", direction: "south" },
+      type: node => (node.type === "deputado" ? "circle" : "rect"),
+      radius: node => (node.type === "deputado" ? 20 : 0),
+      width: node => (node.type === "deputado" ? 0 : 30),
+      height: node => (node.type === "deputado" ? 0 : 30),
+      borderRadius: node => (node.type === "deputado" ? 0 : 4),
+      color: node => nodeColor(node),
+      strokeWidth: 2,
+      strokeColor: "#ffffff",
     },
-    hover: { radius: 24, strokeWidth: 3, color: "#1d4ed8" },
+    hover: {
+      color: node => nodeColor(node),
+      strokeWidth: 3,
+      strokeColor: "#111827",
+    },
+    label: {
+      fontSize: node => (node.type === "deputado" ? 10 : 9),
+      color: node => (node.type === "deputado" ? "#1f2937" : "#6d28d9"),
+      direction: "south",
+    },
   },
   edge: {
     normal: { color: "#94a3b8", width: 2, dasharray: "0" },
@@ -115,11 +164,15 @@ const hoveredEdgeData = computed(() => {
       </div>
       <button
         class="px-3 py-1.5 rounded-full text-xs font-semibold border border-red-200 text-red-600 bg-white hover:bg-red-50 transition-colors"
-        @click="seed(DEFAULT_DEPUTADO)"
+        @click="seed()"
       >
         ↺ Reiniciar
       </button>
     </header>
+
+    <div v-if="limitReached" class="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs">
+      Limite de nós atingido — a expansão foi interrompida para manter o grafo legível. Reinicie ou feche ramos (breve).
+    </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
       <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">

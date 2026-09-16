@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import { PARTY_FLAGS } from '~~/shared/constants'
-import type { Orientacao } from '~~/server/api/votacoes/[vid]/orientacoes.get'
+import type { CamaraLista, Orientacao } from '#shared/api'
 
 const route = useRoute()
 const vid = route.params.vid as string
 
-const { data, status } = await useFetch(`/api/votacoes/${vid}/orientacoes`)
+const { data, status } = await useFetch<CamaraLista<Orientacao>>(`/api/camara/votacoes/${vid}/orientacoes`)
 
 const columns: TableColumn<Orientacao>[] = [
   { id: 'partido', header: 'Partido/Bloco' },
@@ -57,7 +57,7 @@ const votoColor = (voto: string | null) => {
 
       <template #orientacao-cell="{ row }">
         <UBadge
-          :color="votoColor(row.original.orientacaoVoto)"
+          :color="votoColor(row.original.orientacaoVoto ?? null)"
           variant="subtle"
           size="sm"
         >

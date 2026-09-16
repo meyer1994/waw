@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import type { CamaraItem, Legislatura } from '#shared/api'
 
 const route = useRoute()
 const lid = route.params.lid as string
@@ -10,7 +11,8 @@ const items: NavigationMenuItem[] = [
   { label: 'Líderes', icon: 'i-lucide-crown', to: `${parent}/lideres` }
 ]
 
-const { data: legislatura } = await useFetch(`/api/legislaturas/${lid}`)
+const { data } = await useFetch<CamaraItem<Legislatura>>(`/api/camara/legislaturas/${lid}`)
+const legislatura = computed(() => data.value?.dados)
 
 useHead(() => ({ title: `${legislatura.value?.id ?? ''}ª Legislatura` }))
 </script>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import { PARTY_FLAGS } from '~~/shared/constants'
-import type { Partido } from '~~/server/api/partidos/index.get'
+import type { CamaraLista, Partido } from '#shared/api'
 
-const { data, status } = await useFetch('/api/partidos')
+const { data, status } = await useFetch<CamaraLista<Partido>>('/api/camara/partidos')
 
 const columns: TableColumn<Partido>[] = [
   { id: 'logo', header: '', meta: { class: { th: 'w-16' } } },
@@ -27,8 +27,8 @@ useHead(() => ({ title: 'Partidos' }))
     >
       <template #logo-cell="{ row }">
         <NuxtImg
-          v-if="PARTY_FLAGS[row.original.sigla]"
-          :src="PARTY_FLAGS[row.original.sigla]"
+          v-if="row.original.sigla && PARTY_FLAGS[row.original.sigla]"
+          :src="PARTY_FLAGS[row.original.sigla ?? '']"
           alt=""
           class="w-8 h-5 rounded-[2px] object-cover"
         />

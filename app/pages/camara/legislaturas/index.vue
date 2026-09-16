@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Legislatura } from '~~/server/api/legislaturas/index.get'
+import type { CamaraLista, Legislatura } from '#shared/api'
 
-const { data, status } = await useFetch('/api/legislaturas')
+const { data, status } = await useFetch<CamaraLista<Legislatura>>('/api/camara/legislaturas')
 
 const columns: TableColumn<Legislatura>[] = [
   { accessorKey: 'id', header: 'Legislatura' },

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Tema } from '~~/server/api/proposicoes/[pid]/temas.get'
+import type { CamaraLista, Tema } from '#shared/api'
 
 const route = useRoute()
 const pid = route.params.pid as string
 
-const { data, status } = await useFetch(`/api/proposicoes/${pid}/temas`)
+const { data, status } = await useFetch<CamaraLista<Tema>>(`/api/camara/proposicoes/${pid}/temas`)
 
 const columns: TableColumn<Tema>[] = [
   { accessorKey: 'tema', header: 'Tema' },

@@ -11,13 +11,17 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
 
-    // Cache all API proxies (Camara/Senado upstreams). SWR: serve instantly
-    '/api/**': {
+    // Proxy direto para a API da Câmara — sem endpoints server-side.
+    // O caminho após /api/camara/ é repassado ao upstream.
+    '/api/camara/**': {
+      proxy: 'https://dadosabertos.camara.leg.br/api/v2/**',
+
+      // Cache (SWR) na CACHE KV do Cloudflare, como antes
       cache: {
         // @ts-expect-error - allowQuery is valid, but not typed
         allowQuery: true,
-        maxAge: 60 * 5, // 5 minutes
-        staleMaxAge: 60 * 10, // 10 minutes
+        maxAge: 60 * 5, // 5 minutos
+        staleMaxAge: 60 * 10, // 10 minutos
         swr: true
       }
     }
@@ -32,6 +36,9 @@ export default defineNuxtConfig({
       deployConfig: true,
       nodeCompat: true
     },
+
+    debug: true,
+    logLevel: 'debug',
 
     // Persist the cache in the CACHE KV binding (wrangler.jsonc),
     // so entries survive restarts and are shared across workers

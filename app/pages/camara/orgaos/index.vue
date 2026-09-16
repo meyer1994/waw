@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Orgao } from '~~/server/api/orgaos/index.get'
+import type { CamaraLista, Orgao } from '#shared/api'
 import { COD_TIPO_ORGAO } from '~~/shared/constants'
 
 const sigla = ref('')
 const codTipoOrgao = ref<string>()
 
 const debSigla = debouncedRef(sigla, 500)
-const { data, status } = await useFetch('/api/orgaos', {
+const { data, status } = await useFetch<CamaraLista<Orgao>>('/api/camara/orgaos', {
   query: computed(() => ({ sigla: debSigla.value || undefined, codTipoOrgao: codTipoOrgao.value }))
 })
 

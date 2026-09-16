@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Votacao } from '~~/server/api/votacoes/index.get'
+import type { CamaraLista, Votacao } from '#shared/api'
 
 const dataInicio = ref('')
 const dataFim = ref('')
 
-const { data, status } = await useFetch('/api/votacoes', {
+const { data, status } = await useFetch<CamaraLista<Votacao>>('/api/camara/votacoes', {
   query: computed(() => ({ dataInicio: dataInicio.value || undefined, dataFim: dataFim.value || undefined }))
 })
 

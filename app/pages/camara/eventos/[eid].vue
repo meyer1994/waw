@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import type { CamaraItem, Evento } from '#shared/api'
 
 const route = useRoute()
 const eid = route.params.eid as string
@@ -12,7 +13,8 @@ const items: NavigationMenuItem[] = [
   { label: 'Votações', icon: 'i-lucide-check-check', to: `${parent}/votacoes` }
 ]
 
-const { data: evento } = await useFetch(`/api/eventos/${eid}`)
+const { data } = await useFetch<CamaraItem<Evento>>(`/api/camara/eventos/${eid}`)
+const evento = computed(() => data.value?.dados)
 
 useHead(() => ({ title: evento.value?.descricaoTipo ?? 'Evento' }))
 </script>

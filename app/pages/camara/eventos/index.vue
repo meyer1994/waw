@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Evento } from '~~/server/api/eventos/index.get'
+import type { CamaraLista, Evento } from '#shared/api'
 
 const dataInicio = ref('')
 const dataFim = ref('')
 
-const { data, status } = await useFetch('/api/eventos', {
+const { data, status } = await useFetch<CamaraLista<Evento>>('/api/camara/eventos', {
   query: computed(() => ({
     dataInicio: dataInicio.value || undefined,
     dataFim: dataFim.value || undefined

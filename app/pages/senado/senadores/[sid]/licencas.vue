@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Licenca } from '~~/server/api/senadores/[sid]/licencas.get'
 
 const route = useRoute()
 const sid = route.params.sid as string

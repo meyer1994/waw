@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import type { CamaraItem, OrgaoDetalhe } from '#shared/api'
 
 const route = useRoute()
 const oid = route.params.oid as string
@@ -11,7 +12,8 @@ const items: NavigationMenuItem[] = [
   { label: 'Votações', icon: 'i-lucide-check-check', to: `${parent}/votacoes` }
 ]
 
-const { data: orgao } = await useFetch(`/api/orgaos/${oid}`)
+const { data } = await useFetch<CamaraItem<OrgaoDetalhe>>(`/api/camara/orgaos/${oid}`)
+const orgao = computed(() => data.value?.dados)
 
 useHead(() => ({ title: orgao.value?.sigla ?? 'Órgão' }))
 </script>

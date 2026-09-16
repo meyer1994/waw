@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Autor } from '~~/server/api/proposicoes/[pid]/autores.get'
+import type { Autor, CamaraLista } from '#shared/api'
 
 const route = useRoute()
 const pid = route.params.pid as string
 
-const { data, status } = await useFetch(`/api/proposicoes/${pid}/autores`)
+const { data, status } = await useFetch<CamaraLista<Autor>>(`/api/camara/proposicoes/${pid}/autores`)
 
 const columns: TableColumn<Autor>[] = [
   { accessorKey: 'nome', header: 'Autor' },
@@ -23,8 +23,8 @@ const columns: TableColumn<Autor>[] = [
     >
       <template #nome-cell="{ row }">
         <NuxtLink
-          v-if="row.original.uri.includes('/camara/deputados/')"
-          :to="`/camara/deputados/${row.original.uri.split('/').pop()}`"
+          v-if="row.original.uri?.includes('/camara/deputados/')"
+          :to="`/camara/deputados/${row.original.uri?.split('/').pop()}`"
         >
           <span class="text-primary hover:underline font-medium">{{ row.original.nome }}</span>
         </NuxtLink>

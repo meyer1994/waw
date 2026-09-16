@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { ProposicaoRelacionada } from '~~/server/api/proposicoes/[pid]/relacionadas.get'
+import type { CamaraLista, ProposicaoRelacionada } from '#shared/api'
 
 const route = useRoute()
 const pid = route.params.pid as string
 
-const { data, status } = await useFetch(`/api/proposicoes/${pid}/relacionadas`)
+const { data, status } = await useFetch<CamaraLista<ProposicaoRelacionada>>(`/api/camara/proposicoes/${pid}/relacionadas`)
 
 const columns: TableColumn<ProposicaoRelacionada>[] = [
   { id: 'proposicao', header: 'Proposição' },

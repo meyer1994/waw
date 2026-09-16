@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Proposicao } from '~~/server/api/deputados/[did]/index.get'
+import type { CamaraLista, Proposicao } from '#shared/api'
 
 const route = useRoute()
 const did = route.params.did as string
 
-const { data, status } = await useFetch(`/api/deputados/${did}`)
-const proposicoes = computed(() => data.value?.proposicoes)
+const { data, status } = await useFetch<CamaraLista<Proposicao>>(`/api/camara/deputados/${did}/proposicoes`)
+const proposicoes = computed(() => data.value?.dados)
 
 const columns: TableColumn<Proposicao>[] = [
   { id: 'proposicao', header: 'Proposição' },
@@ -22,7 +22,7 @@ const columns: TableColumn<Proposicao>[] = [
     </h2>
 
     <UTable
-      :data="proposicoes?.dados ?? []"
+      :data="proposicoes ?? []"
       :columns="columns"
       :loading="status === 'pending'"
     >

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Frente } from '~~/server/api/frentes/index.get'
+import type { CamaraLista, Frente } from '#shared/api'
 
-const { data, status } = await useFetch('/api/frentes')
+const { data, status } = await useFetch<CamaraLista<Frente>>('/api/camara/frentes')
 
 const columns: TableColumn<Frente>[] = [
   { accessorKey: 'titulo', header: 'Frente' },

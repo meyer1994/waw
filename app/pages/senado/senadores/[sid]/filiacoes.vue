@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import { PARTY_FLAGS } from '~~/shared/constants'
-import type { Filiacao } from '~~/server/api/senadores/[sid]/filiacoes.get'
 
 const route = useRoute()
 const sid = route.params.sid as string

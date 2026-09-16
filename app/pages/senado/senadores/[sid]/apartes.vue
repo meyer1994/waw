@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
-import type { Pronunciamento } from '~~/server/api/senadores/[sid]/discursos.get'
 
 const route = useRoute()
 const sid = route.params.sid as string
