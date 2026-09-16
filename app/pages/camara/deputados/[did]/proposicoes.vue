@@ -5,7 +5,8 @@ import type { CamaraLista, Proposicao } from '#shared/api'
 const route = useRoute()
 const did = route.params.did as string
 
-const { data, status } = await useFetch<CamaraLista<Proposicao>>(`/api/camara/deputados/${did}/proposicoes`)
+// a API não tem /deputados/{id}/proposicoes; usa-se /proposicoes com o filtro idDeputado
+const { data, status } = await useFetch<CamaraLista<Proposicao>>('/api/camara/proposicoes', { query: { idDeputadoAutor: did, itens: 100, ordem: 'DESC', ordenarPor: 'id' } })
 const proposicoes = computed(() => data.value?.dados)
 
 const columns: TableColumn<Proposicao>[] = [
