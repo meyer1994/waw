@@ -17,7 +17,7 @@ export type Evento = {
 export default defineEventHandler(async (event): Promise<{ dados: Evento[] }> => {
   const { codTipoEvento, idOrgao, dataInicio, dataFim, itens } = await getValidatedQuery(event, data => eventosSchema.parse(data))
 
-  return await camaraClient.get('eventos', { query: {
+  const res = await camaraClient.get<{ dados: Evento[] }>('eventos', { query: {
     codTipoEvento,
     idOrgao,
     dataInicio,
@@ -26,4 +26,6 @@ export default defineEventHandler(async (event): Promise<{ dados: Evento[] }> =>
     ordem: 'desc',
     ordenarPor: 'dataHoraInicio'
   } })
+
+  return { dados: res.dados }
 })

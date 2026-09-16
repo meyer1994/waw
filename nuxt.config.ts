@@ -17,6 +17,7 @@ export default defineNuxtConfig({
         // @ts-expect-error - allowQuery is valid, but not typed
         allowQuery: true,
         maxAge: 60 * 5, // 5 minutes
+        staleMaxAge: 60 * 10, // 10 minutes
         swr: true
       }
     }
@@ -39,6 +40,12 @@ export default defineNuxtConfig({
         driver: 'cloudflare-kv-binding',
         binding: 'CACHE'
       }
+    }
+  },
+
+  typescript: {
+    tsConfig: {
+      exclude: ['../app/pages/examples']
     }
   },
 

@@ -11,12 +11,10 @@ export type Proposicao = {
   dataApresentacao: string | null
 }
 
-type Link = { href: string, rel: string, method?: string }
-
-export default defineEventHandler(async (event): Promise<{ dados: Proposicao[], links: Link[] }> => {
+export default defineEventHandler(async (event): Promise<{ dados: Proposicao[] }> => {
   const { siglaTipo, numero, ano, keywords, codTema, autor, dataApresentacaoInicio, dataApresentacaoFim, itens } = await getValidatedQuery(event, data => proposicoesSchema.parse(data))
 
-  return await camaraClient.get<{ dados: Proposicao[], links: Link[] }>('proposicoes', { query: {
+  const res = await camaraClient.get<{ dados: Proposicao[] }>('proposicoes', { query: {
     siglaTipo,
     numero,
     ano,
@@ -29,4 +27,6 @@ export default defineEventHandler(async (event): Promise<{ dados: Proposicao[], 
     ordem: 'desc',
     ordenarPor: 'id'
   } })
+
+  return { dados: res.dados }
 })

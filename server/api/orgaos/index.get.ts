@@ -15,11 +15,13 @@ export type Orgao = {
 export default defineEventHandler(async (event): Promise<{ dados: Orgao[] }> => {
   const { sigla, codTipoOrgao, itens } = await getValidatedQuery(event, data => orgaosSchema.parse(data))
 
-  return await camaraClient.get('orgaos', { query: {
+  const res = await camaraClient.get<{ dados: Orgao[] }>('orgaos', { query: {
     sigla,
     codTipoOrgao,
     itens,
     ordem: 'desc',
     ordenarPor: 'id'
   } })
+
+  return { dados: res.dados }
 })

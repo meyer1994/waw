@@ -17,7 +17,7 @@ export type Votacao = {
 export default defineEventHandler(async (event): Promise<{ dados: Votacao[] }> => {
   const { idProposicao, idEvento, idOrgao, dataInicio, dataFim, itens } = await getValidatedQuery(event, data => votacoesSchema.parse(data))
 
-  return await camaraClient.get<{ dados: Votacao[] }>('votacoes', { query: {
+  const res = await camaraClient.get<{ dados: Votacao[] }>('votacoes', { query: {
     idProposicao,
     idEvento,
     idOrgao,
@@ -27,4 +27,6 @@ export default defineEventHandler(async (event): Promise<{ dados: Votacao[] }> =
     ordem: 'desc',
     ordenarPor: 'dataHoraRegistro'
   } })
+
+  return { dados: res.dados }
 })

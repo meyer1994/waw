@@ -10,8 +10,7 @@ export const deputadosSchema = z.object({
   siglaUf: emptyToUndefined(z.string().trim().length(2).toUpperCase()),
   siglaPartido: emptyToUndefined(z.string().trim().min(1).toUpperCase()),
   siglaSexo: z.enum(['M', 'F']).optional(),
-  pagina: z.coerce.number().int().min(1).default(1),
-  itens: z.coerce.number().int().min(1).max(100).default(15),
+  itens: z.coerce.number().int().min(1).max(100).default(100),
   dataInicio: z.iso.date().optional(),
   dataFim: z.iso.date().optional(),
   ordem: z.enum(['asc', 'desc']).default('asc'),
@@ -38,7 +37,7 @@ export const frentesSchema = z.object({
 export const despesasSchema = z.object({
   ano: z.coerce.number().int().min(1989).max(2100).optional(),
   mes: z.coerce.number().int().min(1).max(12).optional(),
-  itens: z.coerce.number().int().min(1).max(100).default(10)
+  itens: z.coerce.number().int().min(1).max(100).default(100)
 })
 
 export const votacoesSchema = z.object({
@@ -47,7 +46,7 @@ export const votacoesSchema = z.object({
   idOrgao: z.coerce.number().int().positive().optional(),
   dataInicio: emptyToUndefined(z.iso.date()),
   dataFim: emptyToUndefined(z.iso.date()),
-  itens: z.coerce.number().int().min(1).max(100).default(10)
+  itens: z.coerce.number().int().min(1).max(100).default(100)
 })
 
 export const eventosSchema = z.object({
@@ -55,13 +54,13 @@ export const eventosSchema = z.object({
   idOrgao: z.coerce.number().int().positive().optional(),
   dataInicio: emptyToUndefined(z.iso.date()),
   dataFim: emptyToUndefined(z.iso.date()),
-  itens: z.coerce.number().int().min(1).max(100).default(10)
+  itens: z.coerce.number().int().min(1).max(100).default(100)
 })
 
 export const orgaosSchema = z.object({
   sigla: emptyToUndefined(z.string().trim().min(1).toUpperCase()),
   codTipoOrgao: z.coerce.number().int().positive().optional(),
-  itens: z.coerce.number().int().min(1).max(100).default(15)
+  itens: z.coerce.number().int().min(1).max(100).default(100)
 })
 
 export const proposicoesSchema = z.object({
@@ -73,7 +72,7 @@ export const proposicoesSchema = z.object({
   autor: emptyToUndefined(z.string().trim().min(1)),
   dataApresentacaoInicio: emptyToUndefined(z.iso.date()),
   dataApresentacaoFim: emptyToUndefined(z.iso.date()),
-  itens: z.coerce.number().int().min(1).max(100).default(10)
+  itens: z.coerce.number().int().min(1).max(100).default(100)
 })
 
 // Senado cargos/comissoes upstream expects 'S'/'N'

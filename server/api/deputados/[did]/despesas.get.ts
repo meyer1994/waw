@@ -26,11 +26,13 @@ export default defineEventHandler(async (event): Promise<{ dados: Despesa[] }> =
 
   const { ano, mes, itens } = await getValidatedQuery(event, data => despesasSchema.parse(data))
 
-  return await camaraClient.get<{ dados: Despesa[] }>(`deputados/${did}/despesas`, { query: {
+  const res = await camaraClient.get<{ dados: Despesa[] }>(`deputados/${did}/despesas`, { query: {
     ano,
     mes,
     itens,
     ordem: 'desc',
     ordenarPor: 'dataDocumento'
   } })
+
+  return { dados: res.dados }
 })
