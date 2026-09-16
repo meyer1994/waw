@@ -1,36 +1,13 @@
-# Minimal API Reference — Nuxt UI & VueUse
+# Minimal API Reference — Nuxt UI & VueUse (Summary)
 
 > This file exists only to give coding agents a quick mental model of the most
 > common component/function APIs in this project.
 
 ---
 
-## Commands
+## 📋 Project Basics
 
-- **Prefer jq** over inline python/node scripts for parsing json
-- Use `find` and `grep` for searching files:
-  - `find . -name '*.ts'` — list all TypeScript files
-  - `find . -type f -iname '*.vue' | xargs grep 'useFetch'` — search for
-    'useFetch' in all Vue files
-  - `grep -rn 'useToast' ./app/components` — recursively search for 'useToast'
-    in components directory with line numbers
-  - `grep -ri 'error' .` — case-insensitive search for 'error' in all files
-
----
-
-## Coding Guidelines
-
-- **Prefer early returns.** Exit functions as soon as pre-conditions fail; avoid
-  deep nesting.
-- **Happy path on the right.** Only worry about the happy path
-- **Prefer `const` over `let`.** Use immutable bindings by default; only use
-  `let` when reassignment is truly required.
-- **Don't overthink typescript types.** If types are taking too long to fix,
-  ignore them, but add a TODO comment in the code
-
----
-
-## Commands
+### Commands
 
 | Command           | Description                      |
 | ----------------- | -------------------------------- |
@@ -43,9 +20,17 @@
 | `pnpm lint --fix` | Run ESLint autofix               |
 | `pnpm typecheck`  | Run TypeScript type checking     |
 
----
+### Tooling
 
-## Project Structure
+- **Prefer `jq`** for parsing JSON over inline python/node scripts.
+- Use `find` and `grep` for searching files:
+  - `find . -name '*.ts'` — list all TypeScript files
+  - `find . -type f -iname '*.vue' | xargs grep 'useFetch'` — search for
+    'useFetch' in all Vue files
+  - `grep -rn 'useToast' ./app/components` — recursive search with line numbers
+  - `grep -ri 'error' .` — case-insensitive search in all files
+
+### Structure
 
 ```
 .
@@ -63,349 +48,139 @@
 └── AGENTS.md
 ```
 
----
+### Coding Guidelines
 
-## Nuxt UI (v4) — Most Common Components
-
-All components accept `color`, `variant`, `size`, `class`, and `ui` (slot
-overrides) unless noted.
-
-### `<UButton>`
-```
-label?: string
-color?: 'primary' | 'neutral' | 'error' | 'warning' | 'success' | 'info'
-variant?: 'solid' | 'outline' | 'soft' | 'ghost' | 'link'
-size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-icon?: string        // Iconify icon name
-leadingIcon?: string
-trailingIcon?: string
-loading?: boolean
-loadingAuto?: boolean
-square?: boolean
-block?: boolean
-disabled?: boolean
-@click?: (e: MouseEvent) => void | Promise<void>
-```
-Slots: `leading`, `default`, `trailing`
-
-### `<UInput>` / `<UTextarea>`
-```
-modelValue?: string | number
-placeholder?: string
-type?: string          // Input only
-required?: boolean
-autocomplete?: string
-autofocus?: boolean
-disabled?: boolean
-highlight?: boolean    // force focus ring
-icon?: string
-leading?: string | object
-trailing?: string | object
-```
-Emits: `update:modelValue`, `change`, `blur`, `focus`
-
-### `<USelect>` / `<USelectMenu>`
-```
-modelValue?: any
-placeholder?: string
-items?: Array<{ label, value, icon?, disabled? } | string>
-multiple?: boolean
-searchable?: boolean     // SelectMenu only
-clearable?: boolean
-```
-
-### `<UTabs>`
-```
-items?: Array<{ label, value, icon?, disabled?, badge? }>
-modelValue?: string | number
-color?: 'primary' | ...
-variant?: 'pill' | 'line' | 'soft'
-orientation?: 'horizontal' | 'vertical'
-```
-
-### `<UAccordion>` / `<UCollapsible>`
-```
-items?: Array<{ label, icon?, content?, disabled?, slot? }>
-multiple?: boolean     // Accordion only
-defaultValue?: string | string[]
-```
-
-### `<UTable>`
-```
-data?: T[]
-columns?: ColumnDef<T>[]
-caption?: string
-meta?: TableMeta<T>
-virtualize?: boolean | VirtualizerOptions
-loading?: boolean
-empty?: string
-```
-
-### `<UForm>` / `<UFormField>`
-```
-state?: any          // form object
-schema?: ZodSchema | YupSchema | ValibotSchema
-validate?: (state) => Promise<Error[]>
-validateOn?: 'blur' | 'change' | 'input' | 'submit'
-```
-
-### `<UAvatar>`
-```
-src?: string
-alt?: string
-text?: string          // initials fallback
-icon?: string
-size?: '3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
-color?: 'neutral' | ...
-chip?: boolean | ChipProps
-```
-
-### `<UBadge>`
-```
-label?: string | number
-variant?: 'solid' | 'outline' | 'soft' | 'subtle'
-size?: '3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-square?: boolean
-```
-
-### `<UCard>` / `<UPageCard>`
-```
-variant?: 'solid' | 'outline' | 'soft' | 'ghost'
-
-// UCard slots: header, default, footer
-// UPageCard slots: top, default, bottom
-```
-
-### `<UModal>` / `<UDrawer>` / `<USlideover>`
-```
-title?: string
-description?: string
-overlay?: boolean
-scrollable?: boolean
-fullscreen?: boolean
-transition?: boolean
-portal?: boolean | string | HTMLElement
-close?: boolean | ButtonProps
-dismissible?: boolean
-preventClose?: boolean
-```
-
-### `<UDropdownMenu>` / `<UContextMenu>`
-```
-items?: Array<{ label, icon?, disabled?, children?: [], to?, href?, click? }>
-size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-content?: MenuContentProps
-```
-
-### `<UTooltip>` / `<UPopover>`
-```
-text?: string
-content?: string | object
-delayDuration?: number
-side?: 'top' | 'right' | 'bottom' | 'left'
-align?: 'start' | 'center' | 'end'
-```
-
-### `<USwitch>` / `<UCheckbox>` / `<URadioGroup>`
-```
-modelValue?: boolean          // Switch / Checkbox
-modelValue?: any              // RadioGroup
-label?: string
-description?: string
-color?: 'primary' | ...
-```
-
-### `<UToast>` / `<UToaster>`
-```
-toast.add({ title, description, icon?, color?, duration?, actions?[] })
-```
-
-### `<UProgress>` / `<USlider>`
-```
-modelValue?: number
-min?: number
-max?: number
-steps?: number             // Slider only
-```
-
-### `<USkeleton>` / `<USeparator>` / `<UChip>` / `<UKbd>`
-```
-// Skeleton: class, ui
-// Separator: orientation, decorative, class
-// Chip: label, inset, position, size, color
-// Kbd: value, variant, size
-```
-
-### `<UContainer>` / `<ULink>` / `<UIcon>`
-```
-// Container: padding?, constrained?, class
-// Link: to?, href?, external?, target?, active?, activeClass?, exact?, exactActiveClass?
-// Icon: name (Iconify), size?, class?
-```
-
-### `<UBreadcrumb>` / `<UPagination>` / `<UCommandPalette>`
-```
-// Breadcrumb: items: Array<{ label, to?, icon?, slot? }>
-// Pagination: v-model:page, total, itemsPerPage, showEdges, siblings
-// CommandPalette: groups: Array<{ id, items: [{ label, value, icon?, to?, click? }] }], placeholder
-```
-
-### `<UColorPicker>` / `<UInputDate>` / `<UInputNumber>` / `<UInputTags>` / `<UInputRating>`
-```
-// ColorPicker: modelValue (hex), format, modes
-// InputDate: modelValue (Date), placeholder, format
-// InputNumber: modelValue (number), min, max, step
-// InputTags: modelValue (string[]), max, createItem
-// InputRating: modelValue (number), max, icon
-```
+- **Prefer early returns.** Exit functions as soon as pre-conditions fail; avoid
+  deep nesting.
+- **Happy path on the right.** Only worry about the happy path.
+- **Prefer `const` over `let`.** Use immutable bindings by default; only use
+  `let` when reassignment is truly required.
+- **Don't overthink TypeScript types.** If types are taking too long to fix,
+  ignore them, but add a TODO comment in the code.
 
 ---
 
-## VueUse (v10+) — Most Common Composables
+## 🎨 Nuxt UI v4 Components
+
+All components share `color`, `variant`, `size`, `class`, and `ui` props
+(slot overrides) unless noted.
+
+### Buttons & Inputs
+
+| Component                               | Key props                                                                                                                                           |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `UButton`                               | `label`, `icon`, `loading`, `loadingAuto`, `block`, `square`, `disabled` — variants: solid/outline/soft/ghost/link; slots: leading/default/trailing |
+| `UInput` / `UTextarea`                  | `modelValue`, `placeholder`, `icon`, `autofocus`, `highlight`, `leading`, `trailing`                                                                |
+| `USelect` / `USelectMenu`               | `items`, `multiple`, `searchable` (SelectMenu only), `clearable`                                                                                    |
+| `UCheckbox` / `USwitch` / `URadioGroup` | `modelValue`, `label`, `description`, `color`                                                                                                       |
+| `UForm` + `UFormField`                  | `state`, `schema` (Zod/Yup/Valibot), `validate`, `validateOn` (blur/change/input/submit)                                                            |
+| `UInputNumber`                          | `modelValue`, `min`, `max`, `step`                                                                                                                  |
+| `UInputDate`                            | `modelValue` (Date), `placeholder`, `format`                                                                                                        |
+| `UColorPicker`                          | `modelValue` (hex), `format`, `modes`                                                                                                               |
+| `UInputTags`                            | `modelValue` (string[]), `max`, `createItem`                                                                                                        |
+| `UInputRating`                          | `modelValue` (number), `max`, `icon`                                                                                                                |
+
+### Navigation & Layout
+
+- **`UTabs`** — `items` (label/value/icon/badge), `modelValue`, `variant`
+  (pill/line/soft), `orientation`
+- **`UBreadcrumb`** — `items: Array<{ label, to?, icon?, slot? }>`
+- **`UPagination`** — `v-model:page`, `total`, `itemsPerPage`, `showEdges`,
+  `siblings`
+- **`UCommandPalette`** — `groups`, `placeholder`
+- **`UCard`** / **`UPageCard`** — `variant`; slots: header/default/footer or
+  top/default/bottom
+- **`UContainer`** — `padding`, `constrained`, `class`
+- **`ULink`** — `to`, `href`, `external`, `active`, `activeClass`, `exact`
+- **`UIcon`** — `name` (Iconify), `size`, `class`
+- **`USeparator`**, **`USkeleton`**, **`UChip`**, **`UKbd`**
+
+### Overlays & Feedback
+
+| Component                           | Key props                                                                                             |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `UModal` / `UDrawer` / `USlideover` | `title`, `description`, `overlay`, `scrollable`, `fullscreen`, `dismissible`, `preventClose`, `close` |
+| `UDropdownMenu` / `UContextMenu`    | `items` (nested `children`, `to`, `click`), `size`, `content`                                         |
+| `UTooltip` / `UPopover`             | `text`, `content`, `side`, `align`, `delayDuration`                                                   |
+| `UAccordion` / `UCollapsible`       | `items` (label/icon/content/slot), `multiple` (Accordion only), `defaultValue`                        |
+| `UToast` / `UToaster`               | `toast.add({ title, description, icon?, color?, duration?, actions? })`                               |
+
+### Data Display
+
+- **`UTable`** — `data`, `columns`, `caption`, `virtualize`, `loading`, `empty`
+- **`UAvatar`** — `src`/`alt`/`text` (initials fallback), sizes 3xs→3xl, `chip`
+- **`UBadge`** — `label`, variants: solid/outline/soft/subtle
+- **`UProgress`** / **`USlider`** — `modelValue`, `min`, `max`, `steps`
+  (Slider only)
+
+---
+
+## ⚡ VueUse Composables (v10+)
 
 ### State & Reactivity
+
 ```ts
-useToggle(initial?: boolean): [Ref<boolean>, (value?: boolean) => boolean]
-useCounter(initial?: number, options?: { min, max, step }): { count, inc, dec, set, reset }
-useVModel(props, key, emit?): WritableComputedRef
-useVModels(props, emit?): { [K]: WritableComputedRef }
-useCloned<T>(source: T): { cloned, sync }
-useDebounceFn(fn, wait, options?): DebouncedFunction
-useThrottleFn(fn, wait, options?): ThrottledFunction
-useIntervalFn(callback, interval?, options?): { pause, resume, isActive }
-useTimeoutFn(fn, interval?, options?): { start, stop, isPending }
-useInterval(interval?, options?): Ref<number>
-useTimeout(interval?): Ref<boolean>
-useRafFn(fn, options?): { pause, resume }
+useToggle(initial?), useCounter(initial?, { min, max, step }),
+useVModel(props, key, emit?), useVModels(props, emit?), useCloned(source),
+useDebounceFn(fn, wait, options?), useThrottleFn(fn, wait, options?),
+useIntervalFn(callback, interval?, options?), useTimeoutFn(fn, interval?, options?),
+useInterval(interval?), useTimeout(interval?), useRafFn(fn, options?)
 ```
 
 ### Browser / DOM
+
 ```ts
-useMouse(options?): { x, y, sourceType }
-useMouseInElement(target?, options?): { x, y, elementX, elementY, isOutside }
-useWindowSize(options?): { width, height }
-useElementSize(target?, options?): { width, height }
-useElementBounding(target?): { height, width, top, left, bottom, right }
-useElementVisibility(target?): Ref<boolean>
-useIntersectionObserver(target, callback, options?): { stop, isSupported }
-useMutationObserver(target, callback, options?): { stop }
-useResizeObserver(target, callback): { stop }
-useScroll(element?, options?): { x, y, isScrolling, arrivedState, directions }
-useInfiniteScroll(element, onLoadMore, options?)
-useDraggable(target, options?): { x, y, style, isDragging }
-useDropZone(target, options?): { isOverDropZone, files }
-useFocus(target?, options?): { focused, focus, blur }
-useFocusWithin(target?, options?): { focused }
-useElementHover(target?): Ref<boolean>
-useEventListener(target, event, handler, options?): () => void
-useClickOutside(target, handler, options?): () => void
-useKeyStroke(keys, handler, options?): () => void
-onKeyStroke(keys, handler, options?): () => void
-useMagicKeys(options?): { current, [keyCombo]: ComputedRef<boolean> }
-useTextSelection(): { text, rects, ranges, selection }
-useTextareaAutosize(options?): { textarea, input, triggerResize }
-useImage(options?): { isLoading, error, isReady }
-useFullscreen(target?, options?): { isFullscreen, enter, exit, toggle }
-useMediaQuery(query): Ref<boolean>
-useBreakpoints(breakpoints?): { greater, greaterOrEqual, smaller, smallerOrEqual, between, current }
-useFavicon(newIcon?): Ref<string>
-useTitle(newTitle?, options?): Ref<string>
-useScriptTag(src, onLoaded?, options?): { load, unload, script }
-useStyleTag(css, options?): { id, css, unload }
+useMouse, useMouseInElement, useWindowSize, useElementSize, useElementBounding,
+useElementVisibility, useIntersectionObserver, useMutationObserver, useResizeObserver,
+useScroll, useInfiniteScroll, useDraggable, useDropZone, useFocus, useFocusWithin,
+useElementHover, useEventListener, useClickOutside, useKeyStroke, onKeyStroke,
+useMagicKeys, useTextSelection, useTextareaAutosize, useImage, useFullscreen,
+useMediaQuery, useBreakpoints, useFavicon, useTitle, useScriptTag, useStyleTag
 ```
 
 ### Storage & Async
+
 ```ts
-useLocalStorage(key, initial?, options?): RemovableRef<T>
-useSessionStorage(key, initial?, options?): RemovableRef<T>
-useStorage(key, initial?, storage?, options?): RemovableRef<T>
-useStorageAsync(key, initial?, storage?, options?): Ref<T>
-useFetch(url, options?): { data, error, status, refresh }
-useAsyncState(promise, initialState?, options?): { state, isReady, isLoading, error, execute }
-useAsyncQueue(tasks, options?): { activeIndex, result }
-useMemoize(fn, options?): MemoizedFunction
-useCached(ref, comparator?): Ref<T>
+useLocalStorage, useSessionStorage, useStorage, useStorageAsync,
+useFetch(url, options?) → { data, error, status, refresh },
+useAsyncState, useAsyncQueue, useMemoize, useCached
 ```
 
 ### UX / Behavior
+
 ```ts
-useClipboard(options?): { text, copy, copied, isSupported }
-useClipboardItems(options?): { copy, copied, isSupported }
-useConfirmDialog(reveal?): { isRevealed, reveal, confirm, cancel, onReveal, onConfirm, onCancel }
-useDark(options?): Ref<boolean>
-useColorMode(options?): Ref<'light' | 'dark' | 'auto'>
-useToggle(preferredColorMode)
-useOnline(): Ref<boolean>
-useNetwork(): { isOnline, saveData, offlineAt, downlink, effectiveType, type }
-useIdle(timeout?, options?): { idle, lastActive }
-usePageLeave(): Ref<boolean>
-useWindowFocus(): Ref<boolean>
-useDocumentVisibility(): Ref<VisibilityState>
-usePermission(permissionDesc): { state, isSupported }
-useGeolocation(options?): { coords, locatedAt, error, resume, pause }
-useBattery(): { charging, chargingTime, dischargingTime, level, isSupported }
-useShare(options?): { share, isSupported }
-useWebWorker(fn, options?): { data, postMessage, terminate, worker }
-useWebSocket(url, options?): { status, data, send, open, close }
-useWebNotification(options?): { isSupported, notification, show, close }
-usePermission(permission)
-useWakeLock(options?): { isSupported, isActive, request, release }
-useVirtualList(list, options?): { containerProps, wrapperProps, list }
-useFileDialog(options?): { files, open, reset, onChange }
-useBase64(target): Ref<string>
-useSpeechRecognition(options?): { isSupported, isListening, result, error, start, stop }
-useSpeechSynthesis(text, options?): { isSupported, isPlaying, status, speak, stop }
-useDateFormat(date, format?, options?): ComputedRef<string>
-useTimeAgo(date, options?): Ref<string>
-useNow(options?): Ref<Date>
-useTimestamp(options?): Ref<number>
-useTransition(source, options?): Ref<number>
-useStepper(steps?): { index, current, next, previous, isFirst, isLast, goTo }
-useCountdown(options?): { remaining, start, stop, reset, isActive }
-useVirtualList(list, options?): { list, containerProps, wrapperProps, scrollTo }
-useSortable(el, list, options?): void
-useParallax(target?): { roll, tilt }
-useParentElement(target?): Ref<HTMLElement | null>
-useCurrentElement(): Ref<HTMLElement>
-useActiveElement(options?): Ref<HTMLElement | null | undefined>
+useClipboard, useClipboardItems, useConfirmDialog, useDark, useColorMode,
+useOnline, useNetwork, useIdle, usePageLeave, useWindowFocus, useDocumentVisibility,
+usePermission, useGeolocation, useBattery, useShare, useWebWorker, useWebSocket,
+useWebNotification, useWakeLock, useVirtualList, useFileDialog, useBase64,
+useSpeechRecognition, useSpeechSynthesis, useDateFormat, useTimeAgo, useNow,
+useTimestamp, useTransition, useStepper, useCountdown, useSortable, useParallax,
+useParentElement, useCurrentElement, useActiveElement
 ```
 
-### Array / Object helpers (from `@vueuse/shared`)
+### Array / Object helpers (`@vueuse/shared`)
+
 ```ts
-useArrayDifference(listA, listB, key?): Ref<T[]>
-useArrayEvery(list, fn): Ref<boolean>
-useArrayFilter(list, fn): Ref<T[]>
-useArrayFind(list, fn): Ref<T | undefined>
-useArrayFindIndex(list, fn): Ref<number>
-useArrayFindLast(list, fn): Ref<T | undefined>
-useArrayIncludes(list, value, comparator?): Ref<boolean>
-useArrayJoin(list, separator?): Ref<string>
-useArrayMap(list, fn): Ref<U[]>
-useArrayReduce(list, fn, initial?): Ref<U>
-useArraySome(list, fn): Ref<boolean>
-useArrayUnique(list, comparator?): Ref<T[]>
-useSorted(array, compare?, options?): Ref<T[]>
-useGroupBy(array, key): Ref<Record<string, T[]>>
+useArrayDifference, useArrayEvery, useArrayFilter, useArrayFind, useArrayFindIndex,
+useArrayFindLast, useArrayIncludes, useArrayJoin, useArrayMap, useArrayReduce,
+useArraySome, useArrayUnique, useSorted, useGroupBy
 ```
 
-### Component patterns
+### Component Patterns
+
 ```ts
-useTemplateRefsList<T>(): Ref<T[]>
-createReusableTemplate<T>(): [DefineComponent, ReuseComponent]
-useMounted(): Ref<boolean>
-useSupported(callback): Ref<boolean>
-useEventBus<T>(name?): { on, off, emit, reset }
-useConfirmDialog()
+useTemplateRefsList<T>(), createReusableTemplate<T>(), useMounted(),
+useSupported(callback), useEventBus<T>(name?), useConfirmDialog()
 ```
 
 ---
 
-## Quick Nuxt UI Composables
+## 🔧 Quick Nuxt UI Composables
 
 ```ts
-const toast = useToast()            // toast.add({ title, description })
-const modal = useModal()            // modal.open(Component, props), modal.close()
-const overlay = useOverlay()        // overlay.create(...)
+const toast = useToast()               // toast.add({ title, description })
+const modal = useModal()               // modal.open(Component, props), modal.close()
+const overlay = useOverlay()           // overlay.create(...)
 const clipboard = useCopyToClipboard() // clipboard.copy(text)
 ```
 
@@ -413,11 +188,10 @@ const clipboard = useCopyToClipboard() // clipboard.copy(text)
 
 ## Design Tokens (Tailwind Colors)
 
-Nuxt UI maps `color` prop to these theme colors:
+Nuxt UI maps the `color` prop to these theme colors:
+
 - `primary`, `secondary`, `success`, `info`, `warning`, `danger`, `neutral`
 
-Variants are usually:
-- `solid`, `outline`, `soft`, `ghost`, `link`
+Variants are usually: `solid`, `outline`, `soft`, `ghost`, `link`
 
-Sizes are usually:
-- `xs`, `sm`, `md`, `lg`, `xl`
+Sizes are usually: `xs`, `sm`, `md`, `lg`, `xl`
