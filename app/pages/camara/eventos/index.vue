@@ -51,7 +51,6 @@ useHead(() => ({ title: 'Eventos' }))
         <NuxtTime
           v-if="row.original.dataHoraInicio"
           :datetime="row.original.dataHoraInicio"
-          locale="pt-BR"
           year="numeric"
           month="2-digit"
           day="2-digit"

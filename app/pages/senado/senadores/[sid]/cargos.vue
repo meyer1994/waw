@@ -39,7 +39,6 @@ const columns: TableColumn<Cargo>[] = [
         <NuxtTime
           v-if="row.original.DataInicio"
           :datetime="row.original.DataInicio"
-          locale="pt-BR"
           year="numeric"
           month="2-digit"
           day="2-digit"
@@ -54,7 +53,6 @@ const columns: TableColumn<Cargo>[] = [
         <template v-if="row.original.DataFim">
           <NuxtTime
             :datetime="row.original.DataFim"
-            locale="pt-BR"
             year="numeric"
             month="2-digit"
             day="2-digit"

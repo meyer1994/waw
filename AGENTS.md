@@ -14,9 +14,6 @@
 | `pnpm install`    | Install dependencies             |
 | `pnpm dev`        | Start development server (Nuxt)  |
 | `pnpm build`      | Build for production             |
-| `pnpm generate`   | Generate static site             |
-| `pnpm preview`    | Preview production build locally |
-| `pnpm lint`       | Run ESLint                       |
 | `pnpm lint --fix` | Run ESLint autofix               |
 | `pnpm typecheck`  | Run TypeScript type checking     |
 
@@ -47,6 +44,71 @@
 ├── tsconfig.json
 └── AGENTS.md
 ```
+
+### Subpages / Nested Routes
+
+The app uses **3 levels of page nesting** for every entity
+(`camara/deputados`, `camara/partidos`, `senado/senadores`, ...):
+
+```
+app/pages/camara/deputados/
+├── index.vue            → /camara/deputados          (level 2: list page)
+├── [did].vue            → /camara/deputados/:did     (level 3: parent shell)
+└── [did]/
+    ├── despesas.vue     → /camara/deputados/:did/despesas (level 4: subpage)
+    ├── proposicoes.vue  → ...
+    └── ...              (one file per subpage)
+```
+
+**Parent shell (`[did].vue`, `[sid].vue`, ...)** — must follow this contract:
+
+- Read the id from the route: `const did = useRoute().params.did as string`
+- Fetch the entity detail (drives header/hero content)
+- Build a `NavigationMenuItem[]` whose `to` values point at child routes
+- Render the subpage nav with `<UNavigationMenu :items="items" />`
+- **Always render `<NuxtPage />`** — without it, child routes break
+  (`NUXT_E4016` error)
+
+**Subpages (`[did]/despesas.vue`, ...)** — fully self-contained:
+
+- Re-read the parent param: `const did = route.params.did as string`
+- Fetch their own data with a dedicated `useFetch` (no props passed from
+  the parent, no shared state)
+
+**Route resolution:** `/path` → `index.vue` · `/path/:id` → `[id].vue` ·
+`/path/:id/sub` → `[id].vue` renders `<NuxtPage />` with `[id]/sub.vue`
+inside. `app.vue` wraps everything with an outer `<NuxtPage />`.
+
+**Gotchas:** don't delete `<NuxtPage />` from a parent when adding subpages;
+no `pageKey`/`definePageMeta key` is used (default re-rendering is fine).
+
+### API Proxy (`nuxt.config.ts`)
+
+There are **no server-side endpoints** — all data comes from the Câmara
+open-data API via a `routeRules` proxy:
+
+```ts
+'/api/camara/**': {
+  proxy: 'https://dadosabertos.camara.leg.br/api/v2/**',
+  cache: { allowQuery: true, maxAge: 60 * 5, staleMaxAge: 60 * 10, swr: true }
+}
+```
+
+- Components call `useFetch('/api/camara/...')`; the `/**` suffix is
+  forwarded to the upstream (e.g. `/api/camara/deputados?nome=x` →
+  `.../api/v2/deputados?nome=x`).
+- `allowQuery: true` — query params are part of the cache key (per-filter
+  caching)
+- SWR cache: serve stale up to 10 min while revalidating, cache fresh for
+  5 min
+- Cache is persisted in the Cloudflare `CACHE` KV binding
+  (`nitro.storage.cloudflare-kv-binding`), so entries survive restarts and
+  are shared across workers
+- `'/'` is also prerendered (`routeRules` `prerender: true`)
+
+**Gotcha:** keep proxying under `/api/camara/**` — the CACHE KV also stores
+responses, so `allowQuery` + `maxAge`/`staleMaxAge` values are the tuning
+knobs if stale data shows up.
 
 ### Coding Guidelines
 

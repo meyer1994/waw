@@ -39,7 +39,6 @@ useHead(() => ({ title: titulo.value }))
       <NuxtTime
         v-if="proposicao?.dataApresentacao"
         :datetime="proposicao.dataApresentacao.slice(0, 10)"
-        locale="pt-BR"
         year="numeric"
         month="long"
         day="numeric"

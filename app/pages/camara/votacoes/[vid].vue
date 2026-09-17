@@ -27,7 +27,6 @@ useHead(() => ({ title: votacao.value ? `Votação ${votacao.value.id}` : 'Vota�
       <NuxtTime
         v-if="votacao?.data"
         :datetime="votacao.data.slice(0, 10)"
-        locale="pt-BR"
         year="numeric"
         month="long"
         day="numeric"
@@ -74,7 +73,6 @@ useHead(() => ({ title: votacao.value ? `Votação ${votacao.value.id}` : 'Vota�
               <NuxtTime
                 v-if="votacao.data"
                 :datetime="votacao.data.slice(0, 10)"
-                locale="pt-BR"
                 year="numeric"
                 month="long"
                 day="numeric"
@@ -90,7 +88,6 @@ useHead(() => ({ title: votacao.value ? `Votação ${votacao.value.id}` : 'Vota�
               <NuxtTime
                 v-if="votacao.dataHoraRegistro"
                 :datetime="votacao.dataHoraRegistro"
-                locale="pt-BR"
                 year="numeric"
                 month="2-digit"
                 day="2-digit"

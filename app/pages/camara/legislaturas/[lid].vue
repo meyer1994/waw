@@ -26,7 +26,6 @@ useHead(() => ({ title: `${legislatura.value?.id ?? ''}ª Legislatura` }))
       <NuxtTime
         v-if="legislatura?.dataInicio"
         :datetime="legislatura.dataInicio"
-        locale="pt-BR"
         year="numeric"
         month="long"
         day="numeric"
@@ -35,7 +34,6 @@ useHead(() => ({ title: `${legislatura.value?.id ?? ''}ª Legislatura` }))
       <NuxtTime
         v-if="legislatura?.dataFim"
         :datetime="legislatura.dataFim"
-        locale="pt-BR"
         year="numeric"
         month="long"
         day="numeric"
@@ -69,7 +67,6 @@ useHead(() => ({ title: `${legislatura.value?.id ?? ''}ª Legislatura` }))
               <NuxtTime
                 v-if="legislatura.dataInicio"
                 :datetime="legislatura.dataInicio"
-                locale="pt-BR"
                 year="numeric"
                 month="long"
                 day="numeric"
@@ -85,7 +82,6 @@ useHead(() => ({ title: `${legislatura.value?.id ?? ''}ª Legislatura` }))
               <NuxtTime
                 v-if="legislatura.dataFim"
                 :datetime="legislatura.dataFim"
-                locale="pt-BR"
                 year="numeric"
                 month="long"
                 day="numeric"

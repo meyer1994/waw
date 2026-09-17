@@ -29,7 +29,6 @@ const columns: TableColumn<Pronunciamento>[] = [
         <NuxtTime
           v-if="row.original.DataPronunciamento"
           :datetime="row.original.DataPronunciamento"
-          locale="pt-BR"
           year="numeric"
           month="2-digit"
           day="2-digit"

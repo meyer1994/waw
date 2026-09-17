@@ -40,6 +40,8 @@ const columns: TableColumn<Deputado>[] = [
   { accessorKey: 'idLegislatura', header: 'Legislatura' },
   { accessorKey: 'email', header: 'Email' }
 ]
+
+useHead(() => ({ title: 'Deputados' }))
 </script>
 
 <template>

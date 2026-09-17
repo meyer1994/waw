@@ -71,7 +71,6 @@ useHead(() => ({ title: orgao.value?.sigla ?? 'Órgão' }))
               <NuxtTime
                 v-if="orgao.dataInstalacao"
                 :datetime="orgao.dataInstalacao.slice(0, 10)"
-                locale="pt-BR"
                 year="numeric"
                 month="2-digit"
                 day="2-digit"

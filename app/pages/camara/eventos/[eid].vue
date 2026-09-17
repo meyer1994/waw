@@ -28,7 +28,6 @@ useHead(() => ({ title: evento.value?.descricaoTipo ?? 'Evento' }))
       <NuxtTime
         v-if="evento?.dataHoraInicio"
         :datetime="evento.dataHoraInicio"
-        locale="pt-BR"
         year="numeric"
         month="long"
         day="numeric"
@@ -64,7 +63,6 @@ useHead(() => ({ title: evento.value?.descricaoTipo ?? 'Evento' }))
               <NuxtTime
                 v-if="evento.dataHoraInicio"
                 :datetime="evento.dataHoraInicio"
-                locale="pt-BR"
                 year="numeric"
                 month="2-digit"
                 day="2-digit"
@@ -82,7 +80,6 @@ useHead(() => ({ title: evento.value?.descricaoTipo ?? 'Evento' }))
               <NuxtTime
                 v-if="evento.dataHoraFim"
                 :datetime="evento.dataHoraFim"
-                locale="pt-BR"
                 year="numeric"
                 month="2-digit"
                 day="2-digit"

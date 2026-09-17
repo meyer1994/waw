@@ -28,7 +28,6 @@ const columns: TableColumn<Licenca>[] = [
         <NuxtTime
           v-if="row.original.DataInicio"
           :datetime="row.original.DataInicio"
-          locale="pt-BR"
           year="numeric"
           month="2-digit"
           day="2-digit"
@@ -43,7 +42,6 @@ const columns: TableColumn<Licenca>[] = [
         <NuxtTime
           v-if="row.original.DataFim"
           :datetime="row.original.DataFim"
-          locale="pt-BR"
           year="numeric"
           month="2-digit"
           day="2-digit"

@@ -25,7 +25,6 @@ const columns: TableColumn<HistoricoGrupo>[] = [
         <NuxtTime
           v-if="row.original.dataStatus"
           :datetime="row.original.dataStatus.slice(0, 10)"
-          locale="pt-BR"
           year="numeric"
           month="2-digit"
           day="2-digit"

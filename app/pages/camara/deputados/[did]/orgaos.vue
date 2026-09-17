@@ -45,7 +45,6 @@ const columns: TableColumn<DeputadoOrgao>[] = [
           <NuxtTime
             v-if="row.original.dataInicio"
             :datetime="row.original.dataInicio.slice(0, 10)"
-            locale="pt-BR"
             year="numeric"
             month="2-digit"
             day="2-digit"
@@ -53,7 +52,6 @@ const columns: TableColumn<DeputadoOrgao>[] = [
           <span v-if="row.original.dataFim"> –
             <NuxtTime
               :datetime="row.original.dataFim.slice(0, 10)"
-              locale="pt-BR"
               year="numeric"
               month="2-digit"
               day="2-digit"

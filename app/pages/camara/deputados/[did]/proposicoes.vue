@@ -39,7 +39,6 @@ const columns: TableColumn<Proposicao>[] = [
         <NuxtTime
           v-if="row.original.dataApresentacao"
           :datetime="row.original.dataApresentacao.slice(0, 10)"
-          locale="pt-BR"
           year="numeric"
           month="2-digit"
           day="2-digit"

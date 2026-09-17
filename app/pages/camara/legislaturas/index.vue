@@ -34,7 +34,6 @@ useHead(() => ({ title: 'Legislaturas' }))
           <NuxtTime
             v-if="row.original.dataInicio"
             :datetime="row.original.dataInicio"
-            locale="pt-BR"
             year="numeric"
             month="2-digit"
             day="2-digit"
@@ -43,7 +42,6 @@ useHead(() => ({ title: 'Legislaturas' }))
           <NuxtTime
             v-if="row.original.dataFim"
             :datetime="row.original.dataFim"
-            locale="pt-BR"
             year="numeric"
             month="2-digit"
             day="2-digit"

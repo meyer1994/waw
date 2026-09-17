@@ -65,7 +65,6 @@ const columns: TableColumn<Historico>[] = [
         <NuxtTime
           v-if="row.original.dataHora"
           :datetime="row.original.dataHora"
-          locale="pt-BR"
           year="numeric"
           month="2-digit"
           day="2-digit"

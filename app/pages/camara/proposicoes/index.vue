@@ -3,41 +3,32 @@ import type { TableColumn } from '@nuxt/ui'
 import type { CamaraLista, Proposicao } from '#shared/api'
 import { COD_TEMA, SIGLA_TIPO } from '~~/shared/constants'
 
-const siglaTipo = ref('all')
+const siglaTipo = ref<(typeof SIGLA_TIPO)[number]>()
 const numero = ref('')
-const ano = ref('all')
+const ano = ref<string>()
 const keywords = ref('')
-const codTema = ref('all')
+const codTema = ref<string>()
 const dataApresentacaoInicio = ref('')
 const dataApresentacaoFim = ref('')
 
 const debKeywords = debouncedRef(keywords, 500)
 const { data, status } = await useFetch<CamaraLista<Proposicao>>('/api/camara/proposicoes', {
   query: computed(() => ({
-    siglaTipo: siglaTipo.value === 'all' ? undefined : siglaTipo.value,
+    siglaTipo: siglaTipo.value || undefined,
     numero: numero.value || undefined,
-    ano: ano.value === 'all' ? undefined : ano.value,
+    ano: ano.value || undefined,
     keywords: debKeywords.value || undefined,
-    codTema: codTema.value === 'all' ? undefined : codTema.value,
+    codTema: codTema.value || undefined,
     dataApresentacaoInicio: dataApresentacaoInicio.value || undefined,
     dataApresentacaoFim: dataApresentacaoFim.value || undefined
   }))
 })
 
-const tipoItems = [
-  { label: 'Todos os tipos', value: 'all' },
-  ...SIGLA_TIPO.map(tipo => ({ label: tipo, value: tipo }))
-]
+const tipoItems = SIGLA_TIPO.map(tipo => ({ label: tipo, value: tipo }))
 
-const temaItems = [
-  { label: 'Todos os temas', value: 'all' },
-  ...Object.entries(COD_TEMA).map(([cod, tema]) => ({ label: tema, value: cod }))
-]
+const temaItems = Object.entries(COD_TEMA).map(([cod, tema]) => ({ label: tema, value: cod }))
 
-const anoItems = [
-  { label: 'Ano', value: 'all' },
-  ...Array.from({ length: new Date().getFullYear() - 1987 }, (_, i) => ({ label: String(new Date().getFullYear() - i), value: String(new Date().getFullYear() - i) }))
-]
+const anoItems = Array.from({ length: new Date().getFullYear() - 1987 }, (_, i) => ({ label: String(new Date().getFullYear() - i), value: String(new Date().getFullYear() - i) }))
 
 const columns: TableColumn<Proposicao>[] = [
   { id: 'proposicao', header: 'Proposição' },
@@ -125,7 +116,6 @@ useHead(() => ({ title: 'Proposições' }))
         <NuxtTime
           v-if="row.original.dataApresentacao"
           :datetime="row.original.dataApresentacao.slice(0, 10)"
-          locale="pt-BR"
           year="numeric"
           month="2-digit"
           day="2-digit"

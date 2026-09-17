@@ -26,7 +26,6 @@ const columns: TableColumn<Votacao>[] = [
         <NuxtTime
           v-if="row.original.data"
           :datetime="row.original.data.slice(0, 10)"
-          locale="pt-BR"
           year="numeric"
           month="2-digit"
           day="2-digit"

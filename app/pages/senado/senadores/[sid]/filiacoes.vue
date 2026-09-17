@@ -41,7 +41,6 @@ const columns: TableColumn<Filiacao>[] = [
         <NuxtTime
           v-if="row.original.DataFiliacao"
           :datetime="row.original.DataFiliacao"
-          locale="pt-BR"
           year="numeric"
           month="2-digit"
           day="2-digit"
@@ -56,7 +55,6 @@ const columns: TableColumn<Filiacao>[] = [
         <template v-if="row.original.DataDesfiliacao">
           <NuxtTime
             :datetime="row.original.DataDesfiliacao"
-            locale="pt-BR"
             year="numeric"
             month="2-digit"
             day="2-digit"
