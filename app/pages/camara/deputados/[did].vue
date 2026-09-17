@@ -13,6 +13,7 @@ const items: NavigationMenuItem[] = [
   { label: 'Órgãos', icon: 'i-lucide-building-2', to: `${parent}/orgaos` },
   { label: 'Frentes', icon: 'i-lucide-users', to: `${parent}/frentes` },
   { label: 'Histórico', icon: 'i-lucide-history', to: `${parent}/historico` },
+  { label: 'Histórico Antigo', icon: 'i-lucide-file-clock', to: `${parent}/historico-old` },
   { label: 'Ocupações', icon: 'i-lucide-briefcase', to: `${parent}/ocupacoes` },
   { label: 'Profissões', icon: 'i-lucide-hammer', to: `${parent}/profissoes` },
   { label: 'Mandatos Externos', icon: 'i-lucide-globe', to: `${parent}/mandatosExternos` }

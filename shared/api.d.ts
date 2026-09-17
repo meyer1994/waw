@@ -51,6 +51,7 @@ export type ProposicaoRelacionada = Schemas['ProposicoesRelacionadas']
 export type Tema = Schemas['ProposicaoTema']
 export type Tramitacao = Schemas['ProposicaoTramitacao']
 export type Orientacao = Schemas['Orientacao']
+export type Referencia = Schemas['Referencia']
 // TODO: o spec tipa Votos.deputado_ como opcional, mas o upstream sempre o retorna
 export interface Voto {
   dataRegistroVoto: string | null
