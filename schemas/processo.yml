@@ -1,0 +1,482 @@
+openapi: 3.1.0
+info:
+  title: Processo (detalle) — reconstruido
+  version: derived
+components:
+  schemas:
+    Processo:
+      type: object
+      description: Detalle completo de un Proceso Legislativo. Schema reconstruido a partir de respuestas reales de GET /dadosabertos/processo/{id}
+        porque el archivo schemas/processo.yml referenciado por el OpenAPI oficial no se publica.
+      properties:
+        id:
+          type: integer
+        codigoMateria:
+          type: integer
+        identificacao:
+          type: string
+        sigla:
+          type: string
+        descricaoSigla:
+          type: string
+        numero:
+          type: string
+        ano:
+          type: integer
+        objetivo:
+          type: string
+        casaIdentificadora:
+          type: string
+        siglaEnteIdentificador:
+          type: string
+        identificacaoExterna: {}
+        conteudo:
+          type: object
+          properties:
+            id:
+              type: integer
+            idTipo:
+              type: integer
+            siglaTipo:
+              type: string
+            tipo:
+              type: string
+            ementa:
+              type: string
+            tipoNormaIndicada:
+              type: string
+        documento:
+          type: object
+          properties:
+            id:
+              type: integer
+            siglaTipo:
+              type: string
+            tipo:
+              type: string
+            dataApresentacao:
+              type: string
+            dataLeitura:
+              type: string
+            casaLeitura:
+              type: string
+            indexacao:
+              type: string
+            url:
+              type: string
+            autoria:
+              type: array
+              items:
+                type: object
+                properties:
+                  autor:
+                    type: string
+                  siglaTipo:
+                    type: string
+                  descricaoTipo:
+                    type: string
+                  ordem:
+                    type: integer
+                  outrosAutoresNaoInformados:
+                    type: string
+                  idEnte:
+                    type: integer
+                  siglaEnte:
+                    type: string
+                  casaEnte:
+                    type: string
+                  ente:
+                    type: string
+            resumoAutoria:
+              type: string
+        tramitando:
+          type: string
+        dataInicioEfetivo:
+          type: string
+        situacaoAtual:
+          type: string
+        siglaSituacaoAtual:
+          type: string
+        dataSituacaoAtual:
+          type: string
+        classificacoes:
+          type: array
+          items:
+            type: object
+            properties:
+              codigo:
+                type: integer
+              descricao:
+                type: string
+              descricaoHierarquia:
+                type: string
+        autoriaIniciativa:
+          type: array
+          items:
+            type: object
+            properties:
+              autor:
+                type: string
+              sexo:
+                type: string
+              siglaTipo:
+                type: string
+              descricaoTipo:
+                type: string
+              ordem:
+                type: integer
+              outrosAutoresNaoInformados:
+                type: string
+              codigoParlamentar:
+                type: integer
+              siglaPartido:
+                type: string
+              partido:
+                type: string
+              siglaCargo:
+                type: string
+              cargo:
+                type: string
+              idEnte:
+                type: integer
+              siglaEnte:
+                type: string
+              casaEnte:
+                type: string
+              ente:
+                type: string
+        idProcessoCasaInicial:
+          type: integer
+        identificacaoProcessoInicial:
+          type: string
+        siglaCasaIniciadora:
+          type: string
+        comissaoMpv:
+          type: string
+        processosApensados:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              identificacao:
+                type: string
+              tramitando:
+                type: string
+              tipoApensamento:
+                type: string
+              dataApensamento:
+                type: string
+              dataDesapensamento:
+                type: string
+        outrosNumeros:
+          type: array
+          items:
+            type: object
+            properties:
+              idOutroProcesso:
+                type: integer
+              sigla:
+                type: string
+              numero:
+                type: string
+              ano:
+                type: integer
+              tramitando:
+                type: string
+              externaAoCongresso:
+                type: string
+              casaIdentificadora:
+                type: string
+              siglaEnteIdentificador:
+                type: string
+              enteIdentificador:
+                type: string
+        processosRelacionados:
+          type: array
+          items:
+            type: object
+            properties:
+              idOutroProcesso:
+                type: integer
+              tipoRelacao:
+                type: string
+              sigla:
+                type: string
+              numero:
+                type: string
+              ano:
+                type: integer
+              tramitando:
+                type: string
+              casaIdentificadora:
+                type: string
+              siglaEnteIdentificador:
+                type: string
+              enteIdentificador:
+                type: string
+        despachos:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              data:
+                type: string
+              siglaTipoMotivacao:
+                type: string
+              tipoMotivacao:
+                type: string
+              cancelado:
+                type: string
+              encontroLegislativo:
+                type: object
+                properties:
+                  colegiado:
+                    type: object
+                    properties:
+                      codigo:
+                        type: integer
+                      casa:
+                        type: string
+                      sigla:
+                        type: string
+                      nome:
+                        type: string
+                  id:
+                    type: integer
+                  numero:
+                    type: integer
+                  data:
+                    type: string
+                  casa:
+                    type: string
+                  tipo:
+                    type: string
+                  descricao:
+                    type: string
+              providencias:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    tipo:
+                      type: string
+                    descricao:
+                      type: string
+                    ordem:
+                      type: integer
+                    analiseTempo:
+                      type: string
+                    analiseConteudo:
+                      type: string
+                    reexame:
+                      type: string
+                    unidadesDestinatarias:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          ordem:
+                            type: integer
+                          tipoAnaliseDeliberacao:
+                            type: string
+                          colegiado:
+                            type: object
+                            properties:
+                              codigo:
+                                type: integer
+                              sigla:
+                                type: string
+                              casa:
+                                type: string
+                              nome:
+                                type: string
+                          observacao:
+                            type: string
+        autuacoes:
+          type: array
+          items:
+            type: object
+            properties:
+              numero:
+                type: integer
+              descricao:
+                type: string
+              idEnteControleAtual:
+                type: integer
+              siglaEnteControleAtual:
+                type: string
+              nomeEnteControleAtual:
+                type: string
+              situacoes:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idTipo:
+                      type: integer
+                    sigla:
+                      type: string
+                    descricao:
+                      type: string
+                    inicio:
+                      type: string
+                    fim:
+                      type: string
+                    colegiado:
+                      type: object
+                      properties:
+                        codigo:
+                          type: integer
+                        casa:
+                          type: string
+                        sigla:
+                          type: string
+                        nome:
+                          type: string
+                    enteAdministrativo:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        casa:
+                          type: string
+                        sigla:
+                          type: string
+                        nome:
+                          type: string
+              informesLegislativos:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    data:
+                      type: string
+                    colegiado:
+                      type: object
+                      properties:
+                        codigo:
+                          type: integer
+                        casa:
+                          type: string
+                        sigla:
+                          type: string
+                        nome:
+                          type: string
+                    enteAdministrativo:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        casa:
+                          type: string
+                        sigla:
+                          type: string
+                        nome:
+                          type: string
+                    descricao:
+                      type: string
+                    documentosAssociados:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          tipo:
+                            type: string
+                          siglaTipo:
+                            type: string
+                          identificacao:
+                            type: string
+                          descricao:
+                            type: string
+                          data:
+                            type: string
+                          autoria:
+                            type: string
+                          url:
+                            type: string
+                    idSituacaoIniciada:
+                      type: integer
+                    siglaSituacaoIniciada:
+                      type: string
+              movimentacoes:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    dataEnvio:
+                      type: string
+                    enteOrigem:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        casa:
+                          type: string
+                        sigla:
+                          type: string
+                        nome:
+                          type: string
+                    dataRecebimento:
+                      type: string
+                    enteDestino:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        casa:
+                          type: string
+                        sigla:
+                          type: string
+                        nome:
+                          type: string
+                    colegiadoDestino:
+                      type: object
+                      properties:
+                        codigo:
+                          type: integer
+                        casa:
+                          type: string
+                        sigla:
+                          type: string
+                        nome:
+                          type: string
+              codigoColegiadoControleAtual:
+                type: integer
+              casaColegiadoControleAtual:
+                type: string
+              siglaColegiadoControleAtual:
+                type: string
+              nomeColegiadoControleAtual:
+                type: string
+        deliberacao:
+          type: object
+          properties:
+            data:
+              type: string
+            siglaTipo:
+              type: string
+            tipoDeliberacao:
+              type: string
+            idDestino:
+              type: integer
+            siglaDestino:
+              type: string
+            destino:
+              type: string
+        normaGerada: {}
+        ultimaInformacaoAtualizada:
+          type: string
+        dthUltimaAtualizacao:
+          type: string

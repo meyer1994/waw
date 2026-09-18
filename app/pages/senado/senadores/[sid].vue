@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import type { SenadorDetalhe, SenadorDetalheDoc } from '#shared/api-senado'
 
 const route = useRoute()
 const sid = route.params.sid as string
@@ -17,24 +18,28 @@ const items: NavigationMenuItem[] = [
   { label: 'Acadêmico', icon: 'i-lucide-graduation-cap', to: `${parent}/historicoAcademico` }
 ]
 
-const { data } = await useFetch(`/api/senadores/${sid}`)
-const senador = computed(() => data.value?.senador)
+const { data } = await useFetch<SenadorDetalheDoc>(`/api/senado/senador/${sid}.json`)
+const senador = computed(() => data.value?.DetalheParlamentar?.Parlamentar)
+const ident = computed(() => senador.value?.IdentificacaoParlamentar)
 const basico = computed(() => senador.value?.DadosBasicosParlamentar)
 
-const rows = computed(() => [
-  ['Nome completo', senador.value?.IdentificacaoParlamentar?.NomeCompletoParlamentar ?? '—'],
-  ['Partido', senador.value?.IdentificacaoParlamentar?.SiglaPartidoParlamentar ?? '—'],
-  ['UF', senador.value?.IdentificacaoParlamentar?.UfParlamentar ?? '—'],
-  ['Sexo', senador.value?.IdentificacaoParlamentar?.SexoParlamentar ?? '—'],
-  ['Nascimento', basico.value?.DataNascimento ?? '—'],
-  ['Naturalidade', basico.value?.Naturalidade ? `${basico.value.Naturalidade} – ${basico.value.UfNaturalidade ?? ''}` : '—'],
-  ['Endereço', basico.value?.EnderecoParlamentar ?? '—'],
-  ['Email', senador.value?.IdentificacaoParlamentar?.EmailParlamentar ?? '—'],
-  ['Membro da Mesa', senador.value?.IdentificacaoParlamentar?.MembroMesa ?? '—'],
-  ['Membro da Liderança', senador.value?.IdentificacaoParlamentar?.MembroLideranca ?? '—']
-])
+const rows = computed<[string, string][]>(() => {
+  const s: SenadorDetalhe | undefined = senador.value
+  return [
+    ['Nome completo', s?.IdentificacaoParlamentar?.NomeCompletoParlamentar ?? '—'],
+    ['Partido', s?.IdentificacaoParlamentar?.SiglaPartidoParlamentar ?? '—'],
+    ['UF', s?.IdentificacaoParlamentar?.UfParlamentar ?? '—'],
+    ['Sexo', s?.IdentificacaoParlamentar?.SexoParlamentar ?? '—'],
+    ['Nascimento', basico.value?.DataNascimento ?? '—'],
+    ['Naturalidade', basico.value?.Naturalidade ? `${basico.value.Naturalidade} – ${basico.value.UfNaturalidade ?? ''}` : '—'],
+    ['Endereço', basico.value?.EnderecoParlamentar ?? '—'],
+    ['Email', s?.IdentificacaoParlamentar?.EmailParlamentar ?? '—'],
+    ['Membro da Mesa', s?.IdentificacaoParlamentar?.MembroMesa === 'Sim' ? 'Sim' : 'Não'],
+    ['Membro da Liderança', s?.IdentificacaoParlamentar?.MembroLideranca === 'Sim' ? 'Sim' : 'Não']
+  ]
+})
 
-useHead(() => ({ title: senador.value?.IdentificacaoParlamentar?.NomeParlamentar ?? 'Senador' }))
+useHead(() => ({ title: ident.value?.NomeParlamentar ?? 'Senador' }))
 </script>
 
 <template>
@@ -42,21 +47,21 @@ useHead(() => ({ title: senador.value?.IdentificacaoParlamentar?.NomeParlamentar
     <div class="flex items-center gap-4 mb-8">
       <UAvatar
         as="NuxtImg"
-        :src="senador?.IdentificacaoParlamentar?.UrlFotoParlamentar ?? undefined"
-        :alt="senador?.IdentificacaoParlamentar?.NomeParlamentar"
-        :text="senador?.IdentificacaoParlamentar?.NomeParlamentar?.slice(0, 1)"
+        :src="ident?.UrlFotoParlamentar ?? undefined"
+        :alt="ident?.NomeParlamentar"
+        :text="ident?.NomeParlamentar?.slice(0, 1)"
         size="3xl"
       />
 
       <div>
         <h1 class="text-2xl font-bold">
-          {{ senador?.IdentificacaoParlamentar?.NomeParlamentar }}
+          {{ ident?.NomeParlamentar }}
         </h1>
         <p class="text-muted">
-          {{ basico?.Naturalidade }} • {{ senador?.IdentificacaoParlamentar?.SiglaPartidoParlamentar }} – {{ senador?.IdentificacaoParlamentar?.UfParlamentar }}
+          {{ basico?.Naturalidade }} • {{ ident?.SiglaPartidoParlamentar }} – {{ ident?.UfParlamentar }}
         </p>
         <p class="text-sm text-muted">
-          {{ senador?.IdentificacaoParlamentar?.FormaTratamento }} • Mesa: {{ senador?.IdentificacaoParlamentar?.MembroMesa === 'Sim' ? 'Sim' : 'Não' }}
+          {{ ident?.FormaTratamento }} • Mesa: {{ ident?.MembroMesa === 'Sim' ? 'Sim' : 'Não' }}
         </p>
       </div>
     </div>

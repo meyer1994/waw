@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import { PARTY_FLAGS } from '~~/shared/constants'
+import { asArray } from '~~/shared/senado'
+import type { Filiacao, FiliacaoDoc } from '#shared/api-senado'
 
 const route = useRoute()
 const sid = route.params.sid as string
 
-const { data, status } = await useFetch(`/api/senadores/${sid}/filiacoes`)
+const { data, status } = await useFetch<FiliacaoDoc>(`/api/senado/senador/${sid}/filiacoes.json`)
+const filiacoes = computed(() => asArray(data.value?.FiliacaoParlamentar?.Parlamentar?.Filiacoes?.Filiacao))
 
 const columns: TableColumn<Filiacao>[] = [
-  { id: 'partido', accessorKey: 'Partido.SiglaPartido', header: 'Partido' },
+  { id: 'partido', header: 'Partido' },
   { accessorKey: 'Partido.NomePartido', header: 'Nome' },
   { accessorKey: 'DataFiliacao', header: 'Filiação' },
   { accessorKey: 'DataDesfiliacao', header: 'Desfiliação' }
@@ -22,7 +25,7 @@ const columns: TableColumn<Filiacao>[] = [
     </h2>
 
     <UTable
-      :data="data?.dados ?? []"
+      :data="filiacoes"
       :columns="columns"
       :loading="status === 'pending'"
     >
@@ -37,6 +40,7 @@ const columns: TableColumn<Filiacao>[] = [
           {{ row.original.Partido.SiglaPartido }}
         </span>
       </template>
+
       <template #DataFiliacao-cell="{ row }">
         <NuxtTime
           v-if="row.original.DataFiliacao"

@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { asArray } from '~~/shared/senado'
+import type { ComissaoMembro, ComissaoMembroDoc } from '#shared/api-senado'
 
 const route = useRoute()
 const sid = route.params.sid as string
 
 const somenteAtivos = ref(false)
 
-const { data, status } = await useFetch(`/api/senadores/${sid}/comissoes`, {
+const { data, status } = await useFetch<ComissaoMembroDoc>(`/api/senado/senador/${sid}/comissoes.json`, {
   query: computed(() => ({ ativo: somenteAtivos.value || undefined }))
 })
 
+const comissoes = computed(() => asArray(data.value?.MembroComissaoParlamentar?.Parlamentar?.MembroComissoes?.Comissao))
+
 const columns: TableColumn<ComissaoMembro>[] = [
-  { accessorKey: 'SiglaComissao', header: 'Sigla' },
-  { accessorKey: 'NomeComissao', header: 'Comissão' },
-  { accessorKey: 'SiglaCasaComissao', header: 'Casa' },
+  { id: 'sigla', header: 'Sigla' },
+  { id: 'nome', header: 'Comissão' },
+  { id: 'casa', header: 'Casa' },
   { accessorKey: 'DescricaoParticipacao', header: 'Participação' },
   { accessorKey: 'DataInicio', header: 'Início' }
 ]
@@ -31,10 +35,27 @@ const columns: TableColumn<ComissaoMembro>[] = [
     </div>
 
     <UTable
-      :data="data?.dados ?? []"
+      :data="comissoes"
       :columns="columns"
       :loading="status === 'pending'"
     >
+      <template #sigla-cell="{ row }">
+        <span class="font-medium">{{ row.original.IdentificacaoComissao.SiglaComissao }}</span>
+      </template>
+
+      <template #nome-cell="{ row }">
+        <NuxtLink
+          :to="`/senado/comissao/${row.original.IdentificacaoComissao.CodigoComissao}`"
+          class="text-sm text-primary hover:underline"
+        >
+          {{ row.original.IdentificacaoComissao.NomeComissao }}
+        </NuxtLink>
+      </template>
+
+      <template #casa-cell="{ row }">
+        <span class="text-muted text-sm">{{ row.original.IdentificacaoComissao.SiglaCasaComissao ?? '—' }}</span>
+      </template>
+
       <template #DataInicio-cell="{ row }">
         <NuxtTime
           v-if="row.original.DataInicio"

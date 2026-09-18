@@ -24,6 +24,20 @@ export default defineNuxtConfig({
         staleMaxAge: 60 * 10, // 10 minutos
         swr: true
       }
+    },
+
+    // Idem para a API do Senado (dados abertos legislativos).
+    // /api/senado/senador/... -> https://legis.senado.leg.br/dadosabertos/senador/...
+    '/api/senado/**': {
+      proxy: 'https://legis.senado.leg.br/dadosabertos/**',
+
+      cache: {
+        // @ts-expect-error - allowQuery is valid, but not typed
+        allowQuery: true,
+        maxAge: 60 * 5,
+        staleMaxAge: 60 * 10,
+        swr: true
+      }
     }
   },
 

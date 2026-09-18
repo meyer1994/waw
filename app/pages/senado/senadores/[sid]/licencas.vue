@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { asArray } from '~~/shared/senado'
+import type { Licenca, LicencaDoc } from '#shared/api-senado'
 
 const route = useRoute()
 const sid = route.params.sid as string
 
-const { data, status } = await useFetch(`/api/senadores/${sid}/licencas`)
+const { data, status } = await useFetch<LicencaDoc>(`/api/senado/senador/${sid}/licencas.json`)
+const licencas = computed(() => asArray(data.value?.LicencaParlamentar?.Parlamentar?.Licencas?.Licenca))
 
 const columns: TableColumn<Licenca>[] = [
+  { accessorKey: 'DescricaoTipoAfastamento', header: 'Tipo de afastamento' },
   { accessorKey: 'DataInicio', header: 'Início' },
-  { accessorKey: 'DataFim', header: 'Fim' },
-  { accessorKey: 'DescricaoTipoAfastamento', header: 'Tipo' }
+  { accessorKey: 'DataFim', header: 'Fim' }
 ]
 </script>
 
@@ -20,7 +23,7 @@ const columns: TableColumn<Licenca>[] = [
     </h2>
 
     <UTable
-      :data="data?.dados ?? []"
+      :data="licencas"
       :columns="columns"
       :loading="status === 'pending'"
     >
@@ -39,17 +42,21 @@ const columns: TableColumn<Licenca>[] = [
       </template>
 
       <template #DataFim-cell="{ row }">
-        <NuxtTime
-          v-if="row.original.DataFim"
-          :datetime="row.original.DataFim"
-          year="numeric"
-          month="2-digit"
-          day="2-digit"
-        />
-        <span
+        <template v-if="row.original.DataFim">
+          <NuxtTime
+            :datetime="row.original.DataFim"
+            year="numeric"
+            month="2-digit"
+            day="2-digit"
+          />
+        </template>
+        <UBadge
           v-else
-          class="text-muted"
-        >—</span>
+          color="warning"
+          variant="subtle"
+        >
+          Em curso
+        </UBadge>
       </template>
     </UTable>
   </div>

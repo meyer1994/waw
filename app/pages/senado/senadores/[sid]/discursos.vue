@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import { pronunciamentosSchema } from '~~/shared/schemas'
+import { asArray } from '~~/shared/senado'
+import type { PronunciamientoDoc, Pronunciamento } from '#shared/api-senado'
 
 const route = useRoute()
 const sid = route.params.sid as string
@@ -9,7 +11,7 @@ const casa = ref<string>()
 const dataInicio = ref('')
 const dataFim = ref('')
 
-const { data, status } = await useFetch(`/api/senadores/${sid}/discursos`, {
+const { data, status } = await useFetch<PronunciamientoDoc>(`/api/senado/senador/${sid}/discursos.json`, {
   query: computed(() => ({
     casa: casa.value,
     dataInicio: dataInicio.value || undefined,
@@ -17,9 +19,11 @@ const { data, status } = await useFetch(`/api/senadores/${sid}/discursos`, {
   }))
 })
 
+const discursos = computed(() => asArray(data.value?.DiscursosParlamentar?.Parlamentar?.Pronunciamentos?.Pronunciamento))
+
 const columns: TableColumn<Pronunciamento>[] = [
   { accessorKey: 'DataPronunciamento', header: 'Data' },
-  { accessorKey: 'TipoUsoPalavra.Descricao', header: 'Tipo' },
+  { id: 'tipo', header: 'Tipo' },
   { id: 'sessao', header: 'Sessão' },
   { id: 'resumo', header: 'Resumo' }
 ]
@@ -61,7 +65,7 @@ const columns: TableColumn<Pronunciamento>[] = [
     </UForm>
 
     <UTable
-      :data="data?.dados ?? []"
+      :data="discursos"
       :columns="columns"
       :loading="status === 'pending'"
     >
@@ -77,6 +81,10 @@ const columns: TableColumn<Pronunciamento>[] = [
           v-else
           class="text-muted"
         >—</span>
+      </template>
+
+      <template #tipo-cell="{ row }">
+        <span class="text-sm">{{ row.original.TipoUsoPalavra?.Descricao ?? 'Discurso' }}</span>
       </template>
 
       <template #sessao-cell="{ row }">

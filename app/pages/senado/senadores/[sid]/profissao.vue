@@ -1,10 +1,23 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { asArray } from '~~/shared/senado'
+import type { HistoricoAcademicoDoc, Profissao } from '#shared/api-senado'
 
 const route = useRoute()
 const sid = route.params.sid as string
 
-const { data, status } = await useFetch(`/api/senadores/${sid}/profissao`)
+// O serviço /senador/{codigo}/profissao reutiliza o XSD do histórico acadêmico;
+// quando há dados, vêm em Parlamentar.Profissao/Profissões — lida-se de forma defensiva.
+const { data, status } = await useFetch<HistoricoAcademicoDoc>(`/api/senado/senador/${sid}/profissao.json`)
+const profissoes = computed(() => {
+  const raiz = data.value?.HistoricoAcademicoParlamentar?.Parlamentar as Record<string, unknown> | undefined
+  const bruto = raiz?.Profissao ?? raiz?.Profissões
+  if (!bruto) return []
+  const interno = typeof bruto === 'object' && bruto !== null && !Array.isArray(bruto)
+    ? (bruto as { Profissao?: unknown }).Profissao ?? bruto
+    : bruto
+  return asArray(interno as Profissao)
+})
 
 const columns: TableColumn<Profissao>[] = [
   { accessorKey: 'NomeProfissao', header: 'Profissão' },
@@ -19,7 +32,7 @@ const columns: TableColumn<Profissao>[] = [
     </h2>
 
     <UTable
-      :data="data?.dados ?? []"
+      :data="profissoes"
       :columns="columns"
       :loading="status === 'pending'"
     >

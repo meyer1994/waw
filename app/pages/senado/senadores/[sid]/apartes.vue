@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { asArray } from '~~/shared/senado'
+import type { ApartesDoc, Pronunciamento } from '#shared/api-senado'
 
 const route = useRoute()
 const sid = route.params.sid as string
 
-const { data, status } = await useFetch(`/api/senadores/${sid}/apartes`)
+const { data, status } = await useFetch<ApartesDoc>(`/api/senado/senador/${sid}/apartes.json`)
+const apartes = computed(() => asArray(data.value?.ApartesParlamentar?.Parlamentar?.Apartes?.Aparte))
 
 const columns: TableColumn<Pronunciamento>[] = [
   { accessorKey: 'DataPronunciamento', header: 'Data' },
@@ -21,7 +24,7 @@ const columns: TableColumn<Pronunciamento>[] = [
     </h2>
 
     <UTable
-      :data="data?.dados ?? []"
+      :data="apartes"
       :columns="columns"
       :loading="status === 'pending'"
     >

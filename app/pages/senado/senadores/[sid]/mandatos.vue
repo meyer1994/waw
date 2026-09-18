@@ -1,23 +1,24 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import { PARTY_FLAGS } from '~~/shared/constants'
+import { asArray } from '~~/shared/senado'
+import type { Mandato, MandatoDoc } from '#shared/api-senado'
 
 const route = useRoute()
 const sid = route.params.sid as string
 
-const { data, status } = await useFetch(`/api/senadores/${sid}/mandatos`)
+const { data, status } = await useFetch<MandatoDoc>(`/api/senado/senador/${sid}/mandatos.json`)
+const mandatos = computed(() => asArray(data.value?.MandatoParlamentar?.Parlamentar?.Mandatos?.Mandato))
 
-// Senado XML->JSON returns single records as objects, not arrays
-const partidosDoMandato = (mandato: Mandato): { CodigoPartido: string, Sigla: string }[] => {
-  const partido = mandato.Partidos?.Partido
-  if (partido === undefined) return []
-  return Array.isArray(partido) ? partido : [partido]
-}
+// XML→JSON: 1 item vira objeto, n itens viram array
+const partidosDoMandato = (mandato: Mandato): { CodigoPartido: string, Sigla?: string }[] =>
+  asArray(mandato.Partidos?.Partido)
 
 const columns: TableColumn<Mandato>[] = [
   { accessorKey: 'UfParlamentar', header: 'UF' },
   { accessorKey: 'DescricaoParticipacao', header: 'Participação' },
   { id: 'legislaturas', header: 'Legislaturas' },
+  { id: 'exercicios', header: 'Exercícios' },
   { id: 'partidos', header: 'Partidos' }
 ]
 </script>
@@ -29,7 +30,7 @@ const columns: TableColumn<Mandato>[] = [
     </h2>
 
     <UTable
-      :data="data?.dados ?? []"
+      :data="mandatos"
       :columns="columns"
       :loading="status === 'pending'"
     >
@@ -43,6 +44,7 @@ const columns: TableColumn<Mandato>[] = [
           {{ row.original.UfParlamentar }}
         </span>
       </template>
+
       <template #legislaturas-cell="{ row }">
         <span class="text-muted text-sm">
           {{ row.original.PrimeiraLegislaturaDoMandato?.NumeroLegislatura }}
@@ -51,6 +53,12 @@ const columns: TableColumn<Mandato>[] = [
           </template>
           ({{ row.original.PrimeiraLegislaturaDoMandato?.DataInicio }} –
           {{ row.original.SegundaLegislaturaDoMandato?.DataFim ?? row.original.PrimeiraLegislaturaDoMandato?.DataFim }})
+        </span>
+      </template>
+
+      <template #exercicios-cell="{ row }">
+        <span class="text-muted text-sm">
+          {{ asArray(row.original.Exercicios?.Exercicio).length }} exercício(s)
         </span>
       </template>
 
@@ -63,7 +71,7 @@ const columns: TableColumn<Mandato>[] = [
             class="flex items-center gap-1"
           >
             <NuxtImg
-              v-if="PARTY_FLAGS[partido.Sigla]"
+              v-if="partido.Sigla && PARTY_FLAGS[partido.Sigla]"
               :src="PARTY_FLAGS[partido.Sigla]"
               alt=""
               class="w-4 h-3 rounded-[1px] object-cover"
@@ -71,7 +79,7 @@ const columns: TableColumn<Mandato>[] = [
             {{ partido.Sigla }}
           </UBadge>
           <span
-            v-if="!row.original.Partidos"
+            v-if="!row.original.Partidos?.Partido"
             class="text-muted"
           >—</span>
         </div>

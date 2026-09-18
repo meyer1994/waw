@@ -19,7 +19,16 @@ const navItems: NavigationMenuItem[][] = [
       label: 'Senado',
       icon: 'i-lucide-scale',
       children: [
-        { label: 'Senadores', to: '/senado/senadores' }
+        { label: 'Senadores', to: '/senado/senadores' },
+        { label: 'Comissões', to: '/senado/comissao' },
+        { label: 'Processos', to: '/senado/processos' },
+        { label: 'Plenário', to: '/senado/plenario' },
+        { label: 'Votações', to: '/senado/votacoes' },
+        { label: 'Legislação', to: '/senado/legislacao' },
+        { label: 'Blocos', to: '/senado/blocos' },
+        { label: 'Partidos', to: '/senado/partidos' },
+        { label: 'Mesa Diretora', to: '/senado/mesa' },
+        { label: 'Lideranças', to: '/senado/lideranca' }
       ]
     }
   ]

@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { asArray } from '~~/shared/senado'
+import type { Curso, HistoricoAcademicoDoc } from '#shared/api-senado'
 
 const route = useRoute()
 const sid = route.params.sid as string
 
-const { data, status } = await useFetch(`/api/senadores/${sid}/historicoAcademico`)
+const { data, status } = await useFetch<HistoricoAcademicoDoc>(`/api/senado/senador/${sid}/historicoAcademico.json`)
+const cursos = computed(() => asArray(data.value?.HistoricoAcademicoParlamentar?.Parlamentar?.HistoricoAcademico?.Curso))
 
 const columns: TableColumn<Curso>[] = [
   { accessorKey: 'NomeCurso', header: 'Curso' },
   { accessorKey: 'GrauInstrucao', header: 'Grau' },
-  { accessorKey: 'Estabelecimento', header: 'Instituição' }
+  { accessorKey: 'Estabelecimento', header: 'Instituição' },
+  { accessorKey: 'Local', header: 'Local' }
 ]
 </script>
 
@@ -20,7 +24,7 @@ const columns: TableColumn<Curso>[] = [
     </h2>
 
     <UTable
-      :data="data?.dados ?? []"
+      :data="cursos"
       :columns="columns"
       :loading="status === 'pending'"
     >

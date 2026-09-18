@@ -8,6 +8,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "clean": "rm -rf .output .wrangler .nuxt node_modules",
+    "types": "openapi-typescript openapi-camara.json -o shared/camara.d.ts && openapi-typescript openapi-senado.json -o shared/senado.d.ts",
     "cf:deploy": "wrangler --cwd .output deploy",
     "cf:types": "wrangler types shared/wrangler.d.ts && eslint --fix shared/wrangler.d.ts",
     "lint": "eslint .",
@@ -32,6 +33,7 @@
     "@nuxt/eslint": "^1.17.0",
     "eslint": "^10.10.0",
     "nitro-cloudflare-dev": "^0.2.2",
+    "openapi-typescript": "^7.13.0",
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.11",
     "wrangler": "^4.131.2"

@@ -1,21 +1,19 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { asArray } from '~~/shared/senado'
+import type { CargoDoc, CargoParlamentar } from '#shared/api-senado'
 
 const route = useRoute()
 const sid = route.params.sid as string
 
-const somenteAtivos = ref(false)
+const { data, status } = await useFetch<CargoDoc>(`/api/senado/senador/${sid}/cargos.json`)
+const cargos = computed(() => asArray(data.value?.CargoParlamentar?.Parlamentar?.Cargos?.Cargo))
 
-const { data, status } = await useFetch(`/api/senadores/${sid}/cargos`, {
-  query: computed(() => ({ ativo: somenteAtivos.value || undefined }))
-})
-
-const columns: TableColumn<Cargo>[] = [
-  { accessorKey: 'SiglaComissao', header: 'Órgão' },
-  { accessorKey: 'NomeComissao', header: 'Nome' },
+const columns: TableColumn<CargoParlamentar>[] = [
   { accessorKey: 'DescricaoCargo', header: 'Cargo' },
-  { accessorKey: 'DataInicio', header: 'Início' },
-  { accessorKey: 'DataFim', header: 'Fim' }
+  { id: 'comissao', header: 'Comissão' },
+  { id: 'casa', header: 'Casa' },
+  { accessorKey: 'DataInicio', header: 'Início' }
 ]
 </script>
 
@@ -25,16 +23,29 @@ const columns: TableColumn<Cargo>[] = [
       Cargos
     </h2>
 
-    <div class="flex items-center gap-2 mb-4">
-      <USwitch v-model="somenteAtivos" />
-      <span class="text-sm text-muted">Somente em exercício</span>
-    </div>
-
     <UTable
-      :data="data?.dados ?? []"
+      :data="cargos"
       :columns="columns"
       :loading="status === 'pending'"
     >
+      <template #comissao-cell="{ row }">
+        <NuxtLink
+          v-if="row.original.IdentificacaoComissao"
+          :to="`/senado/comissao/${row.original.IdentificacaoComissao.CodigoComissao}`"
+          class="text-sm text-primary hover:underline"
+        >
+          {{ row.original.IdentificacaoComissao.NomeComissao }}
+        </NuxtLink>
+        <span
+          v-else
+          class="text-muted"
+        >—</span>
+      </template>
+
+      <template #casa-cell="{ row }">
+        <span class="text-muted text-sm">{{ row.original.IdentificacaoComissao?.SiglaCasaComissao ?? '—' }}</span>
+      </template>
+
       <template #DataInicio-cell="{ row }">
         <NuxtTime
           v-if="row.original.DataInicio"
@@ -47,24 +58,6 @@ const columns: TableColumn<Cargo>[] = [
           v-else
           class="text-muted"
         >—</span>
-      </template>
-
-      <template #DataFim-cell="{ row }">
-        <template v-if="row.original.DataFim">
-          <NuxtTime
-            :datetime="row.original.DataFim"
-            year="numeric"
-            month="2-digit"
-            day="2-digit"
-          />
-        </template>
-        <UBadge
-          v-else
-          color="success"
-          variant="subtle"
-        >
-          Atual
-        </UBadge>
       </template>
     </UTable>
   </div>
