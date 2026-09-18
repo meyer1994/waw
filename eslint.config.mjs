@@ -4,6 +4,6 @@ import withNuxt from './.nuxt/eslint.config.mjs'
 export default withNuxt(
   // Your custom configs here
   {
-    ignores: ['app/pages/examples/**', 'shared/camara.d.ts']
+    ignores: ['app/pages/examples/**', 'shared/camara.d.ts', 'shared/senado.d.ts', 'shared/wrangler.d.ts']
   }
 )
