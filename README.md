@@ -1,64 +1,98 @@
-# Nuxt Starter Template
+# Waw — Dados Legislativos
 
-[![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
+Explorador de dados abertos do legislativo brasileiro: Deputados e Senadores,
+proposições, votações, comissões, sessões plenárias, legislação e composição
+das casas — tudo consumido direto das APIs públicas da **Câmara dos Deputados**
+e do **Senado Federal**.
 
-Use this template to get started with [Nuxt UI](https://ui.nuxt.com) quickly.
+Feito com [Nuxt 4](https://nuxt.com) + [Nuxt UI v4](https://ui.nuxt.com).
 
-- [Live demo](https://starter-template.nuxt.dev/)
-- [Documentation](https://ui.nuxt.com/docs/getting-started/installation/nuxt)
+## Seções
 
-<a href="https://starter-template.nuxt.dev/" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
-    <img alt="Nuxt Starter Template" src="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png" width="830" height="466">
-  </picture>
-</a>
+### Câmara (dadosabertos.camara.leg.br)
+Deputados (perfil + proposições, discursos, despesas, eventos, órgãos, frentes,
+histórico, ocupações, profissões, mandatos externos) · Proposições · Partidos ·
+Blocos · Órgãos · Eventos · Votações · Frentes · Grupos · Legislaturas.
 
-> The starter template for Vue is on https://github.com/nuxt-ui-templates/starter-vue.
+### Senado (legis.senado.leg.br/dadosabertos)
+Senadores (perfil + filiações, mandatos, comissões, cargos, licenças, discursos,
+apartes, profissões, acadêmico) · Comissões (detalhe + composição) · Processos
+Legislativos · Plenário (agenda + pauta/resultado/resumo de encontros) ·
+Votações Nominais · Legislação · Blocos · Partidos · Mesa Diretora · Lideranças.
 
-## Quick Start
+## Stack
 
-```bash [Terminal]
-npm create nuxt@latest -- -t ui
+- **Nuxt 4** (SSR) + **Nuxt UI v4** (Tailwind CSS v4) + Vue 3
+- **VueUse** (composables) · **Zod** (validação de formulários)
+- **v-network-graph** + **d3-force** (visualizações de rede, `app/pages/examples`)
+- **Cloudflare Workers** (deploy via `wrangler`, cache em KV)
+- **openapi-typescript** (tipos derivados dos specs OpenAPI)
+
+## Scripts
+
+| Comando | Descrição |
+| --- | --- |
+| `pnpm dev` | Servidor de desenvolvimento (`http://localhost:3000`) |
+| `pnpm build` | Build de produção (`.output/`, preset cloudflare) |
+| `pnpm preview` | Preview do build |
+| `pnpm lint` / `--fix` | ESLint |
+| `pnpm typecheck` | Vue/TS type check |
+| `pnpm types` | Regenera `shared/camara.d.ts` e `shared/senado.d.ts` |
+| `pnpm cf:deploy` | Deploy no Cloudflare (`wrangler --cwd .output deploy`) |
+
+## Arquitetura
+
+Não há endpoints server-side — toda a aplicação consome as APIs de dados
+abertos através de **proxies** definidos em `nuxt.config.ts` (`routeRules`),
+com cache **SWR** persistido na **KV `CACHE`** do Cloudflare
+(`nitro.storage.cloudflare-kv-binding`, ver `wrangler.jsonc`).
+
+```
+/api/camara/**  ->  https://dadosabertos.camara.leg.br/api/v2/**
+/api/senado/**  ->  https://legis.senado.leg.br/dadosabertos/**
 ```
 
-## Deploy your own
+- `allowQuery` mantém os parâmetros no cache key (cache por filtro); cache
+  fresco 5 min, stale 10 min (`swr: true`).
+- A raiz `/` é pré-renderizada (`prerender: true`).
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=starter&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Fstarter&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Fstarter-dark.png&demo-url=https%3A%2F%2Fstarter-template.nuxt.dev%2F&demo-title=Nuxt%20Starter%20Template&demo-description=A%20minimal%20template%20to%20get%20started%20with%20Nuxt%20UI.)
+### ⚠️ Senado responde XML por padrão
 
-## Setup
+O proxy Nitro não repassa o header `Accept`, e a API do Senado retorna XML a
+menos que o caminho termine em `.json`. Por isso **todas as URLs do Senado
+terminam com `.json`** (`/api/senado/senador/6009.json`). Não remova o sufixo —
+uma requisição sem ele envenena o cache com XML por ~5 min.
 
-Make sure to install the dependencies:
+## Tipos
 
-```bash
-pnpm install
+`pnpm types` roda o openapi-typescript sobre os dois specs:
+
+```
+openapi-camara.json -> shared/camara.d.ts
+openapi-senado.json -> shared/senado.d.ts
 ```
 
-## Development Server
+- `shared/api.d.ts` e `shared/api-senado.d.ts` são camadas de aliases/tipos de
+  envelope usadas pelas páginas.
+- O spec do Senado referencia `schemas/processo.yml` (detalhe de processo), que
+  **não é publicado** upstream — o arquivo é reconstruído a partir de respostas
+  reais da API via `scripts/gen-senado-processo-schema.py`, gerando
+  `schemas/processo.yml`.
 
-Start the development server on `http://localhost:3000`:
+## Estrutura
 
-```bash
-pnpm dev
+```
+app/
+├── app.vue               # layout (header/nav, footer)
+├── pages/                # rotas por arquivo
+│   ├── camara/…          # seção Câmara
+│   └── senado/…          # seção Senado
+shared/                   # constantes, schemas zod e tipos OpenAPI
+public/flags · public/partidos   # SVGs/files de UF e partidos
+nuxt.config.ts            # proxies + cache + preset cloudflare
+wrangler.jsonc            # binding KV CACHE p/ persistência de cache
 ```
 
-## Production
-
-Build the application for production:
-
-```bash
-pnpm build
-```
-
-Locally preview production build:
-
-```bash
-pnpm preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-
-## Renovate integration
-
-Install [Renovate GitHub app](https://github.com/apps/renovate/installations/select_target) on your repository and you are good to go.
+`app/pages/<seção>/<entidade>/` segue a convenção de 3 níveis:
+`index.vue` (lista) · `[id].vue` (shell do detalhe com `<UNavigationMenu>` +
+`<NuxtPage />`) · `[id]/subpagina.vue` (self-contained).
