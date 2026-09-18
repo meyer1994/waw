@@ -25,7 +25,9 @@ const columns: TableColumn<Frente>[] = [
       :loading="status === 'pending'"
     >
       <template #titulo-cell="{ row }">
-        <span class="text-sm">{{ row.original.titulo }}</span>
+        <NuxtLink :to="`/camara/frentes/${row.original.id}`">
+          <span class="text-sm text-primary hover:underline">{{ row.original.titulo }}</span>
+        </NuxtLink>
       </template>
 
       <template #idLegislatura-cell="{ row }">

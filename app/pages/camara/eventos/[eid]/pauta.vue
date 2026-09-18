@@ -39,7 +39,18 @@ const columns: TableColumn<Pauta>[] = [
             {{ row.original.titulo ?? '—' }}
           </p>
           <p class="text-muted text-xs">
-            {{ row.original.regime ?? '—' }}{{ row.original.relator ? ` • Relator: ${row.original.relator.nome}` : '' }}
+            {{ row.original.regime ?? '—' }}
+            <template v-if="row.original.relator">
+              <span> • Relator: </span>
+              <NuxtLink
+                v-if="row.original.relator.id"
+                :to="`/camara/deputados/${row.original.relator.id}`"
+                class="text-primary hover:underline"
+              >
+                {{ row.original.relator.nome }}
+              </NuxtLink>
+              <span v-else>{{ row.original.relator.nome }}</span>
+            </template>
           </p>
         </div>
       </template>

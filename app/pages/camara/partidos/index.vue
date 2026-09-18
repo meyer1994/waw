@@ -41,7 +41,9 @@ useHead(() => ({ title: 'Partidos' }))
       </template>
 
       <template #nome-cell="{ row }">
-        <span class="text-sm">{{ row.original.nome }}</span>
+        <NuxtLink :to="`/camara/partidos/${row.original.id}`">
+          <span class="text-sm text-primary hover:underline">{{ row.original.nome }}</span>
+        </NuxtLink>
       </template>
     </UTable>
   </div>

@@ -26,14 +26,16 @@ const columns: TableColumn<DeputadoOrgao>[] = [
       :loading="status === 'pending'"
     >
       <template #orgao-cell="{ row }">
-        <div>
-          <p class="font-medium">
-            {{ row.original.siglaOrgao }}
-          </p>
-          <p class="text-muted text-sm">
-            {{ row.original.nomeOrgao }}
-          </p>
-        </div>
+        <NuxtLink :to="`/camara/orgaos/${row.original.idOrgao}`">
+          <div>
+            <p class="font-medium text-primary hover:underline">
+              {{ row.original.siglaOrgao }}
+            </p>
+            <p class="text-muted text-sm">
+              {{ row.original.nomeOrgao }}
+            </p>
+          </div>
+        </NuxtLink>
       </template>
 
       <template #titulo-cell="{ row }">

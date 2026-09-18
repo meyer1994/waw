@@ -169,6 +169,15 @@ useHead(() => ({ title: 'Deputados' }))
         >—</span>
       </template>
 
+      <template #nome-cell="{ row }">
+        <NuxtLink
+          :to="`/camara/deputados/${row.original.id}`"
+          class="text-primary hover:underline font-medium"
+        >
+          {{ row.original.nome }}
+        </NuxtLink>
+      </template>
+
       <template #foto-cell="{ row }">
         <NuxtLink :to="`/camara/deputados/${row.original.id}`">
           <UAvatar

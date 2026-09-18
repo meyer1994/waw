@@ -22,7 +22,15 @@ useHead(() => ({ title: frente.value?.titulo ?? 'Frente' }))
       {{ frente?.titulo }}
     </h1>
     <p class="text-muted text-sm mb-6">
-      Legislatura {{ frente?.idLegislatura }} • {{ frente?.situacao ?? '—' }} • Coordenador: {{ frente?.coordenador?.nome ?? '—' }}
+      Legislatura {{ frente?.idLegislatura }} • {{ frente?.situacao ?? '—' }} • Coordenador:
+      <NuxtLink
+        v-if="frente?.coordenador?.id"
+        :to="`/camara/deputados/${frente.coordenador.id}`"
+        class="text-primary hover:underline"
+      >
+        {{ frente?.coordenador?.nome ?? '—' }}
+      </NuxtLink>
+      <span v-else>{{ frente?.coordenador?.nome ?? '—' }}</span>
     </p>
 
     <div
@@ -47,7 +55,16 @@ useHead(() => ({ title: frente.value?.titulo ?? 'Frente' }))
             <dt class="text-muted">
               Coordenador
             </dt>
-            <dd>{{ frente.coordenador?.nome ?? '—' }}</dd>
+            <dd>
+              <NuxtLink
+                v-if="frente.coordenador?.id"
+                :to="`/camara/deputados/${frente.coordenador.id}`"
+                class="text-primary hover:underline"
+              >
+                {{ frente.coordenador?.nome ?? '—' }}
+              </NuxtLink>
+              <span v-else>{{ frente.coordenador?.nome ?? '—' }}</span>
+            </dd>
           </div>
           <div>
             <dt class="text-muted">

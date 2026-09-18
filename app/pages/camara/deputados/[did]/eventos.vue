@@ -46,9 +46,11 @@ useHead(() => ({ title: 'Eventos' }))
 
       <template #evento-cell="{ row }">
         <div>
-          <p class="font-medium">
-            {{ row.original.descricaoTipo }}
-          </p>
+          <NuxtLink :to="`/camara/eventos/${row.original.id}`">
+            <p class="font-medium text-primary hover:underline">
+              {{ row.original.descricaoTipo }}
+            </p>
+          </NuxtLink>
           <p class="text-muted text-sm line-clamp-2">
             {{ row.original.descricao }}
           </p>

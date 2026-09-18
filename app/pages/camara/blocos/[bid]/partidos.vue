@@ -27,7 +27,12 @@ const columns: TableColumn<Partido>[] = [
       </template>
 
       <template #nome-cell="{ row }">
-        <span class="text-sm">{{ row.original.nome }}</span>
+        <NuxtLink
+          :to="`/camara/partidos/${row.original.id}`"
+          class="text-sm text-primary hover:underline"
+        >
+          {{ row.original.nome }}
+        </NuxtLink>
       </template>
     </UTable>
   </div>

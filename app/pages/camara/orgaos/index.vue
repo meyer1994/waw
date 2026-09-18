@@ -60,7 +60,9 @@ useHead(() => ({ title: 'Órgãos' }))
       </template>
 
       <template #nome-cell="{ row }">
-        <span class="text-sm">{{ row.original.nome }}</span>
+        <NuxtLink :to="`/camara/orgaos/${row.original.id}`">
+          <span class="text-sm text-primary hover:underline">{{ row.original.nome }}</span>
+        </NuxtLink>
       </template>
 
       <template #tipoOrgao-cell="{ row }">
